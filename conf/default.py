@@ -22,8 +22,8 @@ from django.conf.global_settings import *
 # 应用基本信息配置 (请按照说明修改)
 # ==============================================================================
 # 在蓝鲸智云开发者中心 -> 点击应用ID -> 基本信息 中获取 APP_ID 和 APP_TOKEN 的值
-APP_ID = 'oneoaas-event'
-APP_TOKEN = '0fafdaf7-eaa5-4116-9729-b6be84ba0573'
+APP_ID = 'oneoaas-cmp'
+APP_TOKEN = '63d27582-b9ca-4d48-ac69-f8bb3aa89a33'
 # 蓝鲸智云开发者中心的域名，形如：http://paas.bking.com
 BK_PAAS_HOST = 'http://paas.bking.com'
 
@@ -36,7 +36,7 @@ BROKER_URL_DEV = 'redis://127.0.0.1:6379/0'
 # TOCHANGE 调用celery任务的文件路径, List of modules to import when celery starts.
 CELERY_IMPORTS = (
     'home_application.celery_tasks',
-    'home_application.ng_task',
+    # 'home_application.ng_task',
 )
 
 # ==============================================================================
