@@ -7,21 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Vcenter管理系统</title>
-    <!-- Bootstrap css -->
-    <link href="https://magicbox.bkclouds.cc/static_api/v3/assets/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://magicbox.bkclouds.cc/static_api/v3/assets/fontawesome/css/font-awesome.css" rel="stylesheet">
-    <!-- 当前项目样式文件 -->
-    <link href="${STATIC_URL}/css/sb-admin.css" rel="stylesheet">
-    <link href="${STATIC_URL}/css/sb-bk-theme.css" rel="stylesheet">
-    <!--蓝鲸平台APP 公用的样式文件 -->
 
-    <link href="https://magicbox.bkclouds.cc/static_api/v3/bk/css/bk.css?v=1.0.1" rel="stylesheet">
-    <!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
-    <!--[if lt IE 9]>
-    <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/html5shiv.min.js"></script>
-    <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/respond.min.js"></script>
-    <![endif]-->
-    <script src="${STATIC_URL}js/csrftoken.js"></script>
+    <%block name="cssfile"></%block>
+    <%block name="css"></%block>
+
 </head>
 
 <body>
@@ -118,6 +107,9 @@
 
 <!-- 包括所有kendoui的js插件或者可以根据需要使用的js插件调用　-->
 <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/kendoui-2015.2.624/js/kendo.all.min.js"></script>
+
+<%block name="scriptfile"></%block>
+
 <script type="text/javascript">
     $(document).ready(function() {
         $('#chartA').kendoChart({

@@ -1,2 +1,47 @@
 <%inherit file="/base.html"/>
+<%block name="cssfile">
 
+<!-- Bootstrap css -->
+<link href="${STATIC_URL}assets/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
+<link href="${STATIC_URL}assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<!-- 当前项目样式文件 -->
+<link href="${STATIC_URL}css/sb-admin.css" rel="stylesheet">
+<link href="${STATIC_URL}css/sb-bk-theme.css" rel="stylesheet">
+<!--蓝鲸提供的公用样式库 -->
+<link href="${STATIC_URL}css/bk.css" rel="stylesheet">
+<!--前端开发者提供的样式 -->
+<link href="${STATIC_URL}css/alert.css" rel="stylesheet">
+<!--后端开发者提供的样式 -->
+<link href="${STATIC_URL}assets/artDialog-6.0.4/css/ui-dialog.css" rel="stylesheet">
+<link href="${STATIC_URL}assets/select2-3.5.2/select2.css" rel="stylesheet">
+<!-- 左侧下拉搜索导航栏 -->
+<link href="${STATIC_URL}assets/jquery.sumoselect-2.0.0/sumoselect.css" rel="stylesheet">
+<link href="${STATIC_URL}assets/mCustomScrollbar-3.0.9/jquery.mCustomScrollbar.css" rel="stylesheet">
+
+<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+<script src="${STATIC_URL}js/jquery-1.10.2.min.js"></script>
+<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
+<script src="${STATIC_URL}assets/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+<script src="${STATIC_URL}assets/kendoui-2015.2.624/js/kendo.all.min.js"></script>
+
+<!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
+<!--[if lt IE 9]>
+<script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/html5shiv.min.js"></script>
+<script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/respond.min.js"></script>
+<![endif]-->
+<script src="${STATIC_URL}js/csrftoken.js"></script>
+</%block>
+
+
+<%block name="scriptfile">
+<!-- 这个是全局配置，如果需要在js中使用app_code和site_url,则这个javascript片段一定要保留 -->
+
+<!--配置js  勿删-->
+<script src="${STATIC_URL}js/settings.js"></script>
+<script src="${STATIC_URL}assets/topbar-1.0/topbar.js"></script>
+<script src="${STATIC_URL}assets/select2-3.5.2/select2.js"></script>
+<script src="${STATIC_URL}assets/artDialog-6.0.4/dist/dialog-min.js"></script>
+<script src="${STATIC_URL}assets/jquery.sumoselect-2.0.0/jquery.sumoselect.min.js"></script>
+<script src="${STATIC_URL}js/vue.min.js"></script>
+<script src="${STATIC_URL}js/utils.js"></script>
+</%block>
