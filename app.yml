@@ -1,0 +1,13 @@
+app_code: oneoaas-event
+app_name: oneoaas-event_ce
+author: OneOaaS
+date: 2017-04-10 11:38:23
+introduction: OneOaaS Event 社区蓝鲸专用版是OneOaaS开发的蓝鲸SaaS应用
+is_use_celery: true
+language: python
+libraries:
+- name: requests
+  version: 2.9.1
+- name: pymysql
+  version: 0.6.7
+version: 1.0.0
