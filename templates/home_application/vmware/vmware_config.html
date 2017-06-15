@@ -1,0 +1,112 @@
+<%inherit file="/home_application/base_new.html"/>
+<%block name="content">
+<div class="row page-header-box">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            vcenter配置管理
+        </h1>
+    </div>
+</div>
+<div class="main-wrap">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            vcenter账号配置
+        </div>
+        <div class='panel-body'>
+            <div class="col-sm-8">
+                <form class="form-horizontal mt15" id="user_form" action="${SITE_URL}event/addEventSource/" method="post">
+                    <div style="display:none">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">vcenter用户：</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" placeholder="请输入Vcenter用户" id="user_account" name="user_account">
+                            <span class="king-required-tip text-danger ml5">*</span>
+                        </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">vcenter密码：</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" placeholder="请输入Vcenter密码" id="user_password" name="user_password">
+                            <span class="king-required-tip text-danger ml5">*</span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">vcenter主机：</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" placeholder="请输入主机IP" id="user_email" name="user_email">
+                            <span class="king-required-tip text-danger ml5">*</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">vcenter版本：</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" placeholder="请填选择版本" id="user_email" name="user_email">
+                            <span class="king-required-tip text-danger ml5">*</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-10">
+                            <button class="king-btn king-info mr10" title="保存" type="submit">
+                                <i class="fa fa-save btn-icon"></i>保存
+                            </button>
+                            <a href="${SITE_URL}event/manage/" class="king-btn king-default" title="返回">
+                                <i class="fa fa-mail-reply-all btn-icon"></i>返回
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!---->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            vcenter账号列表
+        </div>
+        <div class='panel-body'>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>test1</th>
+                        <th>test2</th>
+                        <th>test3</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <div class="pagination-info pull-left">共有0条，每页5页</div>
+                            <div class="pull-right king-page-box">
+                                <ul class="pagination pagination-small pull-right">
+
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+
+
+
+                    </tfoot>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+
+</div>
+</%block>

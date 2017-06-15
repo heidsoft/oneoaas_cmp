@@ -13,21 +13,5 @@ urlpatterns = patterns(
     url(r'^ucloud/', include('home_application.ucloud.urls')),
     url(r'^aws/', include('home_application.aws.urls')),
     url(r'^aliyun/', include('home_application.aliyun.urls')),
-    url(r'^event/', include('home_application.event.urls')),
-    # (r'^dashboard$','dashboard'),
-    # (r'^hello$','hello'),
-
-    # (r'^view/(.+)/$', 'view'),
-    # (r'^queryHost', 'queryHost'),
-    # (r'^grid$', 'grid'),
-    # (r'^forms$', 'forms'),
-    # (r'^dev-guide/$', 'dev_guide'),
-    # (r'^contactus/$', 'contactus'),
-    # (r'^useradd', 'useradd'),
-    # (r'^userlist', 'userlist'),
-    # (r'^execute/task$', 'executeTask'),
-    # (r'^execute/job$', 'executeJob'),
-    # (r'^hosts$', 'getHosts'),
-    # (r'^jobs', 'getJobs'),
 )
 

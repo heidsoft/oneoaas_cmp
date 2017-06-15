@@ -4,5 +4,6 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns(
     'home_application.vmware.views',
-    url(r'^$', 'vmware'),
+    url(r'^manage', 'getVmManageView'),
+    url(r'^config', 'getVmConfigView'),
 )

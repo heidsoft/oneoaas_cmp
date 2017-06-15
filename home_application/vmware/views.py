@@ -4,10 +4,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from common.mymako import render_mako_context
 
 
-def vmware(request):
-    # 这里开始触发缓存数据，确保后续页面访问流畅。
+def getVmManageView(request):
     return render_mako_context(
-        request, '/home_application/vmware/vmware.html'
+        request, '/home_application/vmware/vmware_manage.html'
     )
 
 
+def getVmConfigView(request):
+    return render_mako_context(
+        request, '/home_application/vmware/vmware_config.html'
+    )
