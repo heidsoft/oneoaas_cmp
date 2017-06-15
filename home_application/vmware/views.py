@@ -16,3 +16,23 @@ def getVmConfigView(request):
     )
 
 
+def createVmRequest(reqeust):
+    pass
+
+def poweroffVmRequest(reqeust):
+    pass
+
+def startVmRequest(reqeust):
+    pass
+
+def rebootVmRequest(reqeust):
+    pass
+
+def destroyVmRequest(reqeust):
+    pass
+
+def cloneVmRequest(reqeust):
+    pass
+
+def WebSSHVmRequest(reqeust):
+    pass
