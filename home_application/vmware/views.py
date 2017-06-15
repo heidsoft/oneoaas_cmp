@@ -14,3 +14,5 @@ def getVmConfigView(request):
     return render_mako_context(
         request, '/home_application/vmware/vmware_config.html'
     )
+
+
