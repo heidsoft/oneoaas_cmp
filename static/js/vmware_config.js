@@ -10,15 +10,26 @@ var VCenterConfig = (function ($) {
             var accountPassword = $("#account_password").val();
             var vcenterHost = $("#vcenter_host").val();
             var vcenterVersion = $("#vcenter_version").val();
+            console.log("VCenterConfig.createVCenterAccount....");
+            $.ajax({
+                url: '/vmware/api/createVCenterAccount',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    "accountName":accountName,
+                    "accountPassword":accountPassword,
+                    "vcenterHost":vcenterHost,
+                    "vcenterVersion":vcenterVersion
+                },
+                success: function (data) {
+                    console.log(data);
+                },
 
-            $.ajax("",{
-
-            })
+            });
 
         },
 
     }
-
 })($);
 
 var VCenterConfigRecord = $('#vcenter_config_record').DataTable({

@@ -16,6 +16,24 @@ def getVmConfigView(request):
         request, '/home_application/vmware/vmware_config.html'
     )
 
+"""
+创建vcenter账号
+"""
+def createVCenterAccount(request):
+    try:
+        if request.method == 'POST':
+            accountName = request.POST['accountName']
+            print accountName
+        res = {
+            'result': True,
+            'message': accountName,
+        }
+    except Exception as e:
+        res = {
+            'result': False,
+            'message': e.message,
+        }
+    return render_json(res)
 
 def getVcenterAccountList(request):
     logger.info("getVcenterAccountList....")
