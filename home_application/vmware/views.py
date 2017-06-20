@@ -23,7 +23,15 @@ def createVCenterAccount(request):
     try:
         if request.method == 'POST':
             accountName = request.POST['accountName']
+            accountPassword = request.POST['accountPassword']
+            vcenterHost = request.POST['vcenterHost']
+            vcenterPort = request.POST['vcenterPort']
+            vcenterVersion = request.POST['vcenterVersion']
             print accountName
+            print accountPassword
+            print vcenterHost
+            print vcenterPort
+            print vcenterVersion
         res = {
             'result': True,
             'message': accountName,
