@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+import simplejson as simplejson
+from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect
 
 from blueking.component.base import logger
 from common.mymako import render_mako_context, render_json
+from home_application.models import VcenterAccount
 
 
 def getVmManageView(request):
@@ -27,14 +30,18 @@ def createVCenterAccount(request):
             vcenterHost = request.POST['vcenterHost']
             vcenterPort = request.POST['vcenterPort']
             vcenterVersion = request.POST['vcenterVersion']
-            print accountName
-            print accountPassword
-            print vcenterHost
-            print vcenterPort
-            print vcenterVersion
+
+            account = VcenterAccount(account_name=accountName,
+                                     account_password=accountPassword,
+                                     vcenter_host=vcenterHost,
+                                     vcenter_port=vcenterPort,
+                                     vcenter_version=vcenterVersion)
+            result = account.save()
+            print request
+
         res = {
             'result': True,
-            'message': accountName,
+            'message': "添加成功",
         }
     except Exception as e:
         res = {
@@ -46,35 +53,21 @@ def createVCenterAccount(request):
 def getVcenterAccountList(request):
     logger.info("getVcenterAccountList....")
     print 'getVcenterAccountList.....'
+    accountObjectList = VcenterAccount.objects.all()
+    accountJsonList = []
+    from django.forms.models import model_to_dict
+    for account in accountObjectList:
+        tempAccount = model_to_dict(account)
+        print tempAccount
+        accountJsonList.append(tempAccount)
+
+
+    print accountJsonList
     res = {
-        "draw": 2,
-        "recordsTotal": 21,
-        "recordsFiltered": 5,
-        'data': [
-            {"test1":1111,"test2":444,"test3":3333},
-            {"test1":1111,"test2":55,"test3":3333},
-            {"test1":1111,"test2":99,"test3":3333},
-            {"test1":1111,"test2":66,"test3":3333},
-            {"test1":1111,"test2":2222,"test3":3333},
-            {"test1":1111,"test2":664,"test3":3333},
-            {"test1":1111,"test2":88,"test3":3333},
-            {"test1":1111,"test2":444,"test3":3333},
-            {"test1":1111,"test2":55,"test3":3333},
-            {"test1":1111,"test2":99,"test3":3333},
-            {"test1":1111,"test2":66,"test3":3333},
-            {"test1":1111,"test2":2222,"test3":3333},
-            {"test1":1111,"test2":664,"test3":3333},
-            {"test1":1111,"test2":88,"test3":3333},
-            {"test1":1111,"test2":444,"test3":3333},
-            {"test1":1111,"test2":55,"test3":3333},
-            {"test1":1111,"test2":99,"test3":3333},
-            {"test1":1111,"test2":66,"test3":3333},
-            {"test1":1111,"test2":2222,"test3":3333},
-            {"test1":1111,"test2":664,"test3":3333},
-            {"test1":1111,"test2":88,"test3":3333}
-        ]
+        "recordsTotal": len(accountObjectList),
+        'data': accountJsonList
     }
-    print res
+
     return render_json(res)
 
 def createVmRequest(reqeust):

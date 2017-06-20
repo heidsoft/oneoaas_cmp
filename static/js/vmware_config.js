@@ -72,15 +72,23 @@ $(document).ready(function(){
         columnDefs: [
             {
                 targets: 0,
-                data: "test1",
+                data: "account_name",
             },
             {
                 targets: 1,
-                data: "test2",
+                data: "account_password",
             },
             {
                 targets: 2,
-                data: "test3",
+                data: "vcenter_host",
+            },
+            {
+                targets: 2,
+                data: "vcenter_port",
+            },
+            {
+                targets: 2,
+                data: "vcenter_version",
             },
         ]
 
