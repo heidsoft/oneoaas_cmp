@@ -57,7 +57,7 @@ $(document).ready(function(){
     ];
     $("#vcenter_version .select2_box").select2({ data: vcenterVersionList });
 
-    var VCenterConfigRecord = $('#vcenter_config_record').DataTable({
+    var VCenterManageRecord = $('#vcenter_manage_record').DataTable({
         "bProcessing": true,                    //加载数据时显示正在加载信息
         "bServerSide": true,                    //指定从服务器端获取数据
         "bFilter": false,                       //不使用过滤功能
@@ -80,39 +80,29 @@ $(document).ready(function(){
         "bInfo":false,//隐藏左下角分页显示信息
         "bServerSide": true,
         ajax: {
-            url: '/vmware/api/getVcenterAccountList',
+            url: '/vmware/api/getVcenterVirtualMachineList',
         },
         columnDefs: [
             {
                 targets: 0,
-                data: "account_name",
+                data: "name",
             },
             {
                 targets: 1,
-                data: "account_password",
+                data: "vm_pathname",
             },
             {
                 targets: 2,
-                data: "vcenter_host",
+                data: "guest_fullname",
             },
             {
                 targets: 3,
-                data: "vcenter_port",
+                data: "power_state",
             },
             {
                 targets: 4,
-                data: "vcenter_version",
+                data: "ipaddress",
             },
-            {
-                targets: 5,
-                data: "id",
-                "render": function ( data, type, row ) {
-                    var syncHtml = '<button class="btn btn-xs btn-info" ' ;
-                    syncHtml+= ' onclick="VCenterConfig.syncVCenterAccount('+data+')" ';
-                    syncHtml+= ' >同步</button> ';
-                    return syncHtml;
-                }
-            }
         ]
 
     });

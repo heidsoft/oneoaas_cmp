@@ -17,3 +17,22 @@ class VcenterAccount(models.Model):
     #自定义表名称
     class Meta:
         db_table = 'vcenter_account'
+
+"""
+vcenter虚拟机对象
+"""
+class VcenterVirtualMachine(models.Model):
+    #虚拟机名称
+    name = models.CharField(max_length=60)
+    #虚拟机路径名称
+    vm_pathname = models.CharField(max_length=120)
+    #虚拟机操作系统名称
+    guest_fullname = models.CharField(max_length=60)
+    #虚拟机运行状态
+    power_state = models.CharField(max_length=50)
+    #虚拟机IP
+    ipaddress = models.CharField(max_length=30)
+
+    #自定义表名称
+    class Meta:
+        db_table = 'vcenter_virtualmachine'

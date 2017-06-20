@@ -8,4 +8,8 @@ urlpatterns = patterns(
     url(r'^config/$', 'getVmConfigView'),
     url(r'api/getVcenterAccountList$', 'getVcenterAccountList'),
     url(r'api/createVCenterAccount$', 'createVCenterAccount'),
+    url(r'api/syncVCenterAccount', 'syncVCenterAccount'),
+    url(r'api/getVcenterVirtualMachineList', 'getVcenterVirtualMachineList'),
+
+
 )
