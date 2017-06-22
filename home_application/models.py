@@ -32,6 +32,10 @@ class VcenterVirtualMachine(models.Model):
     power_state = models.CharField(max_length=50)
     #虚拟机IP
     ipaddress = models.CharField(max_length=30)
+    #实例uuid
+    instance_uuid = models.CharField(max_length=40)
+    #最后启动时间
+    boot_time = models.CharField(max_length=20)
 
     #自定义表名称
     class Meta:

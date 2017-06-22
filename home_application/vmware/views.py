@@ -81,6 +81,7 @@ def createVcenterVirtualMachine(vm,depth=1):
     vcenterVirtualMachineModel.guest_fullname = summary.config.guestFullName
     vcenterVirtualMachineModel.power_state = summary.runtime.powerState
 
+
     if summary.guest != None:
         ip = summary.guest.ipAddress
         if ip != None and ip != "":
