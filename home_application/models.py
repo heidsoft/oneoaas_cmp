@@ -35,7 +35,7 @@ class VcenterVirtualMachine(models.Model):
     #实例uuid
     instance_uuid = models.CharField(max_length=40)
     #最后启动时间
-    boot_time = models.CharField(max_length=20)
+    boot_time = models.TimeField(max_length=20,null=True)
 
     #自定义表名称
     class Meta:

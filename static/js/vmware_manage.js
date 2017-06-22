@@ -85,22 +85,27 @@ $(document).ready(function(){
         columnDefs: [
             {
                 targets: 0,
+                className: 'select-checkbox',
                 data: "name",
             },
             {
                 targets: 1,
+                className: 'select-checkbox',
                 data: "vm_pathname",
             },
             {
                 targets: 2,
+                className: 'select-checkbox',
                 data: "guest_fullname",
             },
             {
                 targets: 3,
+                className: 'select-checkbox',
                 data: "power_state",
             },
             {
                 targets: 4,
+                className: 'select-checkbox',
                 data: "ipaddress",
             },
         ]

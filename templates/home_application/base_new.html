@@ -10,7 +10,7 @@
 <!--蓝鲸提供的公用样式库 -->
 <link href="${STATIC_URL}css/bk.css" rel="stylesheet">
 <!--前端开发者提供的样式 -->
-<link href="${STATIC_URL}css/alert.css" rel="stylesheet">
+<!--<link href="${STATIC_URL}css/alert.css" rel="stylesheet">-->
 <!--后端开发者提供的样式 -->
 <link href="${STATIC_URL}assets/artDialog-6.0.4/css/ui-dialog.css" rel="stylesheet">
 <link href="${STATIC_URL}assets/select2-3.5.2/select2.css" rel="stylesheet">
@@ -19,7 +19,8 @@
 <link href="${STATIC_URL}assets/mCustomScrollbar-3.0.9/jquery.mCustomScrollbar.css" rel="stylesheet">
 
 <!-- datatables css -->
-<link href="${STATIC_URL}assets/datatables-1.10.7/dataTables.bootstrap.css" rel="stylesheet"/>
+<link href="${STATIC_URL}assets/datatables-1.10.15/media/css/dataTables.bootstrap.css" rel="stylesheet"/>
+<link href="${STATIC_URL}assets/datatables-1.10.15/extensions/Select/css/select.bootstrap.css" rel="stylesheet"></link>
 <!-- datatables css -->
 
 <!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
@@ -44,20 +45,11 @@
 
 
 <%block name="scriptfile">
-<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
-<script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
-<!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
-<script src="https://magicbox.bkclouds.cc/static_api/v3/assets/bootstrap-3.3.4/js/bootstrap.min.js"></script>
-
-<!-- 包括所有kendoui的js插件或者可以根据需要使用的js插件调用　-->
-<script src="https://magicbox.bkclouds.cc/static_api/v3/assets/kendoui-2015.2.624/js/kendo.all.min.js"></script>
-
-<!-- 这个是全局配置，如果需要在js中使用app_code和site_url,则这个javascript片段一定要保留 -->
-
-<!--配置js  勿删-->
 <!-- datatables js -->
-<script src="${STATIC_URL}assets/datatables-1.10.7/jquery.dataTables.js"></script>
-<script src="${STATIC_URL}assets/datatables-1.10.7/dataTables.bootstrap.js"></script>
+<script src="${STATIC_URL}assets/datatables-1.10.15/media/js/jquery.dataTables.js"></script>
+<script src="${STATIC_URL}assets/datatables-1.10.15/media/js/dataTables.bootstrap.js"></script>
+<script src="${STATIC_URL}assets/datatables-1.10.15/extensions/Select/js/dataTables.select.min.js"></script>
+
 
 <script src="${STATIC_URL}assets/select2-3.5.2/select2.js"></script>
 <script src="${STATIC_URL}assets/artDialog-6.0.4/dist/dialog-min.js"></script>
@@ -65,4 +57,5 @@
 <script src="${STATIC_URL}js/vue.min.js"></script>
 <script src="${STATIC_URL}js/utils.js"></script>
 </%block>
+
 <%block name="script"></%block>
