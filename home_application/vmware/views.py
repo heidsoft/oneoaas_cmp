@@ -6,8 +6,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from blueking.component.base import logger
 from common.mymako import render_mako_context, render_json
 from home_application.models import VcenterAccount, VcenterVirtualMachine
-from hybirdsdk.virtualMachine import VmManage
+from hybirdsdk.virtualMachine import VmManage,vmware_client
 from pyVmomi import vim, vmodl
+
 def getVmManageView(request):
     return render_mako_context(
         request, '/home_application/vmware/vmware_manage.html'
@@ -160,11 +161,33 @@ def getVcenterVirtualMachineList(request):
 
     return render_json(res)
 
-def createVmRequest(reqeust):
+def createVmRequest(request):
     pass
 
-def poweroffVmRequest(reqeust):
-    pass
+def poweroffVmRequest(request):
+
+    try:
+        if request.method == 'POST':
+            vmId = request.POST['vmId']
+            accountId = request.POST['accountId']
+
+            vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
+            accountModel = VcenterAccount.objects.get(id=accountId)
+
+
+        vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+        vmAllList = vmManager.list()
+
+        res = {
+            'result': True,
+            'message': u"关机成功",
+        }
+    except Exception as e:
+        res = {
+            'result': False,
+            'message': e.message,
+        }
+    return render_json(res)
 
 def startVmRequest(reqeust):
     pass

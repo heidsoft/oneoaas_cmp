@@ -84,33 +84,44 @@ $(document).ready(function(){
         },
         columnDefs: [
             {
-                targets: 0,
-                className: 'select-checkbox',
-                data: "name",
+                'targets': 0,
+                'checkboxes': {
+                    'selectRow': true
+                }
             },
             {
                 targets: 1,
-                className: 'select-checkbox',
-                data: "vm_pathname",
+                data: "name",
             },
             {
                 targets: 2,
-                className: 'select-checkbox',
-                data: "guest_fullname",
+                data: "vm_pathname",
             },
             {
                 targets: 3,
-                className: 'select-checkbox',
-                data: "power_state",
+                data: "guest_fullname",
             },
             {
                 targets: 4,
-                className: 'select-checkbox',
+                data: "power_state",
+            },
+            {
+                targets: 5,
                 data: "ipaddress",
             },
-        ]
+        ],
+        select: {
+            'style': 'multi'
+        },
+        order: [[ 1, 'asc' ]]
 
     });
+
+    $('#select_all_vm').click(function () {
+        var state = this.checked;
+        var cols = VCenterManageRecord.column(0).nodes();
+
+    })
 })
 
 

@@ -22,6 +22,7 @@ class VcenterAccount(models.Model):
 vcenter虚拟机对象
 """
 class VcenterVirtualMachine(models.Model):
+    account = models.ForeignKey(VcenterAccount, related_name='vcenter_virtualmachine_ref_account')
     #虚拟机名称
     name = models.CharField(max_length=60)
     #虚拟机路径名称
