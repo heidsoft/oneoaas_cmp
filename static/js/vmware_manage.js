@@ -3,43 +3,62 @@
  * @description vcenter配置操作模块
  */
 
-var VCenterConfig = (function ($) {
+var VCenterManage = (function ($) {
     return {
-        //创建vcenter账号
-        createVCenterAccount: function () {
-            var accountName =  $("#account_name").val();
-            var accountPassword = $("#account_password").val();
-            var vcenterHost = $("#vcenter_host").val();
-            var vcenterVersion = $("#vcenter_version .select2_box").select2("val");
-            var vcenterPort = $("#vcenter_port").val();
+        //同步vcenter账号
+        poweroff: function (data) {
             $.ajax({
-                url: '/vmware/api/createVCenterAccount',
+                url: '/vmware/api/poweroff',
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    "accountName":accountName,
-                    "accountPassword":accountPassword,
-                    "vcenterHost":vcenterHost,
-                    "vcenterPort":vcenterPort,
-                    "vcenterVersion":vcenterVersion
+                    "vmId":32,
                 },
                 success: function (data) {
                     console.log(data);
+                    alert(data.message);
                 }
             });
         },
-        //同步vcenter账号
-        syncVCenterAccount: function (data) {
-
+        start: function (data) {
             $.ajax({
-                url: '/vmware/api/syncVCenterAccount',
+                url: '/vmware/api/start',
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    "id":data,
+                    "vmId":32,
                 },
                 success: function (data) {
                     console.log(data);
+                    alert(data.message);
+                }
+            });
+        },
+        reboot: function (data) {
+            $.ajax({
+                url: '/vmware/api/reboot',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    "vmId":32,
+                },
+                success: function (data) {
+                    console.log(data);
+                    alert(data.message);
+                }
+            });
+        },
+        destroy: function (data) {
+            $.ajax({
+                url: '/vmware/api/destroy',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    "vmId":32,
+                },
+                success: function (data) {
+                    console.log(data);
+                    alert(data.message);
                 }
             });
         }

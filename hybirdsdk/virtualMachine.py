@@ -159,4 +159,3 @@ class VmManage(object):
         # WaitForTasks(tasks=tasks,si=self.client)
         pass
 
-vmware_client = VmManage()

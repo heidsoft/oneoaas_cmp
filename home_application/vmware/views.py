@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from blueking.component.base import logger
 from common.mymako import render_mako_context, render_json
 from home_application.models import VcenterAccount, VcenterVirtualMachine
-from hybirdsdk.virtualMachine import VmManage,vmware_client
+from hybirdsdk.virtualMachine import VmManage
 from pyVmomi import vim, vmodl
 
 def getVmManageView(request):
@@ -115,6 +115,7 @@ def syncVCenterAccount(request):
         for vm in vmAllList:
             vmTempModel =  createVcenterVirtualMachine(vm)
             if vmTempModel != None and isinstance(vmTempModel,VcenterVirtualMachine):
+                vmTempModel.account = accountModel
                 vmTempModel.save()
 
         res = {
@@ -161,27 +162,33 @@ def getVcenterVirtualMachineList(request):
 
     return render_json(res)
 
-def createVmRequest(request):
-    pass
 
+
+#关机
 def poweroffVmRequest(request):
-
+    logger.info("关闭虚拟机")
     try:
         if request.method == 'POST':
             vmId = request.POST['vmId']
-            accountId = request.POST['accountId']
-
             vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
-            accountModel = VcenterAccount.objects.get(id=accountId)
+            accountModel = vcenterVirtualMachineModel.account
+            print accountModel
 
+        if accountModel is None:
+            res = {
+                'result': True,
+                'message': u"关机失败，资源账号错误",
+            }
+            return render_json(res)
+        else:
+            vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
 
-        vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-        vmAllList = vmManager.list()
+            #todo 关闭
+            res = {
+                'result': True,
+                'message': u"关机成功",
+            }
 
-        res = {
-            'result': True,
-            'message': u"关机成功",
-        }
     except Exception as e:
         res = {
             'result': False,
@@ -189,17 +196,108 @@ def poweroffVmRequest(request):
         }
     return render_json(res)
 
-def startVmRequest(reqeust):
+#开启
+def startVmRequest(request):
+    logger.info("开启虚拟机")
+    try:
+        if request.method == 'POST':
+            vmId = request.POST['vmId']
+            vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
+            accountModel = vcenterVirtualMachineModel.account
+            print accountModel
+
+        if accountModel is None:
+            res = {
+                'result': True,
+                'message': u"开启失败，资源账号错误",
+            }
+            return render_json(res)
+        else:
+            vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+
+            #todo 关闭
+            res = {
+                'result': True,
+                'message': u"开启成功",
+            }
+    except Exception as e:
+        res = {
+            'result': False,
+            'message': e.message,
+        }
+
+    return render_json(res)
+
+#重启
+def rebootVmRequest(request):
+    logger.info("重启虚拟机")
+    try:
+        if request.method == 'POST':
+            vmId = request.POST['vmId']
+            vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
+            accountModel = vcenterVirtualMachineModel.account
+            print accountModel
+
+        if accountModel is None:
+            res = {
+                'result': True,
+                'message': u"重启失败，资源账号错误",
+            }
+            return render_json(res)
+        else:
+            vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+
+            #todo 重启
+            res = {
+                'result': True,
+                'message': u"重启成功",
+            }
+
+    except Exception as e:
+        res = {
+            'result': False,
+            'message': e.message,
+        }
+    return render_json(res)
+
+
+#销毁
+def destroyVmRequest(request):
+    logger.info("销毁虚拟机")
+    try:
+        if request.method == 'POST':
+            vmId = request.POST['vmId']
+            vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
+            accountModel = vcenterVirtualMachineModel.account
+            print accountModel
+
+        if accountModel is None:
+            res = {
+                'result': True,
+                'message': u"销毁失败，资源账号错误",
+            }
+            return render_json(res)
+        else:
+            vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+
+            #todo 销毁
+            res = {
+                'result': True,
+                'message': u"销毁成功",
+            }
+
+    except Exception as e:
+        res = {
+            'result': False,
+            'message': e.message,
+        }
+    return render_json(res)
+
+def createVmRequest(request):
     pass
 
-def rebootVmRequest(reqeust):
+def cloneVmRequest(request):
     pass
 
-def destroyVmRequest(reqeust):
-    pass
-
-def cloneVmRequest(reqeust):
-    pass
-
-def WebSSHVmRequest(reqeust):
+def WebSSHVmRequest(request):
     pass

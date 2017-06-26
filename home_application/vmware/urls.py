@@ -10,6 +10,9 @@ urlpatterns = patterns(
     url(r'api/createVCenterAccount$', 'createVCenterAccount'),
     url(r'api/syncVCenterAccount', 'syncVCenterAccount'),
     url(r'api/getVcenterVirtualMachineList', 'getVcenterVirtualMachineList'),
-
+    url(r'api/poweroff', 'poweroffVmRequest'),
+    url(r'api/start', 'startVmRequest'),
+    url(r'api/reboot', 'rebootVmRequest'),
+    url(r'api/destroy', 'destroyVmRequest'),
 
 )
