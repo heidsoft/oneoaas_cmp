@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+import random
+
 import gevent
 import simplejson as simplejson
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect
+from gevent import Greenlet
 
 from blueking.component.base import logger
 from common.mymako import render_mako_context, render_json
@@ -315,6 +318,15 @@ def asyncDemo(request):
         gevent.spawn(foo),
         gevent.spawn(bar),
     ])
+
+
+    #同步执行
+    synchronous()
+
+    #异步执行
+    asynchronous()
+
+
     res = {
         'result': True,
         'message': "成功",
@@ -331,3 +343,38 @@ def bar():
     gevent.sleep(0)
     print('Implicit context switch back to bar')
 
+
+def task(pid):
+    """
+    Some non-deterministic task
+    """
+    gevent.sleep(random.randint(0,2)*0.001)
+    print('Task %s done' % pid)
+
+#同步执行
+def synchronous():
+    for i in range(1,10):
+        task(i)
+
+#异步执行
+def asynchronous():
+    threads = [gevent.spawn(task, i) for i in xrange(10)]
+    gevent.joinall(threads)
+
+
+"""
+定义Greenlet的子类，可以设定任务消息
+g = MyGreenlet("Hi there!", 3)
+g.start()
+g.join()
+"""
+class MyGreenlet(Greenlet):
+
+    def __init__(self, message, n):
+        Greenlet.__init__(self)
+        self.message = message
+        self.n = n
+
+    def _run(self):
+        print(self.message)
+        gevent.sleep(self.n)

@@ -42,6 +42,8 @@ def execute_task():
     #调用处理结果
     print u'调用处理结果'
     print result
+
+    #是否处理完毕
     print result.ready()
     logger.info(result)
 
