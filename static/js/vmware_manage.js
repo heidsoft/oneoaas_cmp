@@ -61,6 +61,20 @@ var VCenterManage = (function ($) {
                     alert(data.message);
                 }
             });
+        },
+        async: function (data) {
+            $.ajax({
+                url: '/vmware/api/asyncDemo',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    "id":32,
+                },
+                success: function (data) {
+                    console.log(data);
+                    alert(data.message);
+                }
+            });
         }
     }
 })($);

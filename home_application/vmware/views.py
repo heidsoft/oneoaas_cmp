@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+import gevent
 import simplejson as simplejson
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect
 
 from blueking.component.base import logger
 from common.mymako import render_mako_context, render_json
+from home_application.celery_tasks import execute_task
 from home_application.models import VcenterAccount, VcenterVirtualMachine
 from hybirdsdk.virtualMachine import VmManage
 from pyVmomi import vim, vmodl
@@ -204,7 +206,7 @@ def startVmRequest(request):
             vmId = request.POST['vmId']
             vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
             accountModel = vcenterVirtualMachineModel.account
-            print accountModel
+            print accountModel.account_name
 
         if accountModel is None:
             res = {
@@ -301,3 +303,31 @@ def cloneVmRequest(request):
 
 def WebSSHVmRequest(request):
     pass
+
+"""
+并发测试
+"""
+def asyncDemo(request):
+    logger.info("测试异步任务 开始")
+    execute_task()
+    logger.info("测试异步任务 结束")
+    gevent.joinall([
+        gevent.spawn(foo),
+        gevent.spawn(bar),
+    ])
+    res = {
+        'result': True,
+        'message': "成功",
+    }
+    return render_json(res)
+
+def foo():
+    print('Running in foo')
+    gevent.sleep(0)
+    print('Explicit context switch to foo again')
+
+def bar():
+    print('Explicit context to bar')
+    gevent.sleep(0)
+    print('Implicit context switch back to bar')
+

@@ -37,7 +37,13 @@ def execute_task():
     now = datetime.datetime.now()
     logger.error(u"celery 定时任务启动，将在60s后执行，当前时间：{}".format(now))
     # 调用定时任务
-    async_task.apply_async(args=[now.hour, now.minute], eta=now + datetime.timedelta(seconds=60))
+    result = async_task.apply_async(args=[now.hour, now.minute], eta=now + datetime.timedelta(seconds=60))
+
+    #调用处理结果
+    print u'调用处理结果'
+    print result
+    print result.ready()
+    logger.info(result)
 
 
 @periodic_task(run_every=crontab(minute='*/5', hour='*', day_of_week="*"))
