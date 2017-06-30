@@ -3,9 +3,8 @@
  * @description vcenter配置操作模块
  */
 
-var VCenterManage = (function ($) {
+var VCenterManage = (function ($,toastr,dialog) {
     return {
-        //同步vcenter账号
         poweroff: function (data) {
             $.ajax({
                 url: '/vmware/api/poweroff',
@@ -15,8 +14,20 @@ var VCenterManage = (function ($) {
                     "vmId":32,
                 },
                 success: function (data) {
-                    console.log(data);
-                    alert(data.message);
+                    //toastr.success(data.message);
+                    var d = dialog({
+                        width: 440,
+                        title: "提示",
+                        content: '<div class="king-notice3 king-notice-success">'+
+                        '<span class="king-notice-img"></span>'+
+                        '<div class="king-notice-text">'+
+                        '<p class="f24">创建成功</p>'+
+                        '<p class="f12">'+
+                        '<span class="king-notice3-color">3秒</span>后跳转至应用创建状态页面</p>'+
+                        '</div>'+
+                        '</div>',
+                    });
+                    d.show();
                 }
             });
         },
@@ -29,8 +40,7 @@ var VCenterManage = (function ($) {
                     "vmId":32,
                 },
                 success: function (data) {
-                    console.log(data);
-                    alert(data.message);
+                    toastr.success(data.message);
                 }
             });
         },
@@ -43,8 +53,7 @@ var VCenterManage = (function ($) {
                     "vmId":32,
                 },
                 success: function (data) {
-                    console.log(data);
-                    alert(data.message);
+                    toastr.success(data.message);
                 }
             });
         },
@@ -57,8 +66,7 @@ var VCenterManage = (function ($) {
                     "vmId":32,
                 },
                 success: function (data) {
-                    console.log(data);
-                    alert(data.message);
+                    toastr.success(data.message);
                 }
             });
         },
@@ -71,13 +79,12 @@ var VCenterManage = (function ($) {
                     "id":32,
                 },
                 success: function (data) {
-                    console.log(data);
-                    alert(data.message);
+                    toastr.success(data.message);
                 }
             });
         }
     }
-})($);
+})($,window.toastr,dialog);
 
 $(document).ready(function(){
 
