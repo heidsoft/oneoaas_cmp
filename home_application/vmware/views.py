@@ -27,7 +27,9 @@ def getVmConfigView(request):
 
 
 """
+
 创建vcenter账号
+
 """
 def createVCenterAccount(request):
     try:
@@ -257,12 +259,19 @@ def rebootVmRequest(request):
             vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
 
             result = vmManager.reboot(vcenterVirtualMachineModel.name)
-            print result
-            #todo 重启
-            res = {
-                'result': True,
-                'message': u"重启成功",
-            }
+
+            if result is None:
+                res = {
+                    'result': True,
+                    'message': u"重启成功",
+                }
+            else:
+                res = {
+                    'result': True,
+                    'message': u"重启失败",
+                }
+
+
 
     except Exception as e:
         res = {
@@ -313,8 +322,12 @@ def cloneVmRequest(request):
 def WebSSHVmRequest(request):
     pass
 
+
+
 """
+
 并发测试
+
 """
 def asyncDemo(request):
     logger.info("测试异步任务 开始")
