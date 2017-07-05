@@ -175,6 +175,7 @@ def poweroffVmRequest(request):
     try:
         if request.method == 'POST':
             vmId = request.POST['vmId']
+            print 'vmid is %s ' % vmId
             vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
             accountModel = vcenterVirtualMachineModel.account
             print accountModel
@@ -187,8 +188,8 @@ def poweroffVmRequest(request):
             return render_json(res)
         else:
             vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-
-            #todo 关闭
+            result = vmManager.stop(vcenterVirtualMachineModel.name)
+            print result
             res = {
                 'result': True,
                 'message': u"关机成功",
@@ -207,6 +208,7 @@ def startVmRequest(request):
     try:
         if request.method == 'POST':
             vmId = request.POST['vmId']
+            print 'vmid is %s ' % vmId
             vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
             accountModel = vcenterVirtualMachineModel.account
             print accountModel.account_name
@@ -220,7 +222,8 @@ def startVmRequest(request):
         else:
             vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
 
-            #todo 关闭
+            result = vmManager.start(vcenterVirtualMachineModel.name)
+            print result
             res = {
                 'result': True,
                 'message': u"开启成功",
@@ -239,6 +242,7 @@ def rebootVmRequest(request):
     try:
         if request.method == 'POST':
             vmId = request.POST['vmId']
+            print 'vmid is %s ' % vmId
             vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
             accountModel = vcenterVirtualMachineModel.account
             print accountModel
@@ -252,6 +256,8 @@ def rebootVmRequest(request):
         else:
             vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
 
+            result = vmManager.reboot(vcenterVirtualMachineModel.name)
+            print result
             #todo 重启
             res = {
                 'result': True,

@@ -11,23 +11,23 @@ var VCenterManage = (function ($,toastr,dialog) {
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    "vmId":32,
+                    "vmId":83,
                 },
                 success: function (data) {
-                    //toastr.success(data.message);
-                    var d = dialog({
-                        width: 440,
-                        title: "提示",
-                        content: '<div class="king-notice3 king-notice-success">'+
-                        '<span class="king-notice-img"></span>'+
-                        '<div class="king-notice-text">'+
-                        '<p class="f24">创建成功</p>'+
-                        '<p class="f12">'+
-                        '<span class="king-notice3-color">3秒</span>后跳转至应用创建状态页面</p>'+
-                        '</div>'+
-                        '</div>',
-                    });
-                    d.show();
+                    toastr.success(data.message);
+                    // var d = dialog({
+                    //     width: 440,
+                    //     title: "提示",
+                    //     content: '<div class="king-notice3 king-notice-success">'+
+                    //     '<span class="king-notice-img"></span>'+
+                    //     '<div class="king-notice-text">'+
+                    //     '<p class="f24">创建成功</p>'+
+                    //     '<p class="f12">'+
+                    //     '<span class="king-notice3-color">3秒</span>后跳转至应用创建状态页面</p>'+
+                    //     '</div>'+
+                    //     '</div>',
+                    // });
+                    // d.show();
                 }
             });
         },
@@ -37,7 +37,7 @@ var VCenterManage = (function ($,toastr,dialog) {
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    "vmId":32,
+                    "vmId":83,
                 },
                 success: function (data) {
                     toastr.success(data.message);
@@ -50,7 +50,7 @@ var VCenterManage = (function ($,toastr,dialog) {
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    "vmId":32,
+                    "vmId":83,
                 },
                 success: function (data) {
                     toastr.success(data.message);
