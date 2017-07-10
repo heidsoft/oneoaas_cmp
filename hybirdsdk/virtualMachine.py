@@ -199,7 +199,7 @@ class VmManage(object):
         # Find the vm and power it on
         tasks = [vm.PowerOff() for vm in vmList if vm.name in vmnames]
 
-        from pyvim.task import WaitForTasks
+        from pyVim.task import WaitForTasks
         WaitForTasks(tasks=tasks,si=self.client)
 
     #开启
