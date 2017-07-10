@@ -7,7 +7,7 @@ function:vcenter manage
 """
 import time
 from pygments.styles import vim
-from pyvim.connect import SmartConnectNoSSL, Disconnect
+from pyVim.connect import SmartConnectNoSSL, Disconnect
 from pyVmomi import vim, vmodl
 
 from common.log import logger
