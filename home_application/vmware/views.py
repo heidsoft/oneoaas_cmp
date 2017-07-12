@@ -14,16 +14,79 @@ from home_application.models import VcenterAccount, VcenterVirtualMachine
 from hybirdsdk.virtualMachine import VmManage
 from pyVmomi import vim, vmodl
 
+"""
+虚拟机
+"""
 def getVmManageView(request):
     return render_mako_context(
-        request, '/home_application/vmware/vmware_manage.html'
+        request, '/home_application/vmware/vm_manage.html'
     )
 
-
+"""
+虚拟机配置
+"""
 def getVmConfigView(request):
     return render_mako_context(
         request, '/home_application/vmware/vmware_config.html'
     )
+
+"""
+集群管理
+"""
+def getClusterManageView(request):
+    return render_mako_context(
+        request, '/home_application/vmware/cluster_manage.html'
+    )
+
+"""
+数据中心管理
+"""
+def getDatacenterManageView(request):
+    return render_mako_context(
+        request, '/home_application/vmware/datacenter_manage.html'
+    )
+
+"""
+部门管理
+"""
+def getDepartmentManageView(request):
+    return render_mako_context(
+        request, '/home_application/vmware/department_manage.html'
+    )
+
+"""
+部门资源管理
+"""
+def getDepartmentResourceManageView(request):
+    return render_mako_context(
+        request, '/home_application/vmware/department_resource_manage.html'
+    )
+
+"""
+监控配置
+"""
+def getMonitorConfigView(request):
+    return render_mako_context(
+        request, '/home_application/vmware/monitor_config.html'
+    )
+
+"""
+用户管理
+"""
+def getUserManageView(request):
+    return render_mako_context(
+        request, '/home_application/vmware/user_manage.html'
+    )
+
+
+"""
+存储管理
+"""
+def getStorageManageView(request):
+    return render_mako_context(
+        request, '/home_application/vmware/storage_manage.html'
+    )
+
 
 
 """
