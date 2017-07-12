@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "smartwizard": "^4.2.2"
+    "smartwizard": "^4.2.2",
+    "twitter-bootstrap-wizard": "^1.2.0"
   }
 }

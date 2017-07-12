@@ -16,3 +16,7 @@ smartwizard@^4.2.2:
   dependencies:
     bootstrap ">=3.0.0"
     jquery ">=1.9.0"
+
+twitter-bootstrap-wizard@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/twitter-bootstrap-wizard/-/twitter-bootstrap-wizard-1.2.0.tgz#801c695f6b01e52dd622e9522b13fcb809421ef0"
