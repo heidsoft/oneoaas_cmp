@@ -1,4 +1,16 @@
 <%inherit file="/home_application/base_new.html"/>
+
+<%block name="css">
+<!--本模块加载的css-->
+<!-- Include SmartWizard CSS -->
+<link href="${STATIC_URL}assets/smartwizard/dist/css/smart_wizard.css" rel="stylesheet" type="text/css" />
+<!-- Optional SmartWizard theme -->
+<link href="${STATIC_URL}assets/smartwizard/dist/css/smart_wizard_theme_circles.css" rel="stylesheet" type="text/css" />
+<link href="${STATIC_URL}assets/smartwizard/dist/css/smart_wizard_theme_arrows.css" rel="stylesheet" type="text/css" />
+<link href="${STATIC_URL}assets/smartwizard/dist/css/smart_wizard_theme_dots.css" rel="stylesheet" type="text/css" />
+</%block>
+
+
 <%block name="content">
 
 <!-- Page Heading -->
@@ -117,5 +129,7 @@
 </%block>
 
 <%block name="script">
+<!--本模块加载的脚本-->
+<script type="text/javascript" src="${STATIC_URL}assets/smartwizard/dist/js/jquery.smartWizard.min.js"></script>
 <script src="${STATIC_URL}js/vmware_manage.js"></script>
 </%block>
