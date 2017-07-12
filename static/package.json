@@ -1,6 +1,10 @@
 {
   "dependencies": {
+    "art-dialog": "^7.0.0",
     "smartwizard": "^4.2.2",
     "twitter-bootstrap-wizard": "^1.2.0"
+  },
+  "devDependencies": {
+    "art-dialog": "^7.0.0"
   }
 }

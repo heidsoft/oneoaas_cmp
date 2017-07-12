@@ -4,7 +4,7 @@
  */
 
 //vcenter 管理插件
-var VCenterManage = (function ($,toastr,dialog) {
+var VCenterManage = (function ($,toastr) {
     return {
         init:function (tableId) {
             var VCenterManageRecord = $(tableId).DataTable({
@@ -67,6 +67,32 @@ var VCenterManage = (function ($,toastr,dialog) {
             });
 
             return VCenterManageRecord;
+        },
+        create:function () {
+            //$('#rootwizard').show();
+            var d = dialog({
+                width: 600,
+                title: '创建虚拟机',
+                quickClose: true,
+                content: $("#rootwizard"),
+                ok: function() {
+                    console.log(this)
+                    // do something
+                },
+                cancelValue: '取消',
+                cancel: function() {
+                    console.log(this)
+                    // do something
+                },
+                onshow: function() {
+                    console.log(this)
+                    // do something
+                }
+            });
+            d.show();
+        },
+        clone:function () {
+
         },
         poweroff: function (data) {
             $.ajax({
@@ -147,7 +173,7 @@ var VCenterManage = (function ($,toastr,dialog) {
             });
         }
     }
-})($,window.toastr,dialog);
+})($,window.toastr);
 
 //扩展到jquery
 //$.fn.extend(VCenterManage);
@@ -164,6 +190,8 @@ $(document).ready(function(){
         {id:4,text:"6.0"}
     ];
     $("#vcenter_version .select2_box").select2({ data: vcenterVersionList });
+    $('#rootwizard').bootstrapWizard({'tabClass': 'nav nav-tabs'});
+    $('#rootwizard').hide();
 
     VCenterManage.init('#vcenter_manage_record');
 })

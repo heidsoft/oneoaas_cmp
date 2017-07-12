@@ -2,7 +2,7 @@
 
 <%block name="css">
 <!--本模块加载的css-->
-<link href="${STATIC_URL}assets/twitter-bootstrap-wizard/prettify.css" rel="stylesheet" type="text/css" />
+<link href="${STATIC_URL}assets/art-dialog/css/dialog.css" rel="stylesheet" type="text/css" />
 </%block>
 
 
@@ -71,17 +71,15 @@
         </div>
 
         <div class="panel-btns">
-                <a type="button" id="transferID" class="king-btn king-success pull-left mt15 ml15">
+                <a type="button" onclick="VCenterManage.create();"  class="king-btn king-success pull-left mt15 ml15">
                     <i class="fa fa-gavel mr5"></i>创建虚拟机
                 </a>
-                <a type="button" onclick="" class="king-btn king-info pull-left mt15 ml15">
+                <a type="button" onclick="VCenterManage.clone();"class="king-btn king-info pull-left mt15 ml15">
                     <i class="fa fa-user-plus mr5"></i>克隆虚拟机
                 </a>
                 <a type="button" data-type="success" onclick="VCenterManage.poweroff();"  class="king-btn king-info pull-left mt15 ml15">
                     <i class="fa fa-user-plus mr5"></i>关闭虚拟机
                 </a>
-
-                <!--<button data-type="success" onclick="VCenterManage.poweroff();" class="plugin27_demo1 king-btn mb15 mr100 king-success" id="plugin27_demo1">关闭虚拟机</button>-->
 
                 <a type="button" onclick="VCenterManage.start();"  class="king-btn king-info pull-left mt15 ml15">
                     <i class="fa fa-user-plus mr5"></i>开启虚拟机
@@ -117,15 +115,64 @@
                 </table>
             </div>
         </div>
-    </div>
 
+    </div>
 </div>
+
+<div id="rootwizard">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <ul>
+                    <li><a href="#tab1" data-toggle="tab">First</a></li>
+                    <li><a href="#tab2" data-toggle="tab">Second</a></li>
+                    <li><a href="#tab3" data-toggle="tab">Third</a></li>
+                    <li><a href="#tab4" data-toggle="tab">Forth</a></li>
+                    <li><a href="#tab5" data-toggle="tab">Fifth</a></li>
+                    <li><a href="#tab6" data-toggle="tab">Sixth</a></li>
+                    <li><a href="#tab7" data-toggle="tab">Seventh</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane" id="tab1">
+            1
+        </div>
+        <div class="tab-pane" id="tab2">
+            2
+        </div>
+        <div class="tab-pane" id="tab3">
+            3
+        </div>
+        <div class="tab-pane" id="tab4">
+            4
+        </div>
+        <div class="tab-pane" id="tab5">
+            5
+        </div>
+        <div class="tab-pane" id="tab6">
+            6
+        </div>
+        <div class="tab-pane" id="tab7">
+            7
+        </div>
+        <ul class="pager wizard">
+            <li class="previous first" style="display:none;"><a href="#">First</a></li>
+            <li class="previous"><a href="#">Previous</a></li>
+            <li class="next last" style="display:none;"><a href="#">Last</a></li>
+            <li class="next"><a href="#">Next</a></li>
+        </ul>
+    </div>
+</div>
+
 
 </%block>
 
 <%block name="script">
 <!--本模块加载的脚本-->
+<script type="text/javascript" src="${STATIC_URL}assets/art-dialog/dist/dialog.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/twitter-bootstrap-wizard/prettify.js"></script>
-<script src="${STATIC_URL}js/vmware_manage.js"></script>
+<script type="text/javascript" src="${STATIC_URL}js/vmware_manage.js"></script>
 </%block>

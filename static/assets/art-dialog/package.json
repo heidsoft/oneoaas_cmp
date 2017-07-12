@@ -1,0 +1,94 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "art-dialog@^7.0.0",
+        "scope": null,
+        "escapedName": "art-dialog",
+        "name": "art-dialog",
+        "rawSpec": "^7.0.0",
+        "spec": ">=7.0.0 <8.0.0",
+        "type": "range"
+      },
+      "/Users/heidsoft/work/dev_python/venv/oneoaas_cmp/static"
+    ]
+  ],
+  "_from": "art-dialog@>=7.0.0 <8.0.0",
+  "_id": "art-dialog@7.0.0",
+  "_inCache": true,
+  "_location": "/art-dialog",
+  "_nodeVersion": "7.9.0",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/art-dialog-7.0.0.tgz_1492654090103_0.4510204470716417"
+  },
+  "_npmUser": {
+    "name": "aui",
+    "email": "1987.tangbin@gmail.com"
+  },
+  "_npmVersion": "4.2.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "art-dialog@^7.0.0",
+    "scope": null,
+    "escapedName": "art-dialog",
+    "name": "art-dialog",
+    "rawSpec": "^7.0.0",
+    "spec": ">=7.0.0 <8.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/art-dialog/-/art-dialog-7.0.0.tgz",
+  "_shasum": "a6a5a0e1f0d3d38dcb2b9fd8dfd2ca4e8a4dbd32",
+  "_shrinkwrap": null,
+  "_spec": "art-dialog@^7.0.0",
+  "_where": "/Users/heidsoft/work/dev_python/venv/oneoaas_cmp/static",
+  "author": {
+    "name": "aui"
+  },
+  "bugs": {
+    "url": "https://github.com/aui/artDialog/issues"
+  },
+  "dependencies": {},
+  "description": "A smart dialog box component",
+  "devDependencies": {
+    "css-loader": "^0.27.3",
+    "markdown-it": "^8.3.1",
+    "style-loader": "^0.15.0",
+    "webpack": "^2.2.1"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "a6a5a0e1f0d3d38dcb2b9fd8dfd2ca4e8a4dbd32",
+    "tarball": "https://registry.npmjs.org/art-dialog/-/art-dialog-7.0.0.tgz"
+  },
+  "gitHead": "966e4a658b4e7302bba74b15f4759022a611b781",
+  "homepage": "https://github.com/aui/artDialog",
+  "keywords": [
+    "dialog"
+  ],
+  "license": "LGPL-3.0",
+  "main": "./dist/dialog.js",
+  "maintainers": [
+    {
+      "name": "aui",
+      "email": "1987.tangbin@gmail.com"
+    }
+  ],
+  "name": "art-dialog",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aui/artDialog.git"
+  },
+  "scripts": {
+    "build": "webpack -p",
+    "build-doc": "node doc/build/index.js",
+    "dev": "webpack -d"
+  },
+  "version": "7.0.0"
+}
