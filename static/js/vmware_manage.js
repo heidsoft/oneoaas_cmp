@@ -69,30 +69,10 @@ var VCenterManage = (function ($,toastr) {
             return VCenterManageRecord;
         },
         create:function () {
-            //$('#rootwizard').show();
-            var d = dialog({
-                width: 600,
-                title: '创建虚拟机',
-                quickClose: true,
-                content: $("#rootwizard"),
-                ok: function() {
-                    console.log(this)
-                    // do something
-                },
-                cancelValue: '取消',
-                cancel: function() {
-                    console.log(this)
-                    // do something
-                },
-                onshow: function() {
-                    console.log(this)
-                    // do something
-                }
-            });
-            d.show();
+            $('#createVmWizard').modal('show');
         },
         clone:function () {
-
+            $('#cloneVmWizard').modal('show');
         },
         poweroff: function (data) {
             $.ajax({
@@ -190,8 +170,11 @@ $(document).ready(function(){
         {id:4,text:"6.0"}
     ];
     $("#vcenter_version .select2_box").select2({ data: vcenterVersionList });
-    $('#rootwizard').bootstrapWizard({'tabClass': 'nav nav-tabs'});
-    $('#rootwizard').hide();
+    $('#createVmWizard').bootstrapWizard(
+        {
+            'tabClass': 'nav nav-pills',
+        }
+    );
 
     VCenterManage.init('#vcenter_manage_record');
 })
