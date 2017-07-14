@@ -237,27 +237,20 @@ def getVmwareObj(content, vimtype, name):
 def getVcenterVirtualMachineList(request):
     logger.info("查询配置vcenter 虚拟机")
 
+    print request
     accountModelList = VcenterAccount.objects.all()
     accountModel = accountModelList[0]
 
-    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    vmAllList = vmManager.list()
-    host_view = vmManager.listHostSysstem().view
-
-    for vm in vmAllList:
-        if vm is not None and isinstance(vm, vim.VirtualMachine):
-            my =  VirtualMachine()
-
-            # if isinstance(vm.summary.runtime.host,vim.HostSystem):
-            #     host =  vm.summary.runtime.host
-            #     obj = [host for host in host_view.view]
-            #     host_view.Destroy()
-            #     print obj
-
-            my.host = str( vm.summary.runtime.host)
-            my.connectionState = str(vm.summary.runtime.connectionState)
-            my.powerState = str(vm.summary.runtime.powerState)
-            print my.toJSON()
+    # vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+    # vmAllList = vmManager.list()
+    #
+    # for vm in vmAllList:
+    #     if vm is not None and isinstance(vm, vim.VirtualMachine):
+    #         my =  VirtualMachine()
+    #         my.host = str( vm.summary.runtime.host)
+    #         my.connectionState = str(vm.summary.runtime.connectionState)
+    #         my.powerState = str(vm.summary.runtime.powerState)
+            #print my.toJSON()
 
 
     vcenterVirtualMachineObjectList = VcenterVirtualMachine.objects.all()
@@ -266,8 +259,6 @@ def getVcenterVirtualMachineList(request):
     for vm in vcenterVirtualMachineObjectList:
         tempvm = model_to_dict(vm)
         vmJsonList.append(tempvm)
-
-
 
     res = {
         "recordsTotal": len(vmJsonList),
@@ -425,6 +416,26 @@ def destroyVmRequest(request):
         }
     return render_json(res)
 
+
+def getAppList(request):
+    from blueking.component.shortcuts import get_client_by_request
+    # 从环境配置获取APP信息，从request获取当前用户信息
+    client = get_client_by_request(request)
+    from conf import  default
+    kwargs = {'app_id': default.APP_ID,'app_secret':default.APP_TOKEN}
+    apps = client.cc.get_app_list(kwargs)
+    results = {}
+    appList = []
+    if isinstance(apps,dict):
+        appArray = apps['data']
+        for app in appArray:
+            appList.append({'id':app['ApplicationID'],'text':app['ApplicationName']})
+
+        results['results']=appList
+    else:
+        results['results']=appList
+    return render_json(results)
+
 def createVmRequest(request):
     pass
 
@@ -435,11 +446,8 @@ def WebSSHVmRequest(request):
     pass
 
 
-
 """
-
 并发测试
-
 """
 def asyncDemo(request):
     logger.info("测试异步任务 开始")

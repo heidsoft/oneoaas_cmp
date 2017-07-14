@@ -225,14 +225,18 @@ var VCenterManage = (function ($,toastr) {
 
 $(document).ready(function(){
 
-    //默认支持vcenter版本列表
-    var vcenterVersionList = [
-        {id:1,text:"5.0"},
-        {id:2,text:"5.1"},
-        {id:3,text:"5.5"},
-        {id:4,text:"6.0"}
-    ];
-    $("#vcenter_version .select2_box").select2({ data: vcenterVersionList });
+    $("#ccAppList .select2_box").select2({
+        ajax: {
+            url: "/vmware/api/getAppList",
+            cache: false,
+            //对返回的数据进行处理
+            results: function(data){
+                console.log(data);
+                return data;
+            }
+        }
+    })
+
     $('#createVmWizard').bootstrapWizard(
         {
             'tabClass': 'nav nav-pills',

@@ -23,6 +23,7 @@ urlpatterns = patterns(
     url(r'api/start', 'startVmRequest'),
     url(r'api/reboot', 'rebootVmRequest'),
     url(r'api/destroy', 'destroyVmRequest'),
+    url(r'api/getAppList', 'getAppList'),
     url(r'api/async', 'asyncDemo'),
 
 
