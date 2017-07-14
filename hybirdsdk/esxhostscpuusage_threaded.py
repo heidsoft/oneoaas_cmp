@@ -7,7 +7,7 @@ Script to extract cpu usage of esxhosts on vcenter for last 1 hour with multithr
 """
 import atexit
 from pyVmomi import vim
-from pyvim.connect import SmartConnectNoSSL, Disconnect
+from pyVim.connect import SmartConnectNoSSL, Disconnect
 import time
 import datetime
 from pyVmomi import vmodl
@@ -75,21 +75,25 @@ def main():
    except:
        print "Failed to connect"
    atexit.register(Disconnect, si)
-   content = si.RetrieveContent()
-   perf=perfdata()
-   for child in content.rootFolder.childEntity:
-       datacenter=child
-       hostfolder= datacenter.hostFolder
-       hostlist=perf.metricvalue(hostfolder,0)
-       for hosts in hostlist:
-             esxhosts=hosts.host
-             for esx in esxhosts:
-                 summary=esx.summary
-                 esxname=summary.config.name
-                 p = Thread(target=perf.run, args=(content,esxname,))
-                 p.start()
 
-# start
+   content = si.RetrieveContent()
+   print content.rootFolder
+   print content.rootFolder.childEntity[0]
+   print content.rootFolder.childEntity[0].hostFolder
+   print content.rootFolder.childEntity[0].hostFolder.childEntity[0]
+   print content.rootFolder.childEntity[0].hostFolder.childEntity[0].environmentBrowser
+   env = content.rootFolder.childEntity[0].hostFolder.childEntity[0].environmentBrowser
+   cfgOption = env.QueryConfigOption()
+   print map(lambda x: x.id, cfgOption.guestOSDescriptor)
+
+   #location = "vmware.host." + "10.0.2.10"
+
+    # services = content.serviceManager.QueryServiceList(location=[location])
+    # for service in services:
+    #    print service
+
+
+
 if __name__ == "__main__":
     main()
 

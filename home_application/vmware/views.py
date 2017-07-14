@@ -436,12 +436,22 @@ def getAppList(request):
         results['results']=appList
     return render_json(results)
 
+
+"""
+创建虚拟机
+"""
 def createVmRequest(request):
     pass
 
+"""
+克隆虚拟机
+"""
 def cloneVmRequest(request):
     pass
 
+"""
+打开webssh
+"""
 def WebSSHVmRequest(request):
     pass
 

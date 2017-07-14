@@ -239,9 +239,26 @@ $(document).ready(function(){
 
     $('#createVmWizard').bootstrapWizard(
         {
-            'tabClass': 'nav nav-pills',
+            tabClass: 'nav nav-pills',
+            onNext: function(tab, navigation, index) {
+                console.log("onNext:"+index);
+                console.log(navigation);
+                console.log(tab);
+                if(index==4){
+                    //$('#rootwizard').bootstrapWizard('display', $('#stepid').val());
+                }
+            },
+            onPrevious:function(tab, navigation, index) {
+                console.log("onPrevious"+index);
+                console.log("onPrevious"+index);
+            }
         }
     );
+
+    $('#rootwizard .finish').click(function() {
+        alert('Finished!, Starting over!');
+        //$('#rootwizard').find("a[href*='tab1']").trigger('click');
+    });
 
     VCenterManage.init('#vcenter_manage_record');
 })
