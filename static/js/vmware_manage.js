@@ -28,6 +28,7 @@ var VCenterManage = (function ($,toastr) {
                 ordering: false, //关闭排序
                 info: false, //隐藏左下角分页信息
                 searching: false, //关闭搜索
+                pageLength : 5, //每页显示几条数据
                 lengthChange: false, //不允许用户改变表格每页显示的记录数
                 language: language, //汉化
                 ajax: {
@@ -35,30 +36,45 @@ var VCenterManage = (function ($,toastr) {
                 },
                 columns: [
                     {
-                        targets: 0,
+                        title : '名称',
                         data: "name",
                     },
                     {
-                        targets: 1,
-                        data: "vm_pathname",
+                        title : '内存',
+                        data: "name",
+                        render: function ( data, type, row ) {
+                            var opHTML='<div>'+data+'<button class="btn btn-xs btn-danger">减小内存</button>';
+                            opHTML+='<button class="btn btn-xs btn-danger">增加内存</button></div>';
+                            return opHTML;
+                        },
                     },
                     {
-                        targets: 2,
+                        title : 'CPU',
+                        data: "name",
+                        render: function ( data, type, row ) {
+                            var opHTML=data+'<button class="btn btn-xs btn-danger">减小CPU</button>';
+                            opHTML+='<button class="btn btn-xs btn-danger">增加CPU</button>';
+                            return opHTML;
+                        },
+                    },
+                    {
+                        title : '操作系统',
                         data: "guest_fullname",
                     },
                     {
-                        targets: 3,
+                        title : '运行状态',
                         data: "power_state",
                     },
                     {
-                        targets: 4,
+                        title : 'IP',
                         data: "ipaddress",
                     },
                     {
-                        targets: 5,
+                        title : '操作',
                         data: "name",
                         render: function ( data, type, row ) {
-                            return ""
+                            var opHTML='<button class="btn btn-xs btn-danger">执行快照</button>';
+                            return opHTML;
                         },
                     },
                 ],

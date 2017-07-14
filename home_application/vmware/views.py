@@ -2,15 +2,18 @@
 import random
 
 import gevent
+import pyVmomi
 import simplejson as simplejson
 from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect
 from gevent import Greenlet
+from pyVmomi.VmomiSupport import DataObject
 
 from blueking.component.base import logger
 from common.mymako import render_mako_context, render_json
 from home_application.celery_tasks import execute_task
 from home_application.models import VcenterAccount, VcenterVirtualMachine
+from home_application.vmware.vmware_object import VirtualMachine
 from hybirdsdk.virtualMachine import VmManage
 from pyVmomi import vim, vmodl
 
@@ -215,8 +218,47 @@ def getVcenterAccountList(request):
 
     return render_json(res)
 
+#写入文件
+def WriteFile(filename="test",content=""):
+    fo = open(filename, "wb")
+    fo.write( content )
+    fo.close()
+
+def getVmwareObj(content, vimtype, name):
+    obj = None
+    container = content.viewManager.CreateContainerView(
+        content.rootFolder, vimtype, True)
+    for c in container.view:
+        if c.name == name:
+            obj = c
+            break
+    return obj
+
 def getVcenterVirtualMachineList(request):
     logger.info("查询配置vcenter 虚拟机")
+
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+
+    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+    vmAllList = vmManager.list()
+    host_view = vmManager.listHostSysstem().view
+
+    for vm in vmAllList:
+        if vm is not None and isinstance(vm, vim.VirtualMachine):
+            my =  VirtualMachine()
+
+            # if isinstance(vm.summary.runtime.host,vim.HostSystem):
+            #     host =  vm.summary.runtime.host
+            #     obj = [host for host in host_view.view]
+            #     host_view.Destroy()
+            #     print obj
+
+            my.host = str( vm.summary.runtime.host)
+            my.connectionState = str(vm.summary.runtime.connectionState)
+            my.powerState = str(vm.summary.runtime.powerState)
+            print my.toJSON()
+
 
     vcenterVirtualMachineObjectList = VcenterVirtualMachine.objects.all()
     vmJsonList = []
@@ -225,8 +267,15 @@ def getVcenterVirtualMachineList(request):
         tempvm = model_to_dict(vm)
         vmJsonList.append(tempvm)
 
+
+
     res = {
         "recordsTotal": len(vmJsonList),
+        "page": 1,
+        "pages": 6,
+        "start": 10,
+        "end": 20,
+        "length": 10,
         'data': vmJsonList
     }
 

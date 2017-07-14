@@ -7,7 +7,7 @@ Script to extract vm performance data
 '''
 import atexit
 from pyVmomi import vim
-from pyvim.connect import SmartConnectNoSSL, Disconnect
+from pyVim.connect import SmartConnectNoSSL, Disconnect
 import datetime
 from pyVmomi import vmodl
 from threading import Thread

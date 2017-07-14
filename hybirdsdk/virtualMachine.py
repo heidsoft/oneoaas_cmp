@@ -180,6 +180,10 @@ class VmManage(object):
 
         return vmList
 
+    def listHostSysstem(self):
+        content = self.client.content
+        host_view = content.viewManager.CreateContainerView(content.rootFolder,[vim.HostSystem],True)
+        return host_view
 
     #创建
     def create(self):
