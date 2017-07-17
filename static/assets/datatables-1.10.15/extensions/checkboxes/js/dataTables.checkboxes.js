@@ -1,4 +1,4 @@
-/*! Checkboxes 1.2.7
+/*! Checkboxes 1.2.8
  *  Copyright (c) Gyrocode (www.gyrocode.com)
  *  License: MIT License
  */
@@ -6,7 +6,7 @@
 /**
  * @summary     Checkboxes
  * @description Checkboxes extension for jQuery DataTables
- * @version     1.2.7
+ * @version     1.2.8
  * @file        dataTables.checkboxes.js
  * @author      Gyrocode (http://www.gyrocode.com/projects/jquery-datatables-checkboxes/)
  * @contact     http://www.gyrocode.com/contacts
@@ -141,7 +141,9 @@ Checkboxes.prototype = {
             };
 
             if(ctx.aoColumns[i].sClass === ''){
-               colOptions['className'] = 'dt-body-center';
+               colOptions['className'] = 'dt-checkboxes-cell';
+            } else {
+               colOptions['className'] = ctx.aoColumns[i].sClass + ' dt-checkboxes-cell';
             }
 
             if(ctx.aoColumns[i].sWidthOrig === null){
@@ -214,10 +216,24 @@ Checkboxes.prototype = {
                // Save previous HTML content
                $colHeader.data('html', $colHeader.html());
 
-               $colHeader
-                  .html('<input type="checkbox">')
-                  .addClass('dt-checkboxes-select-all')
-                  .attr('data-col', i);
+               // If "Select all" control markup is provided
+               if(ctx.aoColumns[i].checkboxes.selectAllRender !== null){
+                  var selectAllHtml = '';
+
+                  // If "selectAllRender" option is a function
+                  if($.isFunction(ctx.aoColumns[i].checkboxes.selectAllRender)){
+                     selectAllHtml = ctx.aoColumns[i].checkboxes.selectAllRender();
+
+                  // Otherwise, if "selectAllRender" option is a string
+                  } else if(typeof ctx.aoColumns[i].checkboxes.selectAllRender === 'string'){
+                     selectAllHtml = ctx.aoColumns[i].checkboxes.selectAllRender;
+                  }
+
+                  $colHeader
+                     .html(selectAllHtml)
+                     .addClass('dt-checkboxes-select-all')
+                     .attr('data-col', i);
+               }
             }
          }
       }
@@ -249,14 +265,6 @@ Checkboxes.prototype = {
                   // Prevent row selection
                   e.preventDefault();
                }
-
-               // WORKAROUND: Prevent duplicate checkbox select/deselect event
-               // when "label" node is used in the column containing checkbox
-               if(ctx.aoColumns[colIdx].checkboxes){
-                  if(originalEvent.target.nodeName.toLowerCase() === 'label'){
-                     e.preventDefault();
-                  }
-               }
             });
 
             // Handle row select/deselect event
@@ -281,7 +289,7 @@ Checkboxes.prototype = {
             self.onDraw(e);
          });
 
-         // Handles checkbox click event
+         // Handle checkbox click event
          $tableBody.on('click.dtCheckboxes', 'input.dt-checkboxes', function(e){
             self.onClick(e, this);
          });
@@ -294,6 +302,21 @@ Checkboxes.prototype = {
          // Handle click on heading containing "Select all" control
          $tableContainer.on('click.dtCheckboxes', 'thead th.dt-checkboxes-select-all', function(e) {
             $('input[type="checkbox"]', this).not(':disabled').trigger('click');
+         });
+
+         // If row selection is disabled
+         if(!hasCheckboxesSelectRow){
+            // Handle click on cell containing checkbox
+            $tableContainer.on('click.dtCheckboxes', 'tbody td.dt-checkboxes-cell', function(e) {
+               $('input[type="checkbox"]', this).not(':disabled').trigger('click');
+            });
+         }
+
+         // Handle click on label node in heading containing "Select all" control
+         // and in cell containing checkbox
+         $tableContainer.on('click.dtCheckboxes', 'thead th.dt-checkboxes-select-all label, tbody td.dt-checkboxes-cell label', function(e) {
+            // Prevent default behavior
+            e.preventDefault();
          });
 
          // Handle click on "Select all" control in floating fixed header
@@ -870,7 +893,15 @@ Checkboxes.defaults = {
     * @type {Function}
     * @default  `null`
     */
-   selectAllCallback: null
+   selectAllCallback: null,
+
+   /**
+    * "Select all" control markup
+    *
+    * @type {mixed}
+    * @default `<input type="checkbox">`
+    */
+   selectAllRender: '<input type="checkbox">'
 };
 
 
@@ -1000,7 +1031,7 @@ Api.registerPlural( 'cells().checkboxes.enable()', 'cell().checkboxes.enable()',
             // If data is in the list
             if(ctx.checkboxes.s.data[colIdx].hasOwnProperty(cellData)){
                // Update selection based on current state:
-               // if checkbox is enabled then select row; 
+               // if checkbox is enabled then select row;
                // otherwise, deselect row
                ctx.checkboxes.updateSelect(rowIdx, state);
             }
@@ -1061,7 +1092,7 @@ Api.registerPlural( 'columns().checkboxes.selected()', 'column().checkboxes.sele
  * @name Checkboxes.version
  * @static
  */
-Checkboxes.version = '1.2.7';
+Checkboxes.version = '1.2.8';
 
 
 

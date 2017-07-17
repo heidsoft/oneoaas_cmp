@@ -107,11 +107,14 @@ var VCenterManage = (function ($,toastr) {
             $('#createVmWizard').modal('show');
         },
         clone:function () {
-            console.log(this.vmTable.column(-1).checkboxes);
-            var rows_selected = this.vmTable.column(0).checkboxes.select();
+            var rows_selected = this.vmTable.column(0).checkboxes.selected()
+            //var data = this.vmTable.$('input[type="checkbox"]').serialize();
             console.log(rows_selected);
-
-            $('#cloneVmWizard').modal('show');
+            //$('#cloneVmWizard').modal('show');
+            $.each(rows_selected, function(index, rowId){
+                console.log(index);
+                console.log(rowId);
+            });
         },
         poweroff: function (data) {
             $.ajax({
