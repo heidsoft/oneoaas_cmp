@@ -141,12 +141,31 @@ var VCenterManage = (function ($,toastr) {
             if(!this.beforeAction()){
                 return
             }
+            if(this.selectedRows.length>1){
+                toastr.warning("克隆只能选择一台虚拟机");
+                return
+            }
+
+            $('#cloneVmWizard').modal('show');
+
+        },
+        //执行克隆
+        executeClone:function () {
+            var cloneVmName = $("#cloneVmName").val();
+            var select_datacenter = $("#select_datacenter .select2_box").select2("val");
+            var select_cluster = $("#select_cluster .select2_box").select2("val");
+            var select_datastore = $("#select_datastore .select2_box").select2("val");
+
             $.ajax({
                 url: '/vmware/api/clone',
                 type: 'post',
                 dataType:'json',
                 data: {
-                    "vmId":this.selectedRows,
+                    "vmId":this.selectedRows[0],
+                    "vmName":cloneVmName,
+                    "vmDatacenter":select_datacenter,
+                    "vmCluster":select_cluster,
+                    "vmDatastore":select_datastore,
                 },
                 success: function (data) {
                     toastr.success(data.message);
@@ -265,6 +284,43 @@ $(document).ready(function(){
             }
         }
     })
+
+    $("#select_datacenter .select2_box").select2({
+        ajax: {
+            url: "/vmware/api/getAllDatacenter",
+            cache: false,
+            //对返回的数据进行处理
+            results: function(data){
+                console.log(data);
+                return data;
+            }
+        }
+    })
+
+    $("#select_cluster .select2_box").select2({
+        ajax: {
+            url: "/vmware/api/getAllCluster",
+            cache: false,
+            //对返回的数据进行处理
+            results: function(data){
+                console.log(data);
+                return data;
+            }
+        }
+    })
+
+    $("#select_datastore .select2_box").select2({
+        ajax: {
+            url: "/vmware/api/getAllDatastore",
+            cache: false,
+            //对返回的数据进行处理
+            results: function(data){
+                console.log(data);
+                return data;
+            }
+        }
+    })
+
 
     $('#createVmWizard').bootstrapWizard(
         {

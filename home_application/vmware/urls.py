@@ -26,7 +26,15 @@ urlpatterns = patterns(
     url(r'api/reboot', 'rebootVmRequest'),
     url(r'api/destroy', 'destroyVmRequest'),
     url(r'api/getAppList', 'getAppList'),
+    url(r'api/getAllDatacenter', 'getAllDatacenterRequest'),
+    url(r'api/getAllCluster', 'getAllClusterRequest'),
+    url(r'api/getAllDatastore', 'getAllDatastoreRequest'),
+    url(r'api/getClusterByDatacenter', 'getClusterByDatacenterRequest'),
+
+
+    #测试api
     url(r'api/async', 'asyncDemo'),
+
 
 
 

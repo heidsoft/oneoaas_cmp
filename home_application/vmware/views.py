@@ -436,11 +436,14 @@ def cloneVmRequest(request):
     try:
         if request.method == 'POST':
             vmId = request.POST['vmId']
-            print 'vmid is %s ' % vmId
+            vmName = request.POST['vmName']
+            vmDatacenter = request.POST['vmDatacenter']
+            vmCluster = request.POST['vmCluster']
+            vmDatastore = request.POST['vmDatastore']
 
+            print 'vmid is %s, vmName is %s , vmDatacenter is %s, vmCluster is %s, vmDatastore is %s '.format(vmId,vmName,vmDatacenter,vmCluster,vmDatastore)
             vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
             accountModel = vcenterVirtualMachineModel.account
-            print accountModel
 
         if accountModel is None:
             res = {
@@ -451,7 +454,16 @@ def cloneVmRequest(request):
         else:
             vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
 
-            result = vmManager.clone()
+            template = vmManager.get_vm_by_name(vcenterVirtualMachineModel.name)
+            print template
+            result = vmManager.clone(template=template,
+                                     vm_name=vmName,
+                                     datacenter_name=vmDatacenter,
+                                     vm_folder=None,
+                                     datastore_name=vmDatastore,
+                                     cluster_name=vmCluster,
+                                     resource_pool=None,
+                                     power_on=True)
 
             if result is None:
                 res = {
@@ -473,6 +485,89 @@ def cloneVmRequest(request):
 #打开webssh
 def WebSSHVmRequest(request):
     pass
+
+#获取所有数据中心
+def getAllDatacenterRequest(request):
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+
+    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+    allDatacenter = vmManager.get_datacenters()
+
+    results = {}
+
+    datacenterList = []
+    if isinstance(allDatacenter,dict):
+        for datacenter in allDatacenter:
+            # print datacenter.__str__
+            # print datacenter.__dict__
+            # print datacenter._stub
+            # print datacenter._moId
+            datacenterList.append({'id':datacenter.name,'text':datacenter.name})
+        results['results']=datacenterList
+    else:
+        results['results']=datacenterList
+    return render_json(results)
+
+
+#获取所有集群
+def getAllClusterRequest(request):
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+
+    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+    allCluster = vmManager.get_cluster_pools()
+    print allCluster
+
+    results = {}
+    clusterList = []
+    if allCluster is not None:
+        for cluster in allCluster:
+            print cluster
+            clusterList.append({'id':cluster.name,'text':cluster.name})
+
+        results['results']=clusterList
+    else:
+        results['results']=clusterList
+    return render_json(results)
+
+#获取数据中心所有的集群
+def getClusterByDatacenterRequest(request):
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+
+    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+    allDatacenter = vmManager.get_datacenters()
+
+    results = {}
+    datacenterList = []
+    if isinstance(allDatacenter,dict):
+        for datacenter in allDatacenter:
+            datacenterList.append({'id':"1",'text':'1'})
+
+        results['results']=datacenterList
+    else:
+        results['results']=datacenterList
+    return render_json(results)
+
+#获取存储
+def getAllDatastoreRequest(request):
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+
+    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+    allDatastore = vmManager.get_datastores()
+
+    results = {}
+    datastoreList = []
+    if isinstance(allDatastore,dict):
+        for datastore in allDatastore:
+            datastoreList.append({'id':datastore.name,'text':datastore.name})
+
+        results['results']=datastoreList
+    else:
+        results['results']=datastoreList
+    return render_json(results)
 
 
 
