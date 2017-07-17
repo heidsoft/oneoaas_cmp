@@ -463,9 +463,6 @@ def cloneVmRequest(request):
                     'result': True,
                     'message': u"克隆失败",
                 }
-
-
-
     except Exception as e:
         res = {
             'result': False,

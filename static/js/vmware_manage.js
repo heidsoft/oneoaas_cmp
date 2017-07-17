@@ -6,7 +6,11 @@
 //vcenter 管理插件
 var VCenterManage = (function ($,toastr) {
     return {
+        //初始化虚拟机表格对象
         vmTable:null,
+        //被选择记录ID
+        selectedRows:[],
+        //初始化虚拟机表格
         init:function (tableId) {
 
             var language = {
@@ -103,20 +107,57 @@ var VCenterManage = (function ($,toastr) {
 
             return this.vmTable = VCenterManageRecord;
         },
+        //操作动作前置条件
+        beforeAction:function(){
+            var rows_selected = this.vmTable.column(0).checkboxes.selected();
+            if(typeof rows_selected === 'undefined' || rows_selected.length === 0){
+                toastr.warning("请选择虚拟机资源");
+                return false
+            }
+            var rowIds = this.selectedRows =[];
+            $.each(rows_selected, function(index, rowId){
+                rowIds.push(rowId);
+            });
+            this.selectedRows = rowIds;
+            return true
+        },
+        //创建虚拟机
         create:function () {
+            $.ajax({
+                url: '/vmware/api/create',
+                type: 'post',
+                dataType:'json',
+                data: {
+                    "vmId":this.selectedRows,
+                },
+                success: function (data) {
+                    toastr.success(data.message);
+                }
+            });
             $('#createVmWizard').modal('show');
         },
+        //克隆虚拟机
         clone:function () {
-            var rows_selected = this.vmTable.column(0).checkboxes.selected()
-            //var data = this.vmTable.$('input[type="checkbox"]').serialize();
-            console.log(rows_selected);
-            //$('#cloneVmWizard').modal('show');
-            $.each(rows_selected, function(index, rowId){
-                console.log(index);
-                console.log(rowId);
+            if(!this.beforeAction()){
+                return
+            }
+            $.ajax({
+                url: '/vmware/api/clone',
+                type: 'post',
+                dataType:'json',
+                data: {
+                    "vmId":this.selectedRows,
+                },
+                success: function (data) {
+                    toastr.success(data.message);
+                }
             });
         },
+        //关闭虚拟机
         poweroff: function (data) {
+            if(!this.beforeAction()){
+                return
+            }
             $.ajax({
                 url: '/vmware/api/poweroff',
                 type: 'post',
@@ -129,7 +170,11 @@ var VCenterManage = (function ($,toastr) {
                 }
             });
         },
+        //开启虚拟机
         start: function (data) {
+            if(!this.beforeAction()){
+                return
+            }
             $.ajax({
                 url: '/vmware/api/start',
                 type: 'post',
@@ -142,7 +187,11 @@ var VCenterManage = (function ($,toastr) {
                 }
             });
         },
+        //重启虚拟机
         reboot: function (data) {
+            if(!this.beforeAction()){
+                return
+            }
             $.ajax({
                 url: '/vmware/api/reboot',
                 type: 'post',
@@ -155,7 +204,11 @@ var VCenterManage = (function ($,toastr) {
                 }
             });
         },
+        //销毁虚拟机
         destroy: function (data) {
+            if(!this.beforeAction()){
+                return
+            }
             $.ajax({
                 url: '/vmware/api/destroy',
                 type: 'post',
@@ -168,7 +221,11 @@ var VCenterManage = (function ($,toastr) {
                 }
             });
         },
+        //同步虚拟机
         async: function (data) {
+            if(!this.beforeAction()){
+                return
+            }
             $.ajax({
                 url: '/vmware/api/asyncDemo',
                 type: 'post',
@@ -180,6 +237,12 @@ var VCenterManage = (function ($,toastr) {
                     toastr.success(data.message);
                 }
             });
+        },
+        //webssh控制台
+        webssh:function () {
+            if(!this.beforeAction()){
+                return
+            }
         }
     }
 })($,window.toastr);
