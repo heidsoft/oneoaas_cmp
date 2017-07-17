@@ -84,10 +84,17 @@ def main():
    print content.rootFolder.childEntity[0].hostFolder.childEntity[0].environmentBrowser
    env = content.rootFolder.childEntity[0].hostFolder.childEntity[0].environmentBrowser
    cfgOption = env.QueryConfigOption()
-   print map(lambda x: x.id, cfgOption.guestOSDescriptor)
+   print type(cfgOption)
+   print type(cfgOption.guestOSDescriptor)
+   # print map(lambda x: x.id, cfgOption.guestOSDescriptor)
 
    #location = "vmware.host." + "10.0.2.10"
-
+   object_view = content.viewManager.CreateContainerView(content.rootFolder,[vim.ClusterComputeResource], True)
+   for cluster in object_view.view:
+       clusterEnv = cluster.environmentBrowser
+       clusterCfgOption = clusterEnv.QueryConfigOption()
+       # print clusterCfgOption.guestOSDescriptor
+       print map(lambda x: x.id, clusterCfgOption.guestOSDescriptor)
     # services = content.serviceManager.QueryServiceList(location=[location])
     # for service in services:
     #    print service

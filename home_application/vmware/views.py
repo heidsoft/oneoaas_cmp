@@ -163,9 +163,8 @@ def createVcenterVirtualMachine(vm,depth=1):
     else:
         vcenterVirtualMachineModel.ipaddress=""
     return vcenterVirtualMachineModel
-"""
-同步账号
-"""
+
+#同步账号
 def syncVCenterAccount(request):
     if request.method == 'POST':
         accountId = request.POST['id']
@@ -198,9 +197,7 @@ def syncVCenterAccount(request):
 
     return render_json(res)
 
-"""
-查询vcenter账号配置
-"""
+#查询vcenter账号配置
 def getVcenterAccountList(request):
     logger.info("查询配置vcenter配置")
 
@@ -224,20 +221,11 @@ def WriteFile(filename="test",content=""):
     fo.write( content )
     fo.close()
 
-def getVmwareObj(content, vimtype, name):
-    obj = None
-    container = content.viewManager.CreateContainerView(
-        content.rootFolder, vimtype, True)
-    for c in container.view:
-        if c.name == name:
-            obj = c
-            break
-    return obj
 
+#获取虚拟机列表
 def getVcenterVirtualMachineList(request):
     logger.info("查询配置vcenter 虚拟机")
 
-    print request
     accountModelList = VcenterAccount.objects.all()
     accountModel = accountModelList[0]
 
@@ -348,6 +336,7 @@ def rebootVmRequest(request):
         if request.method == 'POST':
             vmId = request.POST['vmId']
             print 'vmid is %s ' % vmId
+
             vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
             accountModel = vcenterVirtualMachineModel.account
             print accountModel
@@ -416,7 +405,7 @@ def destroyVmRequest(request):
         }
     return render_json(res)
 
-
+#获取蓝鲸cmdb 业务配置信息
 def getAppList(request):
     from blueking.component.shortcuts import get_client_by_request
     # 从环境配置获取APP信息，从request获取当前用户信息
@@ -437,25 +426,64 @@ def getAppList(request):
     return render_json(results)
 
 
-"""
-创建虚拟机
-"""
+#创建虚拟机
 def createVmRequest(request):
     pass
 
-"""
-克隆虚拟机
-"""
+#克隆虚拟机
 def cloneVmRequest(request):
-    pass
+    logger.info("克隆虚拟机")
+    try:
+        if request.method == 'POST':
+            vmId = request.POST['vmId']
+            print 'vmid is %s ' % vmId
 
-"""
-打开webssh
-"""
+            vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
+            accountModel = vcenterVirtualMachineModel.account
+            print accountModel
+
+        if accountModel is None:
+            res = {
+                'result': True,
+                'message': u"克隆失败，资源账号错误",
+            }
+            return render_json(res)
+        else:
+            vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+
+            result = vmManager.clone()
+
+            if result is None:
+                res = {
+                    'result': True,
+                    'message': u"克隆成功",
+                }
+            else:
+                res = {
+                    'result': True,
+                    'message': u"克隆失败",
+                }
+
+
+
+    except Exception as e:
+        res = {
+            'result': False,
+            'message': e.message,
+        }
+    return render_json(res)
+
+#打开webssh
 def WebSSHVmRequest(request):
     pass
 
 
+
+
+
+
+
+########################################test request
 """
 并发测试
 """

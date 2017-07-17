@@ -3,7 +3,6 @@
 
 """
 function:vcenter manage
-
 """
 import time
 from pygments.styles import vim
@@ -12,9 +11,7 @@ from pyVmomi import vim, vmodl
 
 from common.log import logger
 
-"""
-打印虚拟机对象
-"""
+#打印虚拟机对象
 def PrintVmInfo(vm, depth=1):
     """
     Print information for a particular virtual machine or recurse into a folder
@@ -73,6 +70,18 @@ class VmManage(object):
         if not self.client:
            raise Exception("构建虚拟机管理器失败")
 
+    #vcenter执行动作等待
+    def wait_for_task(task):
+        """ wait for a vCenter task to finish """
+        task_done = False
+        while not task_done:
+            if task.info.state == 'success':
+                return task.info.result
+
+            if task.info.state == 'error':
+                print "there was an error"
+                task_done = True
+
     #根据资源类型和名称，获取资源对象
     def _get_obj(self,content, vimtype, name):
         """
@@ -115,53 +124,56 @@ class VmManage(object):
                 break
             time.sleep(10)
 
-    def get_vm_by_name(self,si, name):
+    def get_vm_by_name(self,name):
         """
         Find a virtual machine by it's name and return it
         """
-        return self._get_obj(si.RetrieveContent(), [vim.VirtualMachine], name)
 
-    def get_host_by_name(self,si, name):
+        return self._get_obj(self.client.RetrieveContent(), [vim.VirtualMachine], name)
+
+    def get_host_by_name(self, name):
         """
         Find a virtual machine by it's name and return it
         """
-        return self._get_obj(si.RetrieveContent(), [vim.HostSystem], name)
 
-    def get_resource_pool(self,si, name):
+        return self._get_obj(self.client.RetrieveContent(), [vim.HostSystem], name)
+
+    def get_resource_pool(self, name):
         """
         Find a virtual machine by it's name and return it
         """
-        return self._get_obj(si.RetrieveContent(), [vim.ResourcePool], name)
 
-    def get_resource_pools(self,si):
+        return self._get_obj(self.client.RetrieveContent(), [vim.ResourcePool], name)
+
+    def get_resource_pools(self):
         """
         Returns all resource pools
         """
-        return self._get_all_objs(si.RetrieveContent(), [vim.ResourcePool])
+        return self._get_all_objs(self.client.RetrieveContent(), [vim.ResourcePool])
 
-    def get_datastores(self,si):
+    def get_datastores(self):
         """
         Returns all datastores
         """
-        return self._get_all_objs(si.RetrieveContent(), [vim.Datastore])
+        return self._get_all_objs(self.client.RetrieveContent(), [vim.Datastore])
 
-    def get_hosts(self,si):
+    def get_hosts(self):
         """
         Returns all hosts
         """
-        return self._get_all_objs(si.RetrieveContent(), [vim.HostSystem])
+        return self._get_all_objs(self.client.RetrieveContent(), [vim.HostSystem])
 
-    def get_datacenters(self,si):
+    def get_datacenters(self):
         """
         Returns all datacenters
         """
-        return self._get_all_objs(si.RetrieveContent(), [vim.Datacenter])
+        return self._get_all_objs(self.client.RetrieveContent(), [vim.Datacenter])
 
-    def get_registered_vms(self,si):
+    def get_registered_vms(self):
         """
         Returns all vms
         """
-        return self._get_all_objs(si.RetrieveContent(), [vim.VirtualMachine])
+        return self._get_all_objs(self.client.RetrieveContent(), [vim.VirtualMachine])
 
 
     #获取虚拟机列表
@@ -187,10 +199,46 @@ class VmManage(object):
 
     #创建
     def create(self):
-
         pass
 
-    #关闭
+    #克隆
+    def clone(self,template,vm_name,datacenter_name,vm_folder,datastore_name,cluster_name,resource_pool,power_on):
+
+        #选择克隆的虚拟机存放位置,通过数据中心获取对象
+        datacenter = self.get_obj([vim.Datacenter], datacenter_name)
+        if vm_folder:
+            destfolder = self.get_obj([vim.Folder], vm_folder)
+        else:
+            destfolder = datacenter.vmFolder
+
+        if datastore_name:
+            datastore = self.get_obj([vim.Datastore], datastore_name)
+        else:
+            datastore = self.get_obj([vim.Datastore], template.datastore[0].info.name)
+
+        # if None, get the first one
+        cluster = self.get_obj([vim.ClusterComputeResource], cluster_name)
+        if resource_pool:
+            resource_pool = self.get_obj([vim.ResourcePool], resource_pool)
+        else:
+            resource_pool = cluster.resourcePool
+
+        relospec = vim.vm.RelocateSpec()
+        relospec.datastore = datastore
+        relospec.pool = resource_pool
+
+        clonespec = vim.vm.CloneSpec()
+        clonespec.location = relospec
+        clonespec.powerOn = power_on
+
+        print "cloning VM..."
+        task = template.Clone(folder=destfolder, name=vm_name, spec=clonespec)
+
+        return self.wait_for_task(task)
+
+
+
+    #关闭虚拟机
     def stop(self,vmnames):
         print 'vm manage stop...'
         content = self.client.content
