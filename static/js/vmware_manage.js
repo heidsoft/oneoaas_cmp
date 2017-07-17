@@ -34,7 +34,17 @@ var VCenterManage = (function ($,toastr) {
                 ajax: {
                     url: '/vmware/api/getVcenterVirtualMachineList',
                 },
+                select: {
+                    style:    'os',
+                    selector: 'td:first-child'
+                },
                 columns: [
+                    {
+                        data: "id",
+                        render: function ( data, type, row ) {
+                            return '<input type="checkbox" value="'+data+'">';
+                        },
+                    },
                     {
                         title : '名称',
                         data: "name",
@@ -135,6 +145,8 @@ var VCenterManage = (function ($,toastr) {
             $('#createVmWizard').modal('show');
         },
         clone:function () {
+
+
             $('#cloneVmWizard').modal('show');
         },
         poweroff: function (data) {
