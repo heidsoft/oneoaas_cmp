@@ -6,6 +6,7 @@
 //vcenter 管理插件
 var VCenterManage = (function ($,toastr) {
     return {
+        vmTable:null,
         init:function (tableId) {
 
             var language = {
@@ -23,7 +24,7 @@ var VCenterManage = (function ($,toastr) {
                 }
             }
 
-            var VCenterManageRecord = $(tableId).dataTable({
+            var VCenterManageRecord = $(tableId).DataTable({
                 paging: true, //隐藏分页
                 ordering: false, //关闭排序
                 info: false, //隐藏左下角分页信息
@@ -34,16 +35,26 @@ var VCenterManage = (function ($,toastr) {
                 ajax: {
                     url: '/vmware/api/getVcenterVirtualMachineList',
                 },
-                select: {
-                    style:    'os',
-                    selector: 'td:first-child'
+                'columnDefs': [
+                    {
+                        'targets': 0,
+                        'className': 'dt-head-center dt-body-center',
+                        'checkboxes': {
+                            'selectRow': true
+                        }
+                    }
+                ],
+                // select: {
+                //     style:    'os',
+                //     selector: 'td:first-child'
+                // },
+                //多选
+                'select': {
+                    'style': 'multi'
                 },
                 columns: [
                     {
                         data: "id",
-                        render: function ( data, type, row ) {
-                            return '<input type="checkbox" value="'+data+'">';
-                        },
                     },
                     {
                         title : '名称',
@@ -89,63 +100,16 @@ var VCenterManage = (function ($,toastr) {
                     },
                 ],
             });
-            // var VCenterManageRecord = $(tableId).DataTable({
-            //     "bProcessing": true,                    //加载数据时显示正在加载信息
-            //     "bServerSide": true,                    //指定从服务器端获取数据
-            //     "bFilter": false,                       //不使用过滤功能
-            //     "bLengthChange": false,                 //用户不可改变每页显示数量
-            //     "iDisplayLength": 4,                    //每页显示8条数据
-            //     "sPaginationType": "full_numbers",      //翻页界面类型
-            //     "oLanguage": {                          //汉化
-            //         "sLengthMenu": "每页显示 _MENU_ 条记录",
-            //         "sZeroRecords": "没有检索到数据",
-            //         "sInfo": "当前数据为从第 _START_ 到第 _END_ 条数据；总共有 _TOTAL_ 条记录",
-            //         "sInfoEmtpy": "没有数据",
-            //         "sProcessing": "正在加载数据...",
-            //         "oPaginate": {
-            //             "sFirst": "首页",
-            //             "sPrevious": "上一页",
-            //             "sNext": "下一页",
-            //             "sLast": "尾页"
-            //         }
-            //     },
-            //     "bInfo":false,//隐藏左下角分页显示信息
-            //     "bServerSide": true,
-            //     ajax: {
-            //         url: '/vmware/api/getVcenterVirtualMachineList',
-            //     },
-            //     columnDefs: [
-            //         {
-            //             targets: 0,
-            //             data: "name",
-            //         },
-            //         {
-            //             targets: 1,
-            //             data: "vm_pathname",
-            //         },
-            //         {
-            //             targets: 2,
-            //             data: "guest_fullname",
-            //         },
-            //         {
-            //             targets: 3,
-            //             data: "power_state",
-            //         },
-            //         {
-            //             targets: 4,
-            //             data: "ipaddress",
-            //         },
-            //     ],
-            //     order: [[ 1, 'asc' ]]
-            // });
 
-            return VCenterManageRecord;
+            return this.vmTable = VCenterManageRecord;
         },
         create:function () {
             $('#createVmWizard').modal('show');
         },
         clone:function () {
-
+            console.log(this.vmTable.column(-1).checkboxes);
+            var rows_selected = this.vmTable.column(0).checkboxes.select();
+            console.log(rows_selected);
 
             $('#cloneVmWizard').modal('show');
         },
@@ -159,19 +123,6 @@ var VCenterManage = (function ($,toastr) {
                 },
                 success: function (data) {
                     toastr.success(data.message);
-                    // var d = dialog({
-                    //     width: 440,
-                    //     title: "提示",
-                    //     content: '<div class="king-notice3 king-notice-success">'+
-                    //     '<span class="king-notice-img"></span>'+
-                    //     '<div class="king-notice-text">'+
-                    //     '<p class="f24">创建成功</p>'+
-                    //     '<p class="f12">'+
-                    //     '<span class="king-notice3-color">3秒</span>后跳转至应用创建状态页面</p>'+
-                    //     '</div>'+
-                    //     '</div>',
-                    // });
-                    // d.show();
                 }
             });
         },
@@ -273,6 +224,8 @@ $(document).ready(function(){
     });
 
     VCenterManage.init('#vcenter_manage_record');
+
+
 })
 
 
