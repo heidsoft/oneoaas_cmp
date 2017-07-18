@@ -571,13 +571,15 @@ def getAllDatastoreRequest(request):
 
 
 #获取流量分析数据
-def getFlowAnalysisequest(request):
+def getFlowAnalysisRequest(request):
     accountModelList = VcenterAccount.objects.all()
     accountModel = accountModelList[0]
 
     vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    allDatastore = vmManager.get_flows()
-    pass
+    vmManager.get_flows_info()
+
+    return render_json({})
+
 
 #获取内存分析数据
 def getMemoryAnalysisRequest(request):
@@ -585,8 +587,8 @@ def getMemoryAnalysisRequest(request):
     accountModel = accountModelList[0]
 
     vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    allDatastore = vmManager.get_datastores()
-    pass
+
+    return render_json({})
 
 #获取CPU分析数据
 def getCpuAnalysisRequest(request):
@@ -594,8 +596,7 @@ def getCpuAnalysisRequest(request):
     accountModel = accountModelList[0]
 
     vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    allDatastore = vmManager.get_datastores()
-    pass
+    return render_json({})
 
 #获取存储分析数据
 def getStorageAnalysisRequest(request):
@@ -603,8 +604,7 @@ def getStorageAnalysisRequest(request):
     accountModel = accountModelList[0]
 
     vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    allDatastore = vmManager.get_datastores()
-    pass
+    return render_json({})
 
 
 

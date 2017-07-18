@@ -90,7 +90,6 @@ class VmManage(object):
         """
         obj = None
         content = self.client.RetrieveContent()
-        print content
         container = content.viewManager.CreateContainerView(content.rootFolder, vimtype, True)
         for c in container.view:
             if c.name == name:
@@ -180,7 +179,6 @@ class VmManage(object):
         datastores = {}
         datastores_all_capacity = 0
         for esxi_host in esxi_hosts:
-            print("{}\t{}\t\n".format("ESXi Host:    ", esxi_host.name))
 
             # All Filesystems on ESXi host
             storage_system = esxi_host.configManager.storageSystem
@@ -206,8 +204,6 @@ class VmManage(object):
                     for extent in extents:
                         # create an array of the devices backing the given
                         # datastore
-                        print extent
-                        print extent_arr
                         extent_arr.append(extent.diskName)
                         # add the extent array to the datastore info
                         datastore_details['extents'] = extent_arr
@@ -226,6 +222,14 @@ class VmManage(object):
         """
         return self._get_all_objs([vim.HostSystem])
 
+    def get_hosts_array(self):
+        host_view = self.content.viewManager.CreateContainerView(self.content.rootFolder,
+                                                            [vim.HostSystem],
+                                                            True)
+        obj = [host for host in host_view.view]
+        host_view.Destroy()
+        return obj
+
     def get_datacenters(self):
         """
         Returns all datacenters
@@ -238,34 +242,81 @@ class VmManage(object):
         """
         return self._get_all_objs([vim.VirtualMachine])
 
+    def get_dvs_distributed_virtual_portgroup(self,network_name):
+        objview = self.content.viewManager.CreateContainerView(self.content.rootFolder,
+                                                          [vim.dvs.DistributedVirtualPortgroup],
+                                                          True)
+        obj = None
+        for view in objview.view:
+            if view.name == network_name:
+                obj = view
+                break
+        objview.Destroy()
+        return obj
+
+    #获取主机端口组
+    def get_hosts_portgroups(self,hosts):
+        hostPgDict = {}
+        for host in hosts:
+            pgs = host.config.network.portgroup
+            print pgs
+            hostPgDict[host] = pgs
+        return hostPgDict
+
+    #获取overheadMemory
+    def get_overhead_memory(self,vm,host):
+        overheadMemory = self.content.overheadMemoryManager.LookupVmOverheadMemory(vm,host)
+        print overheadMemory
+        return overheadMemory
+
+    #获取dvs的特性
+    def get_dvs_featurecapability(self):
+        dvsFeature = {}
+        dVSFeatureCapability = self.content.dvSwitchManager.QueryDvsFeatureCapability()
+        dvsFeature['ipFix'] = dVSFeatureCapability.ipfixSupported
+        dvsFeature['vspan'] = dVSFeatureCapability.vspanSupported
+        dvsFeature['vmDirectPathGen2'] = dVSFeatureCapability.vmDirectPathGen2Supported
+        dvsFeature['multicastSnooping'] = dVSFeatureCapability.multicastSnoopingSupported
+        return  dvsFeature
+
     #获取虚拟机网卡信息
     def get_vm_nics(self,vm):
+
+        hosts = self.get_hosts_array()
         for dev in vm.config.hardware.device:
+
             if isinstance(dev, vim.vm.device.VirtualEthernetCard):
                 dev_backing = dev.backing
                 portGroup = None
                 vlanId = None
                 vSwitch = None
-                if hasattr(dev_backing, 'port'):
-                    portGroupKey = dev.backing.port.portgroupKey
-                    dvsUuid = dev.backing.port.switchUuid
-                    try:
-                        #查询分布式交换机
-                        dvs = self.content.dvSwitchManager.QueryDvsByUuid(dvsUuid)
-                        print dvs
-                    except:
-                        portGroup = "** Error: DVS not found **"
-                        vlanId = "NA"
-                        vSwitch = "NA"
-                    else:
-                        pgObj = dvs.LookupDvPortGroup(portGroupKey)
-                        portGroup = pgObj.config.name
-                        vlanId = str(pgObj.config.defaultPortConfig.vlan.vlanId)
-                        vSwitch = str(dvs.name)
 
-                print('\t' + dev.deviceInfo.label + '->' + dev.macAddress +
-                      ' @ ' + vSwitch + '->' + portGroup +
-                      ' (VLAN ' + vlanId + ')')
+                if hasattr(dev_backing, 'network'):
+                    # portGroupKey = dev.backing.port.portgroupKey
+                    # dvsUuid = dev.backing.port.switchUuid
+                    portGroup = dev.backing.network.name
+                    network = self.get_dvs_distributed_virtual_portgroup(portGroup)
+                    print network
+                    # for p in pgs:
+                    #     vlanId = str(p.spec.vlanId)
+                    #     vSwitch = str(p.spec.vswitchName)
+                    #     print vlanId
+                    #     print vSwitch
+                    # try:
+                    #     #查询分布式交换机
+                    #     dvs = self.content.dvSwitchManager.QueryDvsByUuid(dvsUuid)
+                    #     print dvs
+                    # except:
+                    #     portGroup = "** Error: DVS not found **"
+                    #     vlanId = "NA"
+                    #     vSwitch = "NA"
+                    # else:
+                    #     pgObj = dvs.LookupDvPortGroup(portGroupKey)
+                    #     portGroup = pgObj.config.name
+                    #     vlanId = str(pgObj.config.defaultPortConfig.vlan.vlanId)
+                    #     vSwitch = str(dvs.name)
+
+
 
     #分析网络流浪
     def get_flows_info(self):
@@ -275,7 +326,7 @@ class VmManage(object):
         vms = self.get_vms()
         for vm in vms:
             if vm is not None:
-                self.get_flows_info(vm)
+                self.get_vm_nics(vm)
 
 
 

@@ -4,6 +4,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns(
     'home_application.vmware.views',
+    #视图处理
     url(r'^vm/manage', 'getVmManageView'),
     url(r'^cluster/manage', 'getClusterManageView'),
     url(r'^datacenter/manage', 'getDatacenterManageView'),
@@ -12,9 +13,11 @@ urlpatterns = patterns(
     url(r'^user/manage', 'getUserManageView'),
     url(r'^storage/manage', 'getStorageManageView'),
 
+    #配置类
     url(r'^monitor/config/$', 'getMonitorConfigView'),
     url(r'^system/config/$', 'getVmConfigView'),
 
+    #管理类
     url(r'api/getVcenterAccountList$', 'getVcenterAccountList'),
     url(r'api/createVCenterAccount$', 'createVCenterAccount'),
     url(r'api/syncVCenterAccount', 'syncVCenterAccount'),
@@ -30,6 +33,12 @@ urlpatterns = patterns(
     url(r'api/getAllCluster', 'getAllClusterRequest'),
     url(r'api/getAllDatastore', 'getAllDatastoreRequest'),
     url(r'api/getClusterByDatacenter', 'getClusterByDatacenterRequest'),
+
+    #资源分析
+    url(r'api/getFlowAnalysis', 'getFlowAnalysisRequest'),
+    url(r'api/getMemoryAnalysis', 'getMemoryAnalysisRequest'),
+    url(r'api/getCpuAnalysis', 'getCpuAnalysisRequest'),
+    url(r'api/getStorageAnalysis', 'getStorageAnalysisRequest'),
 
 
     #测试api

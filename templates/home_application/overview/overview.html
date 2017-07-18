@@ -118,7 +118,19 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $('#chartA').kendoChart({
+        $.ajax({
+            url: '/vmware/api/getFlowAnalysis',
+            type: 'post',
+            dataType:'json',
+            data: {
+
+            },
+            success: function (data) {
+               console.log(data);
+            }
+        });
+
+        $('#memory_analysis').kendoChart({
             legend:{
                 position : "bottom"
             },
@@ -151,7 +163,7 @@
         });
 
 
-        $('#chartB').kendoChart({
+        $('#cpu_analysis').kendoChart({
             legend:{
                 position : "bottom"
             },
@@ -183,7 +195,7 @@
             }]
         });
 
-        $('#chartC').kendoChart({
+        $('#storage_analysis').kendoChart({
             legend:{
                 position : "bottom"
             },
@@ -215,7 +227,7 @@
             }]
         });
 
-        $('#chartD').kendoChart({
+        $('#flow_analysis').kendoChart({
             legend:{
                 position : "bottom"
             },
