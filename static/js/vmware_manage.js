@@ -347,7 +347,6 @@ $(document).ready(function(){
 
     VCenterManage.init('#vcenter_manage_record');
 
-
 })
 
 

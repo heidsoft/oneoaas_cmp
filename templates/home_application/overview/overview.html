@@ -9,13 +9,17 @@
     </div>
 </div>
 <!-- /.row -->
-
+<style type="text/css">
+    a{
+        color: white;
+    }
+</style>
 <div class="row data-panel">
     <div class="col-lg-3 col-md-6">
         <div class="king-widget2">
             <div class="king-widget-content p20 bg-info">
                 <div class="king-counter king-counter-lg">
-                    <div class="king-counter-label text-uppercase f16">数据中心</div>
+                    <div class="king-counter-label text-uppercase f16"><a href="${SITE_URL}vmware/datacenter/manage/">数据中心</a></div>
                     <div class="king-counter-number-group">
                         <span class="king-counter-number white">${datacenter}个</span>
                     </div>
@@ -27,7 +31,7 @@
         <div class="king-widget2">
             <div class="king-widget-content p20 bg-info">
                 <div class="king-counter king-counter-lg">
-                    <div class="king-counter-label text-uppercase f16">集群</div>
+                    <div class="king-counter-label text-uppercase f16"><a href="${SITE_URL}vmware/cluster/manage/">集群</a></div>
                     <div class="king-counter-number-group">
                         <span class="king-counter-number white">${cluster}个</span>
                     </div>
@@ -39,7 +43,7 @@
         <div class="king-widget2">
             <div class="king-widget-content p20 bg-info">
                 <div class="king-counter king-counter-lg">
-                    <div class="king-counter-label text-uppercase f16">虚拟机</div>
+                    <div class="king-counter-label text-uppercase f16"><a href="${SITE_URL}vmware/vm/manage/">虚拟机</a></div>
                     <div class="king-counter-number-group">
                         <span class="king-counter-number white">${vm}个</span>
                     </div>
@@ -51,7 +55,7 @@
         <div class="king-widget2">
             <div class="king-widget-content p20 bg-info">
                 <div class="king-counter king-counter-lg">
-                    <div class="king-counter-label text-uppercase f16">存储</div>
+                    <div class="king-counter-label text-uppercase f16"><a href="${SITE_URL}vmware/storage/manage/">存储</a></div>
                     <div class="king-counter-number-group">
                         <span class="king-counter-number white">${storage}T</span>
                     </div>
