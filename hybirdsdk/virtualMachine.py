@@ -166,6 +166,60 @@ class VmManage(object):
         """
         return self._get_all_objs([vim.Datastore])
 
+    def get_datastores_info(self):
+        content = self.client.RetrieveContent()
+        # Search for all ESXi hosts
+
+        objview = content.viewManager.CreateContainerView(content.rootFolder,
+                                                          [vim.HostSystem],
+                                                          True)
+        #获取主机视图
+        esxi_hosts = objview.view
+        objview.Destroy()
+
+        datastores = {}
+        datastores_all_capacity = 0
+        for esxi_host in esxi_hosts:
+            print("{}\t{}\t\n".format("ESXi Host:    ", esxi_host.name))
+
+            # All Filesystems on ESXi host
+            storage_system = esxi_host.configManager.storageSystem
+            host_file_sys_vol_mount_info = \
+                storage_system.fileSystemVolumeInfo.mountInfo
+
+            datastore_dict = {}
+            # Map all filesystems
+            for host_mount_info in host_file_sys_vol_mount_info:
+                # Extract only VMFS volumes
+                if host_mount_info.volume.type == "VMFS":
+                    extents = host_mount_info.volume.extent
+                    datastore_details = {
+                        'uuid': host_mount_info.volume.uuid,
+                        'capacity': host_mount_info.volume.capacity,
+                        'vmfs_version': host_mount_info.volume.version,
+                        'local': host_mount_info.volume.local,
+                        'ssd': host_mount_info.volume.ssd
+                    }
+                    datastores_all_capacity+=host_mount_info.volume.capacity
+
+                    extent_arr = []
+                    for extent in extents:
+                        # create an array of the devices backing the given
+                        # datastore
+                        print extent
+                        print extent_arr
+                        extent_arr.append(extent.diskName)
+                        # add the extent array to the datastore info
+                        datastore_details['extents'] = extent_arr
+                        # associate datastore details with datastore name
+                        datastore_dict[host_mount_info.volume.name] = datastore_details
+
+            # associate ESXi host with the datastore it sees
+            datastores[esxi_host.name] = datastore_dict
+            datastores['datastores_all_capacity'] = datastores_all_capacity
+
+        return datastores
+
     def get_hosts(self):
         """
         Returns all hosts

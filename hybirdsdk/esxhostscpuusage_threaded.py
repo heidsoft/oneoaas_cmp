@@ -30,6 +30,7 @@ class perfdata():
           perf_dict = {}
           perfManager = content.perfManager
           perfList = content.perfManager.perfCounter
+          print perfList
           for counter in perfList: #build the vcenter counters for the objects
               counter_full = "{}.{}.{}".format(counter.groupInfo.key,counter.nameInfo.key,counter.rollupType)
               perf_dict[counter_full] = counter.key
@@ -77,27 +78,49 @@ def main():
    atexit.register(Disconnect, si)
 
    content = si.RetrieveContent()
-   print content.rootFolder
-   print content.rootFolder.childEntity[0]
-   print content.rootFolder.childEntity[0].hostFolder
-   print content.rootFolder.childEntity[0].hostFolder.childEntity[0]
-   print content.rootFolder.childEntity[0].hostFolder.childEntity[0].environmentBrowser
-   env = content.rootFolder.childEntity[0].hostFolder.childEntity[0].environmentBrowser
-   cfgOption = env.QueryConfigOption()
-   print type(cfgOption)
-   print type(cfgOption.guestOSDescriptor)
+   perf=perfdata()
+   for child in content.rootFolder.childEntity:
+        datacenter=child
+        hostfolder= datacenter.hostFolder
+        hostlist=perf.metricvalue(hostfolder,0)
+        print hostlist
+        for hosts in hostlist:
+            esxhosts=hosts.host
+            for esx in esxhosts:
+                summary=esx.summary
+                esxname=summary.config.name
+                # p = Thread(target=perf.run, args=(content,esxname,))
+                # p.start()
+
+
+
+
+            # content = si.RetrieveContent()
+   # print content.rootFolder
+   # print content.rootFolder.childEntity[0]
+   # print content.rootFolder.childEntity[0].hostFolder
+   # print content.rootFolder.childEntity[0].hostFolder.childEntity[0]
+   # print content.rootFolder.childEntity[0].hostFolder.childEntity[0].environmentBrowser
+   # env = content.rootFolder.childEntity[0].hostFolder.childEntity[0].environmentBrowser
+   # cfgOption = env.QueryConfigOption()
+   # print type(cfgOption)
+   # print type(cfgOption.guestOSDescriptor)
    # print map(lambda x: x.id, cfgOption.guestOSDescriptor)
 
    #location = "vmware.host." + "10.0.2.10"
-   object_view = content.viewManager.CreateContainerView(content.rootFolder,[vim.ClusterComputeResource], True)
-   for cluster in object_view.view:
-       clusterEnv = cluster.environmentBrowser
-       clusterCfgOption = clusterEnv.QueryConfigOption()
+   #object_view = content.viewManager.CreateContainerView(content.rootFolder,[vim.ClusterComputeResource], True)
+   # for cluster in object_view.view:
+   #     clusterEnv = cluster.environmentBrowser
+   #     clusterCfgOption = clusterEnv.QueryConfigOption()
        # print clusterCfgOption.guestOSDescriptor
-       print map(lambda x: x.id, clusterCfgOption.guestOSDescriptor)
+   #    print map(lambda x: x.id, clusterCfgOption.guestOSDescriptor)
     # services = content.serviceManager.QueryServiceList(location=[location])
     # for service in services:
     #    print service
+
+
+
+
 
 
 

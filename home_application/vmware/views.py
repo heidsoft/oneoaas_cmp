@@ -570,6 +570,8 @@ def getAllDatastoreRequest(request):
     return render_json(results)
 
 
+#仪表盘统计数据中心
+
 
 
 
