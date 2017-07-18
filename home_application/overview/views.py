@@ -23,7 +23,7 @@ def overview(request):
         'storage':None
     }
     vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    vmAllList = vmManager.list()
+    vms = vmManager.get_vms()
     datacenters = vmManager.get_datacenters()
     clusters = vmManager.get_resource_pools()
     datastores = vmManager.get_datastores_info()
@@ -35,7 +35,7 @@ def overview(request):
     else:
         data['storage'] = "Unknow"
 
-    data['vm'] = len(vmAllList)
+    data['vm'] = len(vms)
     data['cluster'] = len(clusters)
     data['datacenter'] = len(datacenters)
 

@@ -66,6 +66,7 @@ class VmManage(object):
                                       pwd=password,
                                       port=int(port)
                                     )
+        self.content = self.client.RetrieveContent()
 
         if not self.client:
            raise Exception("构建虚拟机管理器失败")
@@ -102,8 +103,7 @@ class VmManage(object):
         Get all the vsphere objects associated with a given type
         """
         obj = {}
-        content = self.client.RetrieveContent()
-        container = content.viewManager.CreateContainerView(content.rootFolder, vimtype, True)
+        container = self.content.viewManager.CreateContainerView(self.content.rootFolder, vimtype, True)
         for c in container.view:
             obj.update({c: c.name})
         return obj
@@ -238,9 +238,50 @@ class VmManage(object):
         """
         return self._get_all_objs([vim.VirtualMachine])
 
+    #获取虚拟机网卡信息
+    def get_vm_nics(self,vm):
+        for dev in vm.config.hardware.device:
+            if isinstance(dev, vim.vm.device.VirtualEthernetCard):
+                dev_backing = dev.backing
+                portGroup = None
+                vlanId = None
+                vSwitch = None
+                if hasattr(dev_backing, 'port'):
+                    portGroupKey = dev.backing.port.portgroupKey
+                    dvsUuid = dev.backing.port.switchUuid
+                    try:
+                        #查询分布式交换机
+                        dvs = self.content.dvSwitchManager.QueryDvsByUuid(dvsUuid)
+                        print dvs
+                    except:
+                        portGroup = "** Error: DVS not found **"
+                        vlanId = "NA"
+                        vSwitch = "NA"
+                    else:
+                        pgObj = dvs.LookupDvPortGroup(portGroupKey)
+                        portGroup = pgObj.config.name
+                        vlanId = str(pgObj.config.defaultPortConfig.vlan.vlanId)
+                        vSwitch = str(dvs.name)
+
+                print('\t' + dev.deviceInfo.label + '->' + dev.macAddress +
+                      ' @ ' + vSwitch + '->' + portGroup +
+                      ' (VLAN ' + vlanId + ')')
+
+    #分析网络流浪
+    def get_flows_info(self):
+        """
+        获取网卡流量信息
+        """
+        vms = self.get_vms()
+        for vm in vms:
+            if vm is not None:
+                self.get_flows_info(vm)
+
+
+
 
     #获取虚拟机列表
-    def list(self):
+    def get_vms(self):
         content = self.client.content
         objView = content.viewManager.CreateContainerView(content.rootFolder,[vim.VirtualMachine],True)
         vmList = objView.view
@@ -254,11 +295,6 @@ class VmManage(object):
         #         vmAllList.append(vmList)
 
         return vmList
-
-    def listHostSysstem(self):
-        content = self.client.content
-        host_view = content.viewManager.CreateContainerView(content.rootFolder,[vim.HostSystem],True)
-        return host_view
 
     #创建
     def create(self):

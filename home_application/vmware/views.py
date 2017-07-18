@@ -176,7 +176,7 @@ def syncVCenterAccount(request):
         print accountModel
 
     vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    vmAllList = vmManager.list()
+    vmAllList = vmManager.get_vms()
 
     if vmAllList is None:
         res = {
@@ -570,7 +570,42 @@ def getAllDatastoreRequest(request):
     return render_json(results)
 
 
-#仪表盘统计数据中心
+#获取流量分析数据
+def getFlowAnalysisequest(request):
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+
+    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+    allDatastore = vmManager.get_flows()
+    pass
+
+#获取内存分析数据
+def getMemoryAnalysisRequest(request):
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+
+    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+    allDatastore = vmManager.get_datastores()
+    pass
+
+#获取CPU分析数据
+def getCpuAnalysisRequest(request):
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+
+    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+    allDatastore = vmManager.get_datastores()
+    pass
+
+#获取存储分析数据
+def getStorageAnalysisRequest(request):
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+
+    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+    allDatastore = vmManager.get_datastores()
+    pass
+
 
 
 
