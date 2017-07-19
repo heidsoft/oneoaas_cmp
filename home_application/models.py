@@ -18,11 +18,70 @@ class VcenterAccount(models.Model):
     class Meta:
         db_table = 'vcenter_account'
 
+        """
+数据中心,与虚拟机是一对多的关系
+        与集群是一对多的关系
+"""
+class VcenterDatacenter(models.Model):
+    #数据中心名称
+    name = models.CharField(max_length=60)
+
+    #自定义表名称
+    class Meta:
+        db_table = 'vcenter_datacenter'
+
+"""
+集群，与数据中心是一对多关系
+"""
+class VcenterCluster(models.Model):
+    #集群所在的数据中心
+    datacenter = models.ForeignKey(VcenterDatacenter, related_name='vcenter_cluster_ref_datacenter')
+    #数据中心名称
+    name = models.CharField(max_length=60)
+
+    #自定义表名称
+    class Meta:
+        db_table = 'vcenter_cluster'
+
+"""
+存储节点，与数据中心是一对多关系
+"""
+class VcenterDatastore(models.Model):
+    #存储所在的数据中心
+    datacenter = models.ForeignKey(VcenterDatacenter, related_name='vcenter_datastore_ref_datacenter')
+    #数据中心名称
+    name = models.CharField(max_length=60)
+
+    #自定义表名称
+    class Meta:
+        db_table = 'vcenter_datastore'
+
+"""
+存储节点，与数据中心是一对多关系
+"""
+class VcenterNetwork(models.Model):
+    #网络所在的数据中心
+    datacenter = models.ForeignKey(VcenterDatacenter, related_name='vcenter_network_ref_datacenter')
+    #数据中心名称
+    name = models.CharField(max_length=60)
+
+    #自定义表名称
+    class Meta:
+        db_table = 'vcenter_network'
+
 """
 vcenter虚拟机对象
 """
 class VcenterVirtualMachine(models.Model):
+    #属于哪一个vcenter 账号
     account = models.ForeignKey(VcenterAccount, related_name='vcenter_virtualmachine_ref_account')
+
+    #虚拟机所在的数据中心
+    datacenter = models.ForeignKey(VcenterDatacenter, related_name='vcenter_virtualmachine_ref_datacenter')
+
+    #虚拟机所在集群
+    cluster = models.ForeignKey(VcenterCluster, related_name='vcenter_virtualmachine_ref_cluster')
+
     #虚拟机名称
     name = models.CharField(max_length=60)
     #虚拟机路径名称
@@ -41,3 +100,5 @@ class VcenterVirtualMachine(models.Model):
     #自定义表名称
     class Meta:
         db_table = 'vcenter_virtualmachine'
+
+

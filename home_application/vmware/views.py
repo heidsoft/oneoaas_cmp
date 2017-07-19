@@ -168,33 +168,63 @@ def createVcenterVirtualMachine(vm,depth=1):
 def syncVCenterAccount(request):
     if request.method == 'POST':
         accountId = request.POST['id']
-
-        print accountId
-
         accountModel = VcenterAccount.objects.get(id=accountId)
 
-        print accountModel
+        if accountId is None or accountId <0:
+            res = {
+                'result': True,
+                'message': "该账号不存在",
+            }
+            return render_json(res)
+
 
     vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    vmAllList = vmManager.get_vms()
+    rootFolder = vmManager.content.rootFolder
 
-    if vmAllList is None:
-        res = {
-            'result': True,
-            'message': "同步成功,Vcenter没有虚拟机",
-        }
-    else:
-        for vm in vmAllList:
-            vmTempModel =  createVcenterVirtualMachine(vm)
-            if vmTempModel != None and isinstance(vmTempModel,VcenterVirtualMachine):
-                vmTempModel.account = accountModel
-                vmTempModel.save()
+    allFolder = []
+    if rootFolder is not None and hasattr(rootFolder,"childEntity"):
+        print "rootFolder hava child"
+        entity_stack = rootFolder.childEntity
 
-        res = {
-            'result': True,
-            'message': "同步成功",
-        }
+        while entity_stack:
+            entity = entity_stack.pop()
+            if isinstance(entity, vim.Datacenter):
+                # add this vim.DataCenter's folders to our search
+                allFolder.append(entity.datastoreFolder)
+                allFolder.append(entity.hostFolder)
+                allFolder.append(entity.networkFolder)
+                allFolder.append(entity.vmFolder)
+                print entity.datastore
+                print entity.network
+            elif hasattr(entity, 'childEntity'):
+                # add all child entities from this object to our search
+                # 子节点必须是数据中心
+                entity_stack.extend(entity.childEntity)
 
+
+        print allFolder
+
+    # if vmAllList is None:
+    #     res = {
+    #         'result': True,
+    #         'message': "同步成功,Vcenter没有虚拟机",
+    #     }
+    # else:
+    #     for vm in vmAllList:
+    #         vmTempModel =  createVcenterVirtualMachine(vm)
+    #         if vmTempModel != None and isinstance(vmTempModel,VcenterVirtualMachine):
+    #             vmTempModel.account = accountModel
+    #             vmTempModel.save()
+    #
+    #     res = {
+    #         'result': True,
+    #         'message': "同步成功",
+    #     }
+
+    res = {
+        'result': True,
+        'message': "同步成功",
+    }
     return render_json(res)
 
 #查询vcenter账号配置
