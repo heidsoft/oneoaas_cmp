@@ -12,8 +12,8 @@ from pyVmomi.VmomiSupport import DataObject
 from blueking.component.base import logger
 from common.mymako import render_mako_context, render_json
 from home_application.celery_tasks import execute_task
-from home_application.models import VcenterAccount, VcenterVirtualMachine
-from home_application.vmware.vmware_object import VirtualMachine
+from home_application.models import *
+from home_application.vmware.object_convert import convertVmEntityToVcenterVirtualMachine
 from hybirdsdk.virtualMachine import VmManage
 from pyVmomi import vim, vmodl
 
@@ -105,19 +105,33 @@ def createVCenterAccount(request):
             vcenterHost = request.POST['vcenterHost']
             vcenterPort = request.POST['vcenterPort']
             vcenterVersion = request.POST['vcenterVersion']
-
             account = VcenterAccount(account_name=accountName,
-                                     account_password=accountPassword,
-                                     vcenter_host=vcenterHost,
-                                     vcenter_port=vcenterPort,
-                                     vcenter_version=vcenterVersion)
-            result = account.save()
-            print request
+                         account_password=accountPassword,
+                         vcenter_host=vcenterHost,
+                         vcenter_port=vcenterPort,
+                         vcenter_version=vcenterVersion)
+            accountList =  VcenterAccount.objects.all()
+            #判断是否有账号
+            if len(accountList) == 0:
+                result = account.save()
+                res = {
+                    'result': True,
+                    'message': "保存账号成功",
+                }
+            else:
+                accountExist = VcenterAccount.objects.get(account_name=accountName)
+                if accountExist is not None:
+                    res = {
+                        'result': True,
+                        'message': "账号已经存在",
+                    }
+                else:
+                    result = account.save()
+                    res = {
+                        'result': True,
+                        'message': "保存账号成功",
+                    }
 
-        res = {
-            'result': True,
-            'message': "添加成功",
-        }
     except Exception as e:
         res = {
             'result': False,
@@ -126,50 +140,14 @@ def createVCenterAccount(request):
     return render_json(res)
 
 
-def createVcenterVirtualMachine(vm,depth=1):
 
-    maxdepth = 10
-
-    # if this is a group it will have children. if it does, recurse into them
-    # and then return
-    if hasattr(vm, 'childEntity'):
-        if depth > maxdepth:
-            return None
-        vmList = vm.childEntity
-        for c in vmList:
-            createVcenterVirtualMachine(c, depth+1)
-        return None
-
-    # if this is a vApp, it likely contains child VMs
-    # (vApps can nest vApps, but it is hardly a common usecase, so ignore that)
-    if isinstance(vm, vim.VirtualApp):
-        vmList = vm.vm
-        for c in vmList:
-            createVcenterVirtualMachine(c, depth + 1)
-        return None
-
-    vcenterVirtualMachineModel = VcenterVirtualMachine()
-    summary = vm.summary
-    vcenterVirtualMachineModel.name = summary.config.name
-    vcenterVirtualMachineModel.vm_pathname = summary.config.vmPathName
-    vcenterVirtualMachineModel.guest_fullname = summary.config.guestFullName
-    vcenterVirtualMachineModel.power_state = summary.runtime.powerState
-
-
-    if summary.guest != None:
-        ip = summary.guest.ipAddress
-        if ip != None and ip != "":
-            vcenterVirtualMachineModel.ipaddress = ip
-    else:
-        vcenterVirtualMachineModel.ipaddress=""
-    return vcenterVirtualMachineModel
 
 #同步账号
 def syncVCenterAccount(request):
+    accountId = None
     if request.method == 'POST':
         accountId = request.POST['id']
-        accountModel = VcenterAccount.objects.get(id=accountId)
-
+        print "accountId is %s" % accountId
         if accountId is None or accountId <0:
             res = {
                 'result': True,
@@ -177,54 +155,118 @@ def syncVCenterAccount(request):
             }
             return render_json(res)
 
-
+    accountModel = VcenterAccount.objects.get(id=accountId)
     vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
     rootFolder = vmManager.content.rootFolder
 
-    allFolder = []
-    if rootFolder is not None and hasattr(rootFolder,"childEntity"):
-        print "rootFolder hava child"
-        entity_stack = rootFolder.childEntity
+    try:
+        if rootFolder is not None and hasattr(rootFolder,"childEntity"):
+            print "rootFolder hava child"
+            entity_stack = rootFolder.childEntity
 
-        while entity_stack:
-            entity = entity_stack.pop()
-            if isinstance(entity, vim.Datacenter):
-                # add this vim.DataCenter's folders to our search
-                allFolder.append(entity.datastoreFolder)
-                allFolder.append(entity.hostFolder)
-                allFolder.append(entity.networkFolder)
-                allFolder.append(entity.vmFolder)
-                print entity.datastore
-                print entity.network
-            elif hasattr(entity, 'childEntity'):
-                # add all child entities from this object to our search
-                # 子节点必须是数据中心
-                entity_stack.extend(entity.childEntity)
+            while entity_stack:
+                entity = entity_stack.pop()
+                if isinstance(entity, vim.Datacenter):
+                    # add this vim.DataCenter's folders to our search
+                    print(entity.datastoreFolder)
+                    print(entity.hostFolder)
+                    print(entity.networkFolder)
+                    print(entity.vmFolder)
+
+                    vcDatacenterModel =  VcenterDatacenter()
+                    vcDatacenterModel.name = entity.name
+                    try:
+                        tempDc = VcenterDatacenter.objects.filter(name=entity.name)
+                        if len(tempDc)>0:
+                            #如果存在则更新
+                            #VcenterDatacenter.objects.filter(name='yangmv').update(pwd='520')
+                            vcDatacenterModel = tempDc[0]
+                        else:
+                            vcDatacenterModel.save()
+                    except Exception as e:
+                        #说明不存在
+                        print "dc update  %s" % str(e)
+                        vcDatacenterModel.save()
 
 
-        print allFolder
+                    vmEntityList = vmManager.get_vms(entity.vmFolder)
+                    if vmEntityList is not None:
+                        for vmEntity in vmEntityList:
 
-    # if vmAllList is None:
-    #     res = {
-    #         'result': True,
-    #         'message': "同步成功,Vcenter没有虚拟机",
-    #     }
-    # else:
-    #     for vm in vmAllList:
-    #         vmTempModel =  createVcenterVirtualMachine(vm)
-    #         if vmTempModel != None and isinstance(vmTempModel,VcenterVirtualMachine):
-    #             vmTempModel.account = accountModel
-    #             vmTempModel.save()
-    #
-    #     res = {
-    #         'result': True,
-    #         'message': "同步成功",
-    #     }
+                            vcenterVirtualMachineModel = convertVmEntityToVcenterVirtualMachine(vmEntity)
+                            vcenterVirtualMachineModel.datacenter = vcDatacenterModel
+                            vcenterVirtualMachineModel.account = accountModel
+                            clusters =  VcenterCluster.objects.all()
+                            vcenterVirtualMachineModel.template = False
+                            vcenterVirtualMachineModel.cluster = clusters[0]
+                            try:
+                                tempVm = VcenterVirtualMachine.objects.filter(instance_uuid=vcenterVirtualMachineModel.instance_uuid)
+                                if len(tempVm)>0:
+                                    #如果存在则更新
+                                    pass
+                                else:
+                                    vcenterVirtualMachineModel.save()
+                            except Exception as e:
+                                #说明不存在
+                                print "vm update  %s" % str(e)
+                                vcenterVirtualMachineModel.save()
 
-    res = {
-        'result': True,
-        'message': "同步成功",
-    }
+
+                    clusterEntityList = vmManager.get_cluster_pools(entity.hostFolder)
+                    if clusterEntityList is not None:
+                        for clusterEntity in clusterEntityList:
+                            vcClusterModel = VcenterCluster()
+                            vcClusterModel.name = clusterEntity.name
+                            vcClusterModel.datacenter = vcDatacenterModel
+                            try:
+                                tempCluster =  VcenterCluster.objects.filter(name=clusterEntity.name)
+                                if len(tempCluster)>0:
+                                    #如果存在则更新
+                                    pass
+                                else:
+                                    vcClusterModel.save()
+                            except Exception as e:
+                                #说明不存在
+                                print "cluster update  %s" % str(e)
+                                vcClusterModel.save()
+
+                    datastoreEntityList = vmManager.get_datastores(entity.datastoreFolder)
+                    if datastoreEntityList is not None:
+                        for datastoreEntity in datastoreEntityList:
+                            vcDatastoreModel = VcenterDatastore()
+                            vcDatastoreModel.name = datastoreEntity.name
+                            vcDatastoreModel.datacenter = vcDatacenterModel
+                            try:
+                                tempStore =  VcenterDatastore.objects.filter(name=datastoreEntity.name)
+                                if len(tempStore)>0:
+                                    #如果存在则更新
+                                    pass
+                                else:
+                                    vcDatastoreModel.save()
+                            except Exception as e:
+                                #说明不存在
+                                print "datastore update  %s" % str(e)
+                                vcDatastoreModel.save()
+
+                    # print entity.name
+                    # print entity.datastore
+                    # print entity.network
+                elif hasattr(entity, 'childEntity'):
+                    # add all child entities from this object to our search
+                    # 子节点必须是数据中心
+                    entity_stack.extend(entity.childEntity)
+
+        res = {
+            'result': True,
+            'message': "同步成功",
+        }
+    except Exception as e:
+        print "root update  %s" % str(e)
+        res = {
+            'result': True,
+            'message': "同步失败",
+        }
+
     return render_json(res)
 
 #查询vcenter账号配置

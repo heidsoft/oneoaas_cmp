@@ -97,6 +97,34 @@ class VcenterVirtualMachine(models.Model):
     #最后启动时间
     boot_time = models.TimeField(max_length=20,null=True)
 
+    #是否为模版
+    template = models.BooleanField(max_length=1)
+
+    #最大cpu使用
+    maxCpuUsage = models.IntegerField(max_length=20)
+    #最大内存使用
+    maxMemoryUsage = models.IntegerField(max_length=20)
+    #内存大小
+    memorySizeMB = models.IntegerField(max_length=20)
+    #cpu个数
+    numCpu = models.IntegerField(max_length=20)
+
+    numEthernetCards = models.IntegerField(max_length=20)
+
+    numVirtualDisks = models.IntegerField(max_length=20)
+
+    instanceUuid = models.CharField(max_length=60)
+
+    #操作系统Id
+    guestId = models.CharField(max_length=60)
+
+    #存储信息
+    storage_committed = models.IntegerField(max_length=20,null=True),
+    storage_uncommitted = models.IntegerField(max_length=20,null=True),
+    storage_unshared = models.IntegerField(max_length=20,null=True),
+
+    overallStatus = models.CharField(max_length=10)
+
     #自定义表名称
     class Meta:
         db_table = 'vcenter_virtualmachine'

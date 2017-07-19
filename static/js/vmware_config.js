@@ -3,7 +3,7 @@
  * @description vcenter配置操作模块
  */
 
-var VCenterConfig = (function ($) {
+var VCenterConfig = (function ($,toastr) {
     return {
         //创建vcenter账号
         createVCenterAccount: function () {
@@ -24,13 +24,12 @@ var VCenterConfig = (function ($) {
                     "vcenterVersion":vcenterVersion
                 },
                 success: function (data) {
-                    console.log(data);
+                    toastr.success(data.message);
                 }
             });
         },
         //同步vcenter账号
         syncVCenterAccount: function (data) {
-
             $.ajax({
                 url: '/vmware/api/syncVCenterAccount',
                 type: 'post',
@@ -39,12 +38,12 @@ var VCenterConfig = (function ($) {
                     "id":data,
                 },
                 success: function (data) {
-                    console.log(data);
+                    toastr.success(data.message);
                 }
             });
         }
     }
-})($);
+})($,window.toastr);
 
 $(document).ready(function(){
 

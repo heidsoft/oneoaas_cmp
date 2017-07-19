@@ -64,7 +64,7 @@ class VmManage(object):
         self.client = SmartConnectNoSSL(host=host,
                                       user=user,
                                       pwd=password,
-                                      port=int(port)
+                                      port=443
                                     )
         self.content = self.client.RetrieveContent()
 
@@ -97,12 +97,16 @@ class VmManage(object):
                 break
         return obj
 
-    def _get_all_objs(self,vimtype):
+    def _get_all_objs(self,vimtype,folder=None):
         """
         Get all the vsphere objects associated with a given type
         """
         #obj = {}
-        container = self.content.viewManager.CreateContainerView(self.content.rootFolder, vimtype, True)
+        container = None
+        if folder is None:
+            container = self.content.viewManager.CreateContainerView(self.content.rootFolder, vimtype, True)
+        else:
+            container = self.content.viewManager.CreateContainerView(folder, vimtype, True)
         # for c in container.view:
         #     obj.update({c: c.name})
         #return obj
@@ -125,6 +129,28 @@ class VmManage(object):
             if system_ready and system_state == 'running' and system_uptime > 90:
                 break
             time.sleep(10)
+
+    #获取虚拟机列表
+    def get_vms(self,vmFolder=None):
+        content = self.client.content
+        vmObjectList = None
+        if vmFolder is None:
+            objView = content.viewManager.CreateContainerView(content.rootFolder,[vim.VirtualMachine],True)
+            vmObjectList = objView.view
+        else:
+            objView = content.viewManager.CreateContainerView(vmFolder,[vim.VirtualMachine],True)
+            vmObjectList = objView.view
+        # vmAllList = []
+        # content = self.client.RetrieveContent()
+        # for child in content.rootFolder.childEntity:
+        #     if hasattr(child, 'vmFolder'):
+        #         datacenter = child
+        #         vmFolder = datacenter.vmFolder
+        #         vmList = vmFolder.childEntity
+        #         vmAllList.append(vmList)
+
+        return vmObjectList
+
 
     def get_vm_by_name(self,name):
         """
@@ -153,11 +179,11 @@ class VmManage(object):
         """
         return self._get_all_objs([vim.ResourcePool])
 
-    def get_cluster_pools(self):
+    def get_cluster_pools(self,hostFolder=None):
         """
         Returns all resource pools
         """
-        return self._get_all_objs([vim.ClusterComputeResource])
+        return self._get_all_objs([vim.ClusterComputeResource],hostFolder)
 
     #通过集群名,数据中心名称获取集群
     def get_cluster_by_name(self, cluster_name=None, datacenter=None):
@@ -174,11 +200,11 @@ class VmManage(object):
                 return cluster
         return None
 
-    def get_datastores(self):
+    def get_datastores(self,folder=None):
         """
         Returns all datastores
         """
-        return self._get_all_objs([vim.Datastore])
+        return self._get_all_objs([vim.Datastore],folder)
 
     def get_datastores_info(self):
         content = self.client.RetrieveContent()
@@ -346,21 +372,6 @@ class VmManage(object):
 
 
 
-    #获取虚拟机列表
-    def get_vms(self):
-        content = self.client.content
-        objView = content.viewManager.CreateContainerView(content.rootFolder,[vim.VirtualMachine],True)
-        vmList = objView.view
-        # vmAllList = []
-        # content = self.client.RetrieveContent()
-        # for child in content.rootFolder.childEntity:
-        #     if hasattr(child, 'vmFolder'):
-        #         datacenter = child
-        #         vmFolder = datacenter.vmFolder
-        #         vmList = vmFolder.childEntity
-        #         vmAllList.append(vmList)
-
-        return vmList
 
     #创建
     def create(self):

@@ -13,8 +13,25 @@ def home(request):
 
 def overview(request):
     # 这里开始触发缓存数据，确保后续页面访问流畅。
-    accountModelList = VcenterAccount.objects.all()
-    accountModel = accountModelList[0]
+    data={
+        'datacenter':None,
+        'cluster':None,
+        'vm':None,
+        'storage':None
+    }
+
+    try:
+        accountModelList = VcenterAccount.objects.all()
+        accountModel = accountModelList[0]
+    except Exception as e:
+       print("Caught exception : " + str(e))
+       data['vm'] = "Unkonw"
+       data['cluster'] = "Unkonw"
+       data['datacenter'] = "Unkonw"
+       data['storage'] = "Unkonw"
+       return render_mako_context(
+           request, '/home_application/overview/overview.html',data
+       )
 
     data={
         'datacenter':None,
@@ -33,7 +50,7 @@ def overview(request):
     if datastores_all_capacity is not None and datastores_all_capacity > 0:
         data['storage'] = datastores_all_capacity/(1024*1024*1024*1024)
     else:
-        data['storage'] = "Unknow"
+        data['storage'] = "Unkonw"
 
     data['vm'] = len(vms)
     data['cluster'] = len(clusters)
