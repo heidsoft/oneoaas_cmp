@@ -101,12 +101,12 @@ class VmManage(object):
         """
         Get all the vsphere objects associated with a given type
         """
-        obj = {}
+        #obj = {}
         container = self.content.viewManager.CreateContainerView(self.content.rootFolder, vimtype, True)
-        for c in container.view:
-            obj.update({c: c.name})
-        return obj
-
+        # for c in container.view:
+        #     obj.update({c: c.name})
+        #return obj
+        return container.view
 
     def login_in_guest(self,username, password):
         return vim.vm.guest.NamePasswordAuthentication(username=username,password=password)
@@ -158,6 +158,21 @@ class VmManage(object):
         Returns all resource pools
         """
         return self._get_all_objs([vim.ClusterComputeResource])
+
+    #通过集群名,数据中心名称获取集群
+    def get_cluster_by_name(self, cluster_name=None, datacenter=None):
+        if datacenter:
+            folder = datacenter.hostFolder
+        else:
+            folder = self.content.rootFolder
+
+        container = self.content.viewManager.CreateContainerView(folder, [vim.ClusterComputeResource], True)
+        clusters = container.view
+        print clusters
+        for cluster in clusters:
+            if cluster.name == cluster_name:
+                return cluster
+        return None
 
     def get_datastores(self):
         """

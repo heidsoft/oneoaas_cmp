@@ -70,7 +70,7 @@
     <div class="col-md-6">
         <div class="king-block king-block-bordered mb30">
             <div class="king-block-header">
-                <h3 class="king-block-title">内存分析</h3>
+                <h3 class="king-block-title">内存分布</h3>
             </div>
             <div class="king-block-content">
                 <div class="chart" id="memory_analysis"></div>
@@ -80,7 +80,7 @@
     <div class="col-md-6">
         <div class="king-block king-block-bordered mb30">
             <div class="king-block-header">
-                <h3 class="king-block-title">CPU分析</h3>
+                <h3 class="king-block-title">CPU分布</h3>
             </div>
             <div class="king-block-content">
                 <div class="chart" id="cpu_analysis"></div>
@@ -90,7 +90,7 @@
     <div class="col-md-6">
         <div class="king-block king-block-bordered mb30">
             <div class="king-block-header">
-                <h3 class="king-block-title">存储分析</h3>
+                <h3 class="king-block-title">存储分布</h3>
             </div>
             <div class="king-block-content">
                 <div class="chart" id="storage_analysis"></div>
@@ -100,7 +100,7 @@
     <div class="col-md-6">
         <div class="king-block king-block-bordered mb30">
             <div class="king-block-header">
-                <h3 class="king-block-title">流量分析</h3>
+                <h3 class="king-block-title">CPU-Core分布</h3>
             </div>
             <div class="king-block-content">
                 <div class="chart" id="flow_analysis"></div>
@@ -118,146 +118,193 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $.ajax({
+        var promise = $.ajax({
             url: '/vmware/api/getFlowAnalysis',
             type: 'post',
             dataType:'json',
             data: {
 
             },
-            success: function (data) {
-               console.log(data);
-            }
         });
 
-        $('#memory_analysis').kendoChart({
-            legend:{
-                position : "bottom"
-            },
-            theme : 'bootstrap',
-            seriesDefaults: {
-                labels: {
-                    template: "#= category # - #= kendo.format('{0:P}', percentage)#",
-                    position: "outsideEnd",
-                    visible: true,
-                    background: "transparent"
-                }
-            },
-            series: [{
-                name: '内存分布',
-                type: 'pie',
-                data: [{
-                        category:'Cluster1',
-                        value:335
-                    },
-                    {
-                        value: 310,
-                        category: 'Cluster2'
-                    },
-                    {
-                        value: 234,
-                        category: 'Cluster3'
-                    },
-                ]
-            }]
-        });
+        promise
+            .then(handleData,handleError);
+
+        //promise.done(mySuccessFunction);
+        //promise.done(mySuccessFunction2);
+        //promise.fail(myErrorFunction);
+
+        function handleData(data) {
+            console.log(data);
+            $('#memory_analysis').kendoChart({
+                legend:{
+                    position : "bottom"
+                },
+                theme : 'bootstrap',
+                seriesDefaults: {
+                    labels: {
+                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
+                        position: "outsideEnd",
+                        visible: true,
+                        background: "transparent"
+                    }
+                },
+                series: [{
+                    name: '内存分布',
+                    type: 'pie',
+                    data: data.memroy
+                }]
+            });
 
 
-        $('#cpu_analysis').kendoChart({
-            legend:{
-                position : "bottom"
-            },
-            theme : 'bootstrap',
-            seriesDefaults: {
-                labels: {
-                    template: "#= category # - #= kendo.format('{0:P}', percentage)#",
-                    position: "outsideEnd",
-                    visible: true,
-                    background: "transparent"
-                }
-            },
-            series: [{
-                name: 'CPU分布',
-                type: 'pie',
-                data: [{
-                        category:'上海数据中心',
-                        value:335
-                    },
-                    {
-                        value: 310,
-                        category: '北京数据中心'
-                    },
-                    {
-                        value: 234,
-                        category: '深圳数据中心'
-                    },
-                ]
-            }]
-        });
+            $('#cpu_analysis').kendoChart({
+                legend:{
+                    position : "bottom"
+                },
+                theme : 'bootstrap',
+                seriesDefaults: {
+                    labels: {
+                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
+                        position: "outsideEnd",
+                        visible: true,
+                        background: "transparent"
+                    }
+                },
+                series: [{
+                    name: 'CPU分布',
+                    type: 'pie',
+                    data: data.cpu
+                }]
+            });
 
-        $('#storage_analysis').kendoChart({
-            legend:{
-                position : "bottom"
-            },
-            theme : 'bootstrap',
-            seriesDefaults: {
-                labels: {
-                    template: "#= category # - #= kendo.format('{0:P}', percentage)#",
-                    position: "outsideEnd",
-                    visible: true,
-                    background: "transparent"
-                }
-            },
-            series: [{
-                name: '存储分布',
-                type: 'pie',
-                data: [{
-                        category:'上海数据中心',
-                        value:335
-                    },
-                    {
-                        value: 310,
-                        category: '北京数据中心'
-                    },
-                    {
-                        value: 234,
-                        category: '深圳数据中心'
-                    },
-                ]
-            }]
-        });
+            $('#storage_analysis').kendoChart({
+                legend:{
+                    position : "bottom"
+                },
+                theme : 'bootstrap',
+                seriesDefaults: {
+                    labels: {
+                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
+                        position: "outsideEnd",
+                        visible: true,
+                        background: "transparent"
+                    }
+                },
+                series:[{
+                    name: '存储分布',
+                    type: 'pie',
+                    data: data.storage
+                }]
 
-        $('#flow_analysis').kendoChart({
-            legend:{
-                position : "bottom"
-            },
-            theme : 'bootstrap',
-            seriesDefaults: {
-                labels: {
-                    template: "#= category # - #= kendo.format('{0:P}', percentage)#",
-                    position: "outsideEnd",
-                    visible: true,
-                    background: "transparent"
-                }
-            },
-            series: [{
-                name: '流量统计',
-                type: 'pie',
-                data: [{
-                        category:'Cluster1',
-                        value:335
-                    },
-                    {
-                        value: 310,
-                        category: 'Cluster2'
-                    },
-                    {
-                        value: 234,
-                        category: 'Cluster3'
-                    },
-                ]
-            }]
-        });
+            });
+
+            $('#flow_analysis').kendoChart({
+                legend:{
+                    position : "bottom"
+                },
+                theme : 'bootstrap',
+                seriesDefaults: {
+                    labels: {
+                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
+                        position: "outsideEnd",
+                        visible: true,
+                        background: "transparent"
+                    }
+                },
+                series:[{
+                    name: 'CPU-Core分布',
+                    type: 'pie',
+                    data: data.cpuCores
+                }]
+            });
+        }
+        function handleError(error) {
+            //处理错误
+            console.log(error);
+            $('#memory_analysis').kendoChart({
+                legend:{
+                    position : "bottom"
+                },
+                theme : 'bootstrap',
+                seriesDefaults: {
+                    labels: {
+                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
+                        position: "outsideEnd",
+                        visible: true,
+                        background: "transparent"
+                    }
+                },
+                series: [{
+                    name: '内存分布',
+                    type: 'pie',
+                    data: []
+                }]
+            });
+
+
+            $('#cpu_analysis').kendoChart({
+                legend:{
+                    position : "bottom"
+                },
+                theme : 'bootstrap',
+                seriesDefaults: {
+                    labels: {
+                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
+                        position: "outsideEnd",
+                        visible: true,
+                        background: "transparent"
+                    }
+                },
+                series: [{
+                    name: 'CPU分布',
+                    type: 'pie',
+                    data: []
+                }]
+            });
+
+            $('#storage_analysis').kendoChart({
+                legend:{
+                    position : "bottom"
+                },
+                theme : 'bootstrap',
+                seriesDefaults: {
+                    labels: {
+                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
+                        position: "outsideEnd",
+                        visible: true,
+                        background: "transparent"
+                    }
+                },
+                series:[{
+                    name: '存储分布',
+                    type: 'pie',
+                    data: []
+                }]
+
+            });
+
+            $('#flow_analysis').kendoChart({
+                legend:{
+                    position : "bottom"
+                },
+                theme : 'bootstrap',
+                seriesDefaults: {
+                    labels: {
+                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
+                        position: "outsideEnd",
+                        visible: true,
+                        background: "transparent"
+                    }
+                },
+                series:[{
+                    name: '虚拟机分布',
+                    type: 'pie',
+                    data: []
+                }]
+            });
+        }
+
+
 
     });
 

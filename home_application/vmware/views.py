@@ -576,9 +576,38 @@ def getFlowAnalysisRequest(request):
     accountModel = accountModelList[0]
 
     vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    vmManager.get_flows_info()
+    clusters = vmManager.get_cluster_pools()
 
-    return render_json({})
+    storageList = []
+    memroyList = []
+    cpuList = []
+    cpuCoresList = []
+    analysis_data = {
+        'storage':[],
+        'memroy':[],
+        'cpu':[],
+        'cpuCores':[]
+    }
+
+    for cluster in clusters:
+        datastores = cluster.datastore
+        clusterForDatastoreTotal = 0
+        if len(datastores) >0:
+            for store in datastores:
+                clusterForDatastoreTotal+=store.summary.capacity
+                # print (store.summary.capacity/(1024*1024*1024*1024))
+                # print (store.summary.freeSpace/(1024*1024*1024*1024))
+
+        memroyList.append({'category':cluster.name,'value':cluster.summary.totalMemory})
+        cpuList.append({'category':cluster.name,'value':cluster.summary.totalCpu})
+        storageList.append({'category':cluster.name,'value':clusterForDatastoreTotal/1000})
+        cpuCoresList.append({'category':cluster.name,'value':cluster.summary.numCpuCores})
+    analysis_data['storage'] = storageList
+    analysis_data['memroy'] = memroyList
+    analysis_data['cpu'] = cpuList
+    analysis_data['cpuCores'] = cpuCoresList
+    print analysis_data
+    return render_json(analysis_data)
 
 
 #获取内存分析数据
