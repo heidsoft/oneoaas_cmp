@@ -287,6 +287,58 @@ def getVcenterAccountList(request):
 
     return render_json(res)
 
+def getVcenterDatacenterList(request):
+    logger.info("查询配置vcenter 数据中心")
+
+    datacenterObjectList = VcenterDatacenter.objects.all()
+    datacenterJsonList = []
+    from django.forms.models import model_to_dict
+    for datacenter in datacenterObjectList:
+        tempDc = model_to_dict(datacenter)
+        datacenterJsonList.append(tempDc)
+
+    res = {
+        "recordsTotal": len(datacenterObjectList),
+        'data': datacenterJsonList
+    }
+    print datacenterJsonList
+
+    return render_json(res)
+
+def getVcenterClusterList(request):
+    logger.info("查询配置vcenter 集群")
+
+    clusterObjectList = VcenterCluster.objects.all()
+    clusterJsonList = []
+    from django.forms.models import model_to_dict
+    for cluster in clusterObjectList:
+        tempCluster = model_to_dict(cluster)
+        clusterJsonList.append(tempCluster)
+
+    res = {
+        "recordsTotal": len(clusterObjectList),
+        'data': clusterJsonList
+    }
+    return render_json(res)
+
+def getVcenterDatastoreList(request):
+    logger.info("查询配置vcenter 存储")
+
+    datastoreObjectList = VcenterDatastore.objects.all()
+    datastoreJsonList = []
+    from django.forms.models import model_to_dict
+    for store in datastoreObjectList:
+        tempStore = model_to_dict(store)
+        datastoreJsonList.append(tempStore)
+
+    res = {
+        "recordsTotal": len(datastoreObjectList),
+        'data': datastoreJsonList
+    }
+    return render_json(res)
+
+
+
 #写入文件
 def WriteFile(filename="test",content=""):
     fo = open(filename, "wb")

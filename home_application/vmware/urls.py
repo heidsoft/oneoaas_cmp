@@ -17,8 +17,15 @@ urlpatterns = patterns(
     url(r'^monitor/config/$', 'getMonitorConfigView'),
     url(r'^system/config/$', 'getVmConfigView'),
 
-    #管理类
+    #表格
     url(r'api/getVcenterAccountList$', 'getVcenterAccountList'),
+    url(r'api/getVcenterDatacenterList$', 'getVcenterDatacenterList'),
+    url(r'api/getVcenterClusterList$', 'getVcenterClusterList'),
+    url(r'api/getVcenterDatastoreList$', 'getVcenterDatastoreList'),
+
+
+
+    #管理类
     url(r'api/createVCenterAccount$', 'createVCenterAccount'),
     url(r'api/syncVCenterAccount', 'syncVCenterAccount'),
     url(r'api/getVcenterVirtualMachineList', 'getVcenterVirtualMachineList'),
@@ -33,6 +40,9 @@ urlpatterns = patterns(
     url(r'api/getAllCluster', 'getAllClusterRequest'),
     url(r'api/getAllDatastore', 'getAllDatastoreRequest'),
     url(r'api/getClusterByDatacenter', 'getClusterByDatacenterRequest'),
+
+
+
 
     #资源分析
     url(r'api/getFlowAnalysis', 'getFlowAnalysisRequest'),

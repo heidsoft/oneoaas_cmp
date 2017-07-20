@@ -36,6 +36,14 @@ var VCenterManage = (function ($,toastr) {
                 pageLength : 5, //每页显示几条数据
                 lengthChange: false, //不允许用户改变表格每页显示的记录数
                 language: language, //汉化
+                ajax: {
+                    url: '/vmware/api/getVcenterDatastoreList',
+                },
+                columns: [
+                    {
+                        data: "name",
+                    },
+                ],
             });
 
             return this.vmTable = VCenterManageRecord;
