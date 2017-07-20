@@ -37,7 +37,7 @@ var VCenterManage = (function ($,toastr) {
                 lengthChange: false, //不允许用户改变表格每页显示的记录数
                 language: language, //汉化
                 ajax: {
-                    url: '/vmware/api/getVcenterVirtualMachineList',
+                    url: site_url+'vmware/api/getVcenterVirtualMachineList',
                 },
                 'columnDefs': [
                     {
@@ -177,7 +177,7 @@ var VCenterManage = (function ($,toastr) {
         //创建虚拟机
         create:function () {
             $.ajax({
-                url: '/vmware/api/create',
+                url: site_url+'vmware/api/create',
                 type: 'post',
                 dataType:'json',
                 data: {
@@ -210,7 +210,7 @@ var VCenterManage = (function ($,toastr) {
             var select_datastore = $("#select_datastore .select2_box").select2("val");
 
             $.ajax({
-                url: '/vmware/api/clone',
+                url: site_url+'vmware/api/clone',
                 type: 'post',
                 dataType:'json',
                 data: {
@@ -231,7 +231,7 @@ var VCenterManage = (function ($,toastr) {
                 return
             }
             $.ajax({
-                url: '/vmware/api/poweroff',
+                url: site_url+'vmware/api/poweroff',
                 type: 'post',
                 dataType: 'json',
                 data: {
@@ -248,7 +248,7 @@ var VCenterManage = (function ($,toastr) {
                 return
             }
             $.ajax({
-                url: '/vmware/api/start',
+                url: site_url+'vmware/api/start',
                 type: 'post',
                 dataType: 'json',
                 data: {
@@ -265,7 +265,7 @@ var VCenterManage = (function ($,toastr) {
                 return
             }
             $.ajax({
-                url: '/vmware/api/reboot',
+                url: site_url+'vmware/api/reboot',
                 type: 'post',
                 dataType: 'json',
                 data: {
@@ -282,7 +282,7 @@ var VCenterManage = (function ($,toastr) {
                 return
             }
             $.ajax({
-                url: '/vmware/api/destroy',
+                url: site_url+'vmware/api/destroy',
                 type: 'post',
                 dataType: 'json',
                 data: {
@@ -299,7 +299,7 @@ var VCenterManage = (function ($,toastr) {
                 return
             }
             $.ajax({
-                url: '/vmware/api/asyncDemo',
+                url: site_url+'vmware/api/asyncDemo',
                 type: 'post',
                 dataType: 'json',
                 data: {

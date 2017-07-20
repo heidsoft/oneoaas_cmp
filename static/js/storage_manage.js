@@ -37,7 +37,7 @@ var VCenterManage = (function ($,toastr) {
                 lengthChange: false, //不允许用户改变表格每页显示的记录数
                 language: language, //汉化
                 ajax: {
-                    url: '/vmware/api/getVcenterDatastoreList',
+                    url: site_url+'vmware/api/getVcenterDatastoreList',
                 },
                 columns: [
                     {
