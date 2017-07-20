@@ -65,22 +65,24 @@ var VCenterManage = (function ($,toastr) {
                         data: "name",
                     },
                     {
-                        title : '内存',
-                        data: "name",
-                        render: function ( data, type, row ) {
-                            var opHTML='<div>'+data+'<button class="btn btn-xs btn-danger">减小内存</button>';
-                            opHTML+='<button class="btn btn-xs btn-danger">增加内存</button></div>';
-                            return opHTML;
-                        },
+                        title : '内存(MB)',
+                        data: "memorySizeMB",
                     },
                     {
-                        title : 'CPU',
-                        data: "name",
-                        render: function ( data, type, row ) {
-                            var opHTML=data+'<button class="btn btn-xs btn-danger">减小CPU</button>';
-                            opHTML+='<button class="btn btn-xs btn-danger">增加CPU</button>';
-                            return opHTML;
-                        },
+                        title : 'CPU个数',
+                        data: "numCpu",
+                    },
+                    {
+                        title : '最大CPU使用',
+                        data: "maxCpuUsage",
+                    },
+                    {
+                        title : '最大CPU使用',
+                        data: "maxMemoryUsage",
+                    },
+                    {
+                        title : '是否为模板',
+                        data: "template",
                     },
                     {
                         title : '操作系统',
@@ -89,19 +91,39 @@ var VCenterManage = (function ($,toastr) {
                     {
                         title : '运行状态',
                         data: "power_state",
+                        render: function ( data, type, row ) {
+                            if(data === 'poweredOn'){
+                                return "运行";
+                            }else if(data === 'poweredOff'){
+                                return "关机";
+                            }
+
+                        },
+                    },
+                    {
+                        title : '总体状态',
+                        data: "overallStatus",
+                        render: function ( data, type, row ) {
+                            if(data === 'green'){
+                                return "正常";
+                            }else{
+                                return data;
+                            }
+                        },
                     },
                     {
                         title : 'IP',
                         data: "ipaddress",
                     },
-                    {
-                        title : '操作',
-                        data: "name",
-                        render: function ( data, type, row ) {
-                            var opHTML='<button class="btn btn-xs btn-danger">执行快照</button>';
-                            return opHTML;
-                        },
-                    },
+
+                    // {
+                    //     title : '操作',
+                    //     data: "name",
+                    //     render: function ( data, type, row ) {
+                    //         var opHTML='<button class="btn btn-xs btn-danger">执行快照</button>';
+                    //         return opHTML;
+                    //     },
+                    // },
                 ],
             });
 
