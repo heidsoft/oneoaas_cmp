@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponse, HttpResponseRedirect
 
-from common.mymako import render_mako_context
+from common.mymako import render_mako_context, render_json
 from home_application.models import VcenterAccount
 from hybirdsdk.virtualMachine import VmManage
 
@@ -62,3 +62,40 @@ def overview(request):
     )
 
 
+#获取流量分析数据
+def getAnalysisDataRequest(request):
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+
+    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+    clusters = vmManager.get_cluster_pools()
+
+    storageList = []
+    memroyList = []
+    cpuList = []
+    cpuCoresList = []
+    analysis_data = {
+        'storage':[],
+        'memroy':[],
+        'cpu':[],
+        'cpuCores':[]
+    }
+
+    for cluster in clusters:
+        datastores = cluster.datastore
+        clusterForDatastoreTotal = 0
+        if len(datastores) >0:
+            for store in datastores:
+                clusterForDatastoreTotal+=store.summary.capacity
+                # print (store.summary.capacity/(1024*1024*1024*1024))
+                # print (store.summary.freeSpace/(1024*1024*1024*1024))
+
+        memroyList.append({'category':cluster.name,'value':cluster.summary.totalMemory})
+        cpuList.append({'category':cluster.name,'value':cluster.summary.totalCpu})
+        storageList.append({'category':cluster.name,'value':clusterForDatastoreTotal/1000})
+        cpuCoresList.append({'category':cluster.name,'value':cluster.summary.numCpuCores})
+    analysis_data['storage'] = storageList
+    analysis_data['memroy'] = memroyList
+    analysis_data['cpu'] = cpuList
+    analysis_data['cpuCores'] = cpuCoresList
+    return render_json(analysis_data)
