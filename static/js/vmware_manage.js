@@ -29,6 +29,10 @@ var VCenterManage = (function ($,toastr) {
             }
 
             var VCenterManageRecord = $(tableId).DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copyHtml5', 'excelHtml5', 'pdfHtml5', 'csvHtml5'
+                ],
                 paging: true, //隐藏分页
                 ordering: false, //关闭排序
                 info: false, //隐藏左下角分页信息
