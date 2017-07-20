@@ -168,10 +168,10 @@ def syncVCenterAccount(request):
                 entity = entity_stack.pop()
                 if isinstance(entity, vim.Datacenter):
                     # add this vim.DataCenter's folders to our search
-                    print(entity.datastoreFolder)
-                    print(entity.hostFolder)
-                    print(entity.networkFolder)
-                    print(entity.vmFolder)
+                    # print(entity.datastoreFolder)
+                    # print(entity.hostFolder)
+                    # print(entity.networkFolder)
+                    # print(entity.vmFolder)
 
                     vcDatacenterModel =  VcenterDatacenter()
                     vcDatacenterModel.name = entity.name

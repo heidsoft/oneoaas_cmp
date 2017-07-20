@@ -54,8 +54,21 @@ class VcenterDatacenter(models.Model):
 class VcenterCluster(models.Model):
     #集群所在的数据中心
     datacenter = models.ForeignKey(VcenterDatacenter, related_name='vcenter_cluster_ref_datacenter')
-    #数据中心名称
+
+    #集群名称
     name = models.CharField(max_length=60)
+
+    #集群操作历史次数
+    actionHistoryNum = models.IntegerField(default=0)
+
+    #集群迁移历史次数
+    migrationHistoryNum = models.IntegerField(default=0)
+
+    #drs推荐次数
+    drsRecommendationNum = models.IntegerField(default=0)
+
+    #集群是否开启HA
+    enabledClusterHa  = models.BooleanField(default=False)
 
     #自定义表名称
     class Meta:
@@ -67,8 +80,35 @@ class VcenterCluster(models.Model):
 class VcenterDatastore(models.Model):
     #存储所在的数据中心
     datacenter = models.ForeignKey(VcenterDatacenter, related_name='vcenter_datastore_ref_datacenter')
-    #数据中心名称
+    #存储节点名称
     name = models.CharField(max_length=60)
+
+    #存储挂载主机数
+    mountHostNum = models.IntegerField(default=0)
+
+    #存储节点容器id
+    datastoreContainerId = models.CharField(default="",max_length=60)
+
+    #是否可访问
+    accessible = models.BooleanField(default=True)
+
+    #容量大小
+    capacity = models.IntegerField(default=0)
+
+    #剩余空间
+    freeSpace = models.IntegerField(default=0)
+
+    #维护模式
+    maintenanceMode = models.CharField(default="",max_length=20)
+
+    #多主机访问是否开启
+    multipleHostAccess = models.BooleanField(default=True,max_length=20)
+
+    #文件系统类型
+    filesystemType = models.CharField(default="",max_length=20)
+
+    #存储节点路径
+    url = models.CharField(default="",max_length=120)
 
     #自定义表名称
     class Meta:

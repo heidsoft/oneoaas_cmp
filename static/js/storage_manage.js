@@ -43,10 +43,67 @@ var VCenterManage = (function ($,toastr) {
                     {
                         data: "name",
                     },
+                    {
+                        data: "mountHostNum",
+                    },
+                    {
+                        data: "datastoreContainerId",
+                    },
+                    {
+                        data: "accessible",
+                    },
+                    {
+                        data: "capacity",
+                    },
+                    {
+                        data: "freeSpace",
+                    },
+                    {
+                        data: "maintenanceMode",
+                    },
+                    {
+                        data: "multipleHostAccess",
+                    },
+                    {
+                        data: "filesystemType",
+                    },
+                    {
+                        data: "url",
+                    },
                 ],
             });
 
-            return this.vmTable = VCenterManageRecord;
+            this.vmTable = VCenterManageRecord;
+
+            //设置button
+            new $.fn.dataTable.Buttons( VCenterManageRecord, {
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        text: '拷贝表格'
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: '导出Excel'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '导出PDF'
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        text: '导出CVS'
+                    },
+                ],
+            } );
+
+            //将button放置到底部
+            var tableContainer = VCenterManageRecord.buttons().container();
+            tableContainer.appendTo(
+                VCenterManageRecord.table().container()
+            );
+
+            return VCenterManageRecord;
         }
     }
 })($,window.toastr);
