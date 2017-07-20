@@ -87,7 +87,7 @@ class VcenterDatastore(models.Model):
     mountHostNum = models.IntegerField(default=0)
 
     #存储节点容器id
-    datastoreContainerId = models.CharField(default="",max_length=60)
+    datastoreContainerId = models.CharField(default="",max_length=60,null=True)
 
     #是否可访问
     accessible = models.BooleanField(default=True)

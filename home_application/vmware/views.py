@@ -209,15 +209,17 @@ def syncVCenterAccount(request):
                                 vcClusterModel.save()
 
                     datastoreEntityList = vmManager.get_datastores(entity.datastoreFolder)
-                    vcDatacenterModel.datastoreNum = len(datastoreEntity)
+                    vcDatacenterModel.datastoreNum = len(datastoreEntityList)
                     datastoreTotal = 0
                     if datastoreEntityList is not None:
                         for datastoreEntity in datastoreEntityList:
-                            print datastoreEntity
+
                             vcDatastoreModel = VcenterDatastore()
                             vcDatastoreModel.name = datastoreEntity.summary.name
                             vcDatastoreModel.datacenter = vcDatacenterModel
                             vcDatastoreModel.mountHostNum = len(datastoreEntity.host)
+
+                            print "container %s "% datastoreEntity.info.containerId
                             vcDatastoreModel.datastoreContainerId = datastoreEntity.info.containerId
                             vcDatastoreModel.accessible  = datastoreEntity.summary.accessible
                             vcDatastoreModel.capacity = datastoreEntity.summary.capacity
