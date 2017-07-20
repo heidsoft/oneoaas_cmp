@@ -11,7 +11,7 @@ class VcenterAccount(models.Model):
     account_name = models.CharField(max_length=60)
     account_password = models.CharField(max_length=20)
     vcenter_host = models.CharField(max_length=30)
-    vcenter_port = models.IntegerField(max_length=10)
+    vcenter_port = models.IntegerField(default=443)
     vcenter_version = models.CharField(max_length=10)
 
     #自定义表名称
@@ -95,23 +95,23 @@ class VcenterVirtualMachine(models.Model):
     #实例uuid
     instance_uuid = models.CharField(max_length=40)
     #最后启动时间
-    boot_time = models.TimeField(max_length=20,null=True)
+    boot_time = models.TimeField(null=True)
 
     #是否为模版
     template = models.BooleanField(max_length=1)
 
     #最大cpu使用
-    maxCpuUsage = models.IntegerField(max_length=20)
+    maxCpuUsage = models.IntegerField(default=0)
     #最大内存使用
-    maxMemoryUsage = models.IntegerField(max_length=20)
+    maxMemoryUsage = models.IntegerField(default=0)
     #内存大小
-    memorySizeMB = models.IntegerField(max_length=20)
+    memorySizeMB = models.IntegerField(default=0)
     #cpu个数
-    numCpu = models.IntegerField(max_length=20)
+    numCpu = models.IntegerField(default=0)
 
-    numEthernetCards = models.IntegerField(max_length=20)
+    numEthernetCards = models.IntegerField(default=0)
 
-    numVirtualDisks = models.IntegerField(max_length=20)
+    numVirtualDisks = models.IntegerField(default=0)
 
     instanceUuid = models.CharField(max_length=60)
 
@@ -119,9 +119,9 @@ class VcenterVirtualMachine(models.Model):
     guestId = models.CharField(max_length=60)
 
     #存储信息
-    storage_committed = models.IntegerField(max_length=20,null=True),
-    storage_uncommitted = models.IntegerField(max_length=20,null=True),
-    storage_unshared = models.IntegerField(max_length=20,null=True),
+    storage_committed = models.IntegerField(default=0,null=True),
+    storage_uncommitted = models.IntegerField(default=0,null=True),
+    storage_unshared = models.IntegerField(default=0,null=True),
 
     overallStatus = models.CharField(max_length=10)
 
