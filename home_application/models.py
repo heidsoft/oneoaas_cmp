@@ -26,6 +26,24 @@ class VcenterDatacenter(models.Model):
     #数据中心名称
     name = models.CharField(max_length=60)
 
+    #存储节点总量
+    datastoreTotal = models.IntegerField(default=0)
+
+    #存储节点个数
+    datastoreNum = models.IntegerField(default=0)
+
+    #主机个数
+    hostNum = models.IntegerField(default=0)
+
+    #网络个数
+    networkNum = models.IntegerField(default=0)
+
+    #虚拟机个数
+    vmNum = models.IntegerField(default=0)
+
+    #集群个数
+    clusterNum = models.IntegerField(default=0)
+
     #自定义表名称
     class Meta:
         db_table = 'vcenter_datacenter'
