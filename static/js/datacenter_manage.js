@@ -44,9 +44,6 @@ var VCenterManage = (function ($,toastr) {
                         data: "name",
                     },
                     {
-                        data: "datastoreTotal",
-                    },
-                    {
                         data: "datastoreNum",
                     },
                     {

@@ -183,7 +183,8 @@ def syncVCenterAccount(request):
                             #VcenterDatacenter.objects.filter(name='yangmv').update(pwd='520')
                             vcDatacenterModel = tempDc[0]
                         else:
-                            vcDatacenterModel.save()
+                            saveVcDatacenterModel = vcDatacenterModel.save()
+                            print "save dc %s" % saveVcDatacenterModel
                     except Exception as e:
                         #说明不存在
                         print "dc update  %s" % str(e)
@@ -196,6 +197,24 @@ def syncVCenterAccount(request):
                             vcClusterModel = VcenterCluster()
                             vcClusterModel.name = clusterEntity.name
                             vcClusterModel.datacenter = vcDatacenterModel
+
+                            if clusterEntity.actionHistory is not None:
+                                vcClusterModel.actionHistoryNum = len(clusterEntity.actionHistory)
+                            else:
+                                vcClusterModel.actionHistoryNum = 0
+
+                            if clusterEntity.migrationHistory is not None:
+                                vcClusterModel.migrationHistoryNum = len(clusterEntity.migrationHistory)
+                            else:
+                                vcClusterModel.migrationHistoryNum = 0
+
+                            if clusterEntity.drsRecommendation is not None:
+                                vcClusterModel.drsRecommendationNum = len(clusterEntity.drsRecommendation)
+                            else:
+                                vcClusterModel.drsRecommendationNum = 0
+
+                            vcClusterModel.enabledClusterHa =   clusterEntity.configuration.dasConfig.enabled
+
                             try:
                                 tempCluster =  VcenterCluster.objects.filter(name=clusterEntity.name)
                                 if len(tempCluster)>0:
@@ -222,8 +241,18 @@ def syncVCenterAccount(request):
                             print "container %s "% datastoreEntity.info.containerId
                             vcDatastoreModel.datastoreContainerId = datastoreEntity.info.containerId
                             vcDatastoreModel.accessible  = datastoreEntity.summary.accessible
-                            vcDatastoreModel.capacity = datastoreEntity.summary.capacity
-                            vcDatastoreModel.freeSpace = datastoreEntity.summary.freeSpace
+
+                            tmpCapacity = datastoreEntity.summary.capacity
+                            if tmpCapacity is not None:
+                                vcDatastoreModel.capacity = datastoreEntity.summary.capacity/(1024*1024)
+                            else:
+                                vcDatastoreModel.capacity = 0
+
+                            tmpFreeSpace = datastoreEntity.summary.freeSpace
+                            if tmpFreeSpace is not None:
+                                vcDatastoreModel.freeSpace = datastoreEntity.summary.freeSpace/(1024*1024)
+                            else:
+                                vcDatastoreModel.freeSpace = 0
                             vcDatastoreModel.maintenanceMode = datastoreEntity.summary.maintenanceMode
                             vcDatastoreModel.multipleHostAccess = datastoreEntity.summary.multipleHostAccess
                             vcDatastoreModel.filesystemType = datastoreEntity.summary.type
@@ -264,7 +293,7 @@ def syncVCenterAccount(request):
                     # print entity.name
                     # print entity.datastore
                     # print entity.network
-                    vcDatacenterModel.objects.update(datastoreTotal=datastoreTotal)
+                    vcDatacenterModel.save()
                 elif hasattr(entity, 'childEntity'):
                     # add all child entities from this object to our search
                     # 子节点必须是数据中心

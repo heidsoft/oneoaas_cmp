@@ -47,9 +47,6 @@ var VCenterManage = (function ($,toastr) {
                         data: "mountHostNum",
                     },
                     {
-                        data: "datastoreContainerId",
-                    },
-                    {
                         data: "accessible",
                     },
                     {
