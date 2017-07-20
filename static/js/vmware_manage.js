@@ -29,10 +29,6 @@ var VCenterManage = (function ($,toastr) {
             }
 
             var VCenterManageRecord = $(tableId).DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    'copyHtml5', 'excelHtml5', 'pdfHtml5', 'csvHtml5'
-                ],
                 paging: true, //隐藏分页
                 ordering: false, //关闭排序
                 info: false, //隐藏左下角分页信息
@@ -131,7 +127,38 @@ var VCenterManage = (function ($,toastr) {
                 ],
             });
 
-            return this.vmTable = VCenterManageRecord;
+
+            this.vmTable = VCenterManageRecord;
+
+            //设置button
+            new $.fn.dataTable.Buttons( VCenterManageRecord, {
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        text: '拷贝表格'
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: '导出Excel'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '导出PDF'
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        text: '导出CVS'
+                    },
+                ],
+            } );
+
+            //将button放置到底部
+            var tableContainer = VCenterManageRecord.buttons().container();
+            tableContainer.appendTo(
+                VCenterManageRecord.table().container()
+            );
+
+            return VCenterManageRecord;
         },
         //操作动作前置条件
         beforeAction:function(){
@@ -208,7 +235,7 @@ var VCenterManage = (function ($,toastr) {
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    "vmId":83,
+                    "vmId":this.selectedRows[0],
                 },
                 success: function (data) {
                     toastr.success(data.message);
@@ -225,7 +252,7 @@ var VCenterManage = (function ($,toastr) {
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    "vmId":83,
+                    "vmId":this.selectedRows[0],
                 },
                 success: function (data) {
                     toastr.success(data.message);
@@ -242,7 +269,7 @@ var VCenterManage = (function ($,toastr) {
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    "vmId":83,
+                    "vmId":this.selectedRows[0],
                 },
                 success: function (data) {
                     toastr.success(data.message);
@@ -259,7 +286,7 @@ var VCenterManage = (function ($,toastr) {
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    "vmId":32,
+                    "vmId":this.selectedRows[0],
                 },
                 success: function (data) {
                     toastr.success(data.message);
@@ -276,7 +303,7 @@ var VCenterManage = (function ($,toastr) {
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    "id":32,
+                    "id":this.selectedRows[0],
                 },
                 success: function (data) {
                     toastr.success(data.message);
