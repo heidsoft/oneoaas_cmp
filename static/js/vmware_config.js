@@ -13,7 +13,7 @@ var VCenterConfig = (function ($,toastr) {
             var vcenterVersion = $("#vcenter_version .select2_box").select2("val");
             var vcenterPort = $("#vcenter_port").val();
             $.ajax({
-                url: '/vmware/api/createVCenterAccount',
+                url: site_url+'vmware/api/createVCenterAccount',
                 type: 'post',
                 dataType: 'json',
                 data: {
@@ -31,7 +31,7 @@ var VCenterConfig = (function ($,toastr) {
         //同步vcenter账号
         syncVCenterAccount: function (data) {
             $.ajax({
-                url: '/vmware/api/syncVCenterAccount',
+                url: site_url+'vmware/api/syncVCenterAccount',
                 type: 'post',
                 dataType: 'json',
                 data: {
@@ -79,7 +79,7 @@ $(document).ready(function(){
         "bInfo":false,//隐藏左下角分页显示信息
         "bServerSide": true,
         ajax: {
-            url: '/vmware/api/getVcenterAccountList',
+            url: site_url+'vmware/api/getVcenterAccountList',
         },
         columnDefs: [
             {
