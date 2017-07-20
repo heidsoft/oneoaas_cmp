@@ -135,10 +135,10 @@ class VcenterVirtualMachine(models.Model):
     account = models.ForeignKey(VcenterAccount, related_name='vcenter_virtualmachine_ref_account')
 
     #虚拟机所在的数据中心
-    datacenter = models.ForeignKey(VcenterDatacenter, related_name='vcenter_virtualmachine_ref_datacenter')
+    datacenter = models.ForeignKey(VcenterDatacenter, related_name='vcenter_virtualmachine_ref_datacenter',null=True)
 
     #虚拟机所在集群
-    cluster = models.ForeignKey(VcenterCluster, related_name='vcenter_virtualmachine_ref_cluster')
+    cluster = models.ForeignKey(VcenterCluster, related_name='vcenter_virtualmachine_ref_cluster',null=True)
 
     #虚拟机名称
     name = models.CharField(max_length=60)

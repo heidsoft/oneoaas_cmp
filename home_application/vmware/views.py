@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
+import traceback
 
 import gevent
 import pyVmomi
@@ -188,31 +189,8 @@ def syncVCenterAccount(request):
                         print "dc update  %s" % str(e)
                         vcDatacenterModel.save()
 
-
-                    vmEntityList = vmManager.get_vms(entity.vmFolder)
-                    if vmEntityList is not None:
-                        for vmEntity in vmEntityList:
-
-                            vcenterVirtualMachineModel = convertVmEntityToVcenterVirtualMachine(vmEntity)
-                            vcenterVirtualMachineModel.datacenter = vcDatacenterModel
-                            vcenterVirtualMachineModel.account = accountModel
-                            clusters =  VcenterCluster.objects.all()
-                            vcenterVirtualMachineModel.template = False
-                            vcenterVirtualMachineModel.cluster = clusters[0]
-                            try:
-                                tempVm = VcenterVirtualMachine.objects.filter(instance_uuid=vcenterVirtualMachineModel.instance_uuid)
-                                if len(tempVm)>0:
-                                    #如果存在则更新
-                                    pass
-                                else:
-                                    vcenterVirtualMachineModel.save()
-                            except Exception as e:
-                                #说明不存在
-                                print "vm update  %s" % str(e)
-                                vcenterVirtualMachineModel.save()
-
-
                     clusterEntityList = vmManager.get_cluster_pools(entity.hostFolder)
+                    vcDatacenterModel.clusterNum = len(clusterEntityList)
                     if clusterEntityList is not None:
                         for clusterEntity in clusterEntityList:
                             vcClusterModel = VcenterCluster()
@@ -231,11 +209,24 @@ def syncVCenterAccount(request):
                                 vcClusterModel.save()
 
                     datastoreEntityList = vmManager.get_datastores(entity.datastoreFolder)
+                    vcDatacenterModel.datastoreNum = len(datastoreEntity)
+                    datastoreTotal = 0
                     if datastoreEntityList is not None:
                         for datastoreEntity in datastoreEntityList:
+                            print datastoreEntity
                             vcDatastoreModel = VcenterDatastore()
-                            vcDatastoreModel.name = datastoreEntity.name
+                            vcDatastoreModel.name = datastoreEntity.summary.name
                             vcDatastoreModel.datacenter = vcDatacenterModel
+                            vcDatastoreModel.mountHostNum = len(datastoreEntity.host)
+                            vcDatastoreModel.datastoreContainerId = datastoreEntity.info.containerId
+                            vcDatastoreModel.accessible  = datastoreEntity.summary.accessible
+                            vcDatastoreModel.capacity = datastoreEntity.summary.capacity
+                            vcDatastoreModel.freeSpace = datastoreEntity.summary.freeSpace
+                            vcDatastoreModel.maintenanceMode = datastoreEntity.summary.maintenanceMode
+                            vcDatastoreModel.multipleHostAccess = datastoreEntity.summary.multipleHostAccess
+                            vcDatastoreModel.filesystemType = datastoreEntity.summary.type
+                            vcDatastoreModel.url = datastoreEntity.summary.url
+                            datastoreTotal+= vcDatastoreModel.capacity
                             try:
                                 tempStore =  VcenterDatastore.objects.filter(name=datastoreEntity.name)
                                 if len(tempStore)>0:
@@ -248,9 +239,30 @@ def syncVCenterAccount(request):
                                 print "datastore update  %s" % str(e)
                                 vcDatastoreModel.save()
 
+                    vmEntityList = vmManager.get_vms(entity.vmFolder)
+                    vcDatacenterModel.vmNum = len(vmEntityList)
+                    if vmEntityList is not None:
+                        for vmEntity in vmEntityList:
+                            vcenterVirtualMachineModel = convertVmEntityToVcenterVirtualMachine(vmEntity)
+                            vcenterVirtualMachineModel.datacenter = vcDatacenterModel
+                            vcenterVirtualMachineModel.account = accountModel
+                            vcenterVirtualMachineModel.template = False
+                            try:
+                                tempVm = VcenterVirtualMachine.objects.filter(instance_uuid=vcenterVirtualMachineModel.instance_uuid)
+                                if len(tempVm)>0:
+                                    #如果存在则更新
+                                    pass
+                                else:
+                                    vcenterVirtualMachineModel.save()
+                            except Exception as e:
+                                #说明不存在
+                                print "vm update  %s" % str(e)
+                                vcenterVirtualMachineModel.save()
+
                     # print entity.name
                     # print entity.datastore
                     # print entity.network
+                    vcDatacenterModel.objects.update(datastoreTotal=datastoreTotal)
                 elif hasattr(entity, 'childEntity'):
                     # add all child entities from this object to our search
                     # 子节点必须是数据中心
@@ -261,6 +273,7 @@ def syncVCenterAccount(request):
             'message': "同步成功",
         }
     except Exception as e:
+        traceback.print_exc()
         print "root update  %s" % str(e)
         res = {
             'result': True,
