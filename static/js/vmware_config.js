@@ -49,10 +49,10 @@ $(document).ready(function(){
 
     //默认支持vcenter版本列表
     var vcenterVersionList =[
-        {id:1,text:"5.0"},
-        {id:2,text:"5.1"},
-        {id:3,text:"5.5"},
-        {id:4,text:"6.0"}
+        {id:5.0,text:"5.0"},
+        {id:5.1,text:"5.1"},
+        {id:5.5,text:"5.5"},
+        {id:6.0,text:"6.0"}
     ];
     $("#vcenter_version .select2_box").select2({ data: vcenterVersionList });
 
