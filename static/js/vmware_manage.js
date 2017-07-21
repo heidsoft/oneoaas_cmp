@@ -78,15 +78,23 @@ var VCenterManage = (function ($,toastr) {
                         data: "maxCpuUsage",
                     },
                     {
-                        title : '最大CPU使用',
+                        title : '最大内存使用',
                         data: "maxMemoryUsage",
                     },
                     {
                         title : '是否为模板',
                         data: "template",
+                        render: function ( data, type, row ) {
+                            if(data === false){
+                                return "不是模板";
+                            }else{
+                                return "是模板";
+                            }
+
+                        },
                     },
                     {
-                        title : '操作系统',
+                        title : '系统类型',
                         data: "guest_fullname",
                     },
                     {
