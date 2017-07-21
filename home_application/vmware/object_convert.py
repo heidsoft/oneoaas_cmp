@@ -267,17 +267,3 @@ def convertVmEntityToVcenterVirtualMachine(vm,depth=1):
     else:
         vcenterVirtualMachineModel.ipaddress=""
     return vcenterVirtualMachineModel
-
-
-
-class Capability(object):
-    pass
-
-class VirtualMachine(object):
-    def __init__(self):
-        self.host = None
-        self.connectionState = None
-        self.powerState = None
-
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,sort_keys=True, indent=4)

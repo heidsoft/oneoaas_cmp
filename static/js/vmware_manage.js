@@ -36,6 +36,7 @@ var VCenterManage = (function ($,toastr) {
                 pageLength : 5, //每页显示几条数据
                 lengthChange: false, //不允许用户改变表格每页显示的记录数
                 language: language, //汉化
+                sLoadingRecords:true,
                 ajax: {
                     url: site_url+'vmware/api/getVcenterVirtualMachineList',
                 },
@@ -195,7 +196,7 @@ var VCenterManage = (function ($,toastr) {
                 return
             }
             if(this.selectedRows.length>1){
-                toastr.warning("克隆只能选择一台虚拟机");
+                toastr.warning("蓝鲸版克隆操作只支持选择一台虚拟机");
                 return
             }
 
@@ -208,7 +209,6 @@ var VCenterManage = (function ($,toastr) {
             var select_datacenter = $("#select_datacenter .select2_box").select2("val");
             var select_cluster = $("#select_cluster .select2_box").select2("val");
             var select_datastore = $("#select_datastore .select2_box").select2("val");
-
             $.ajax({
                 url: site_url+'vmware/api/clone',
                 type: 'post',
@@ -221,13 +221,21 @@ var VCenterManage = (function ($,toastr) {
                     "vmDatastore":select_datastore,
                 },
                 success: function (data) {
+                    $('#cloneVmWizard').modal('hide');
                     toastr.success(data.message);
+                    VCenterManage.vmTable.ajax.reload( null, false );
+
                 }
             });
         },
         //关闭虚拟机
         poweroff: function (data) {
             if(!this.beforeAction()){
+                return
+            }
+
+            if(this.selectedRows.length>1){
+                toastr.warning("蓝鲸版关机操作只支持一台虚拟机");
                 return
             }
             $.ajax({
@@ -239,12 +247,18 @@ var VCenterManage = (function ($,toastr) {
                 },
                 success: function (data) {
                     toastr.success(data.message);
+                    //重新刷新表格数据
+                    VCenterManage.vmTable.ajax.reload( null, false );
                 }
             });
         },
         //开启虚拟机
         start: function (data) {
             if(!this.beforeAction()){
+                return
+            }
+            if(this.selectedRows.length>1){
+                toastr.warning("蓝鲸版开机操作只支持一台虚拟机");
                 return
             }
             $.ajax({
@@ -256,12 +270,17 @@ var VCenterManage = (function ($,toastr) {
                 },
                 success: function (data) {
                     toastr.success(data.message);
+                    VCenterManage.vmTable.ajax.reload( null, false );
                 }
             });
         },
         //重启虚拟机
         reboot: function (data) {
             if(!this.beforeAction()){
+                return
+            }
+            if(this.selectedRows.length>1){
+                toastr.warning("蓝鲸版重启操作只支持一台虚拟机");
                 return
             }
             $.ajax({
@@ -273,12 +292,17 @@ var VCenterManage = (function ($,toastr) {
                 },
                 success: function (data) {
                     toastr.success(data.message);
+                    VCenterManage.vmTable.ajax.reload( null, false );
                 }
             });
         },
         //销毁虚拟机
         destroy: function (data) {
             if(!this.beforeAction()){
+                return
+            }
+            if(this.selectedRows.length>1){
+                toastr.warning("蓝鲸版销毁操作只支持一台虚拟机");
                 return
             }
             $.ajax({
@@ -290,6 +314,7 @@ var VCenterManage = (function ($,toastr) {
                 },
                 success: function (data) {
                     toastr.success(data.message);
+                    VCenterManage.vmTable.ajax.reload( null, false );
                 }
             });
         },
@@ -307,6 +332,7 @@ var VCenterManage = (function ($,toastr) {
                 },
                 success: function (data) {
                     toastr.success(data.message);
+                    VCenterManage.vmTable.ajax.reload( null, false );
                 }
             });
         },
@@ -328,7 +354,7 @@ $(document).ready(function(){
 
     $("#ccAppList .select2_box").select2({
         ajax: {
-            url: "/vmware/api/getAppList",
+            url: site_url+"vmware/api/getAppList",
             cache: false,
             //对返回的数据进行处理
             results: function(data){
@@ -340,7 +366,7 @@ $(document).ready(function(){
 
     $("#select_datacenter .select2_box").select2({
         ajax: {
-            url: "/vmware/api/getAllDatacenter",
+            url: site_url+"vmware/api/getAllDatacenter",
             cache: false,
             //对返回的数据进行处理
             results: function(data){
@@ -352,7 +378,7 @@ $(document).ready(function(){
 
     $("#select_cluster .select2_box").select2({
         ajax: {
-            url: "/vmware/api/getAllCluster",
+            url: site_url+"vmware/api/getAllCluster",
             cache: false,
             //对返回的数据进行处理
             results: function(data){
@@ -364,7 +390,7 @@ $(document).ready(function(){
 
     $("#select_datastore .select2_box").select2({
         ajax: {
-            url: "/vmware/api/getAllDatastore",
+            url: site_url+"vmware/api/getAllDatastore",
             cache: false,
             //对返回的数据进行处理
             results: function(data){

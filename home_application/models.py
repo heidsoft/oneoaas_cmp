@@ -128,6 +128,13 @@ class VcenterNetwork(models.Model):
         db_table = 'vcenter_network'
 
 """
+定义vm管理器
+"""
+class VmManager(models.Manager):
+    pass
+
+
+"""
 vcenter虚拟机对象
 """
 class VcenterVirtualMachine(models.Model):
