@@ -23,9 +23,9 @@ urlpatterns = patterns(
     url(r'api/getVcenterClusterList$', 'getVcenterClusterList'),
     url(r'api/getVcenterDatastoreList$', 'getVcenterDatastoreList'),
 
-
-
     #管理类
+    url(r'api/deleteAccount', 'deleteAccount'),
+    url(r'api/desctroyAccount', 'desctroyAccount'),
     url(r'api/createVCenterAccount$', 'createVCenterAccount'),
     url(r'api/syncVCenterAccount', 'syncVCenterAccount'),
     url(r'api/getVcenterVirtualMachineList', 'getVcenterVirtualMachineList'),

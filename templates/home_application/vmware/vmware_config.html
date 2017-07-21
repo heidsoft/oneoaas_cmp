@@ -72,24 +72,25 @@
         </div>
     </div>
 
-    <!---->
     <div class="panel panel-default">
+
         <div class="panel-heading">
             vcenter账号列表
         </div>
-        <div class='panel-body'>
-            <div class="table-responsive">
+        <div class="panel-btns">
+            <a type="button" onclick="VCenterConfig.deleteAccount();"class="king-btn king-info pull-left mt15 ml15">
+                <i class="fa fa-user-plus mr5"></i>删除账号
+            </a>
+            <a type="button" data-type="success" onclick="VCenterConfig.desctroyAccount()"  class="king-btn king-info pull-left mt15 ml15">
+                <i class="fa fa-user-plus mr5"></i>清除账号与资源
+            </a>
+            <a type="button" onclick="VCenterConfig.setSyncPolicy();"  class="king-btn king-info pull-left mt15 ml15">
+                <i class="fa fa-user-plus mr5"></i>设置同步策略
+            </a>
+        </div>
+        <div class='panel-body panel-search-body'>
+            <div class="panel-content">
                 <table id="vcenter_config_record" class="table table-bordered table-hover table-striped">
-                    <thead>
-                    <tr>
-                        <th>账号名称</th>
-                        <th>账号密码</th>
-                        <th>Vcenter主机</th>
-                        <th>Vcenter端口</th>
-                        <th>Vcenter版本</th>
-                        <th>同步</th>
-                    </tr>
-                    </thead>
                 </table>
             </div>
         </div>

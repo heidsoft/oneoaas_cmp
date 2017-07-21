@@ -141,8 +141,32 @@ def createVCenterAccount(request):
         }
     return render_json(res)
 
+def deleteAccount(request):
+    accountId = None
+    if request.method == 'POST':
+        accountId = request.POST['id']
+        if accountId is None or accountId <0:
+            res = {
+                'result': True,
+                'message': "该账号不存在",
+            }
+            return render_json(res)
 
+    try:
+        accountModel = VcenterAccount.objects.get(id=accountId)
+        print accountModel
+        accountModel.delete()
+        res = {
+            'result': True,
+            'message': "删除账号成功",
+        }
+    except Exception as e:
+        print str(e)
 
+    return render_json(res)
+
+def desctroyAccount(request):
+    pass
 
 #同步账号
 def syncVCenterAccount(request):
@@ -394,36 +418,22 @@ def WriteFile(filename="test",content=""):
 #获取虚拟机列表
 def getVcenterVirtualMachineList(request):
     logger.info("查询配置vcenter 虚拟机")
-
-    accountModelList = VcenterAccount.objects.all()
-    accountModel = accountModelList[0]
-
-    # vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    # vmAllList = vmManager.list()
-    #
-    # for vm in vmAllList:
-    #     if vm is not None and isinstance(vm, vim.VirtualMachine):
-    #         my =  VirtualMachine()
-    #         my.host = str( vm.summary.runtime.host)
-    #         my.connectionState = str(vm.summary.runtime.connectionState)
-    #         my.powerState = str(vm.summary.runtime.powerState)
-            #print my.toJSON()
-
-
     vcenterVirtualMachineObjectList = VcenterVirtualMachine.objects.all()
+    print vcenterVirtualMachineObjectList
     vmJsonList = []
     from django.forms.models import model_to_dict
     for vm in vcenterVirtualMachineObjectList:
         tempvm = model_to_dict(vm)
         vmJsonList.append(tempvm)
 
+
     res = {
         "recordsTotal": len(vmJsonList),
-        "page": 1,
-        "pages": 6,
-        "start": 10,
-        "end": 20,
-        "length": 10,
+        # "page": 1,
+        # "pages": 6,
+        # "start": 10,
+        # "end": 20,
+        # "length": 10,
         'data': vmJsonList
     }
 
