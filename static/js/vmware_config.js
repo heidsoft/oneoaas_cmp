@@ -12,6 +12,21 @@ var VCenterConfig = (function ($,toastr) {
             var vcenterHost = $("#vcenter_host").val();
             var vcenterVersion = $("#vcenter_version .select2_box").select2("val");
             var vcenterPort = $("#vcenter_port").val();
+            if(accountName===""){
+                toastr.warning("VCenter账号不能为空");
+                return
+            }
+
+            if(accountPassword===""){
+                toastr.warning("VCenter账号密码不能为空");
+                return
+            }
+
+            if(vcenterHost===""){
+                toastr.warning("VCenter主机不能为空");
+                return
+            }
+
             $.ajax({
                 url: site_url+'vmware/api/createVCenterAccount',
                 type: 'post',

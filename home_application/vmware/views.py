@@ -120,8 +120,9 @@ def createVCenterAccount(request):
                     'message': "保存账号成功",
                 }
             else:
-                accountExist = VcenterAccount.objects.get(account_name=accountName)
-                if accountExist is not None:
+                accountExist = VcenterAccount.objects.filter(account_name=accountName)
+
+                if len(accountExist) >0:
                     res = {
                         'result': True,
                         'message': "账号已经存在",
@@ -136,7 +137,7 @@ def createVCenterAccount(request):
     except Exception as e:
         res = {
             'result': False,
-            'message': e.message,
+            'message': "账号保持错误",
         }
     return render_json(res)
 
@@ -156,11 +157,11 @@ def syncVCenterAccount(request):
             }
             return render_json(res)
 
-    accountModel = VcenterAccount.objects.get(id=accountId)
-    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    rootFolder = vmManager.content.rootFolder
-
     try:
+        accountModel = VcenterAccount.objects.get(id=accountId)
+        vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+        rootFolder = vmManager.content.rootFolder
+
         if rootFolder is not None and hasattr(rootFolder,"childEntity"):
             print "rootFolder hava child"
             entity_stack = rootFolder.childEntity

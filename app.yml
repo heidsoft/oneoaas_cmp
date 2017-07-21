@@ -1,8 +1,8 @@
-app_code: oneoaas-event
-app_name: oneoaas-event_ce
+app_code: oneoaas-cmp
+app_name: oneoaas-cmp
 author: OneOaaS
 date: 2017-04-10 11:38:23
-introduction: OneOaaS Event 社区蓝鲸专用版是OneOaaS开发的蓝鲸SaaS应用
+introduction: OneOaaS CMP云管理社区版,是蓝鲸专用版,版权归OneOaaS所有
 is_use_celery: true
 language: python
 libraries:
