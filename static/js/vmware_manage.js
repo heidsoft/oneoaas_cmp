@@ -125,14 +125,14 @@ var VCenterManage = (function ($,toastr) {
                         data: "ipaddress",
                     },
 
-                    // {
-                    //     title : '操作',
-                    //     data: "name",
-                    //     render: function ( data, type, row ) {
-                    //         var opHTML='<button class="btn btn-xs btn-danger">执行快照</button>';
-                    //         return opHTML;
-                    //     },
-                    // },
+                    {
+                        title : '操作',
+                        data: "name",
+                        render: function ( data, type, row ) {
+                            var opHTML='<button class="btn btn-xs btn-danger" onclick="VCenterManage.snapshot()">执行快照</button>';
+                            return opHTML;
+                        },
+                    },
                 ],
             });
 
@@ -185,18 +185,22 @@ var VCenterManage = (function ($,toastr) {
         },
         //创建虚拟机
         create:function () {
-            $.ajax({
-                url: site_url+'vmware/api/create',
-                type: 'post',
-                dataType:'json',
-                data: {
-                    "vmId":this.selectedRows,
-                },
-                success: function (data) {
-                    toastr.success(data.message);
-                }
-            });
-            $('#createVmWizard').modal('show');
+            toastr.warning("这是高级功能，蓝鲸社区版暂不支持该功能,如果需要请联系OneOaaS");
+
+            return
+
+            // $.ajax({
+            //     url: site_url+'vmware/api/create',
+            //     type: 'post',
+            //     dataType:'json',
+            //     data: {
+            //         "vmId":this.selectedRows,
+            //     },
+            //     success: function (data) {
+            //         toastr.success(data.message);
+            //     }
+            // });
+            // $('#createVmWizard').modal('show');
         },
         //克隆虚拟机
         clone:function () {
@@ -326,6 +330,9 @@ var VCenterManage = (function ($,toastr) {
                 }
             });
         },
+        snapshot:function () {
+            toastr.warning("这是高级功能，蓝鲸社区版暂不支持该功能,如果需要请联系OneOaaS");
+        },
         //同步虚拟机
         async: function (data) {
             if(!this.beforeAction()){
@@ -346,9 +353,12 @@ var VCenterManage = (function ($,toastr) {
         },
         //webssh控制台
         webssh:function () {
-            if(!this.beforeAction()){
-                return
-            }
+            toastr.warning("这是高级功能，蓝鲸社区版暂不支持该功能,如果需要请联系OneOaaS");
+            return
+        },
+        RDP:function () {
+            toastr.warning("这是高级功能，蓝鲸社区版暂不支持该功能,如果需要请联系OneOaaS");
+            return
         }
     }
 })($,window.toastr);
