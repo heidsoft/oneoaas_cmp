@@ -56,10 +56,6 @@ var VCenterConfig = (function ($,toastr) {
                         data: "account_name",
                     },
                     {
-                        title : '账号密码',
-                        data: "account_password",
-                    },
-                    {
                         title : 'VCenter主机',
                         data: "vcenter_host",
                     },
