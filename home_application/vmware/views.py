@@ -939,7 +939,13 @@ def updateVMConfigurationRequest(request):
 
 
 
-'''createVMSnapshotRequest'''
+'''
+创建虚拟机快照
+name: 指定快照的名称
+description: 指定快照的描述
+memory: 若为 true, 则虚拟机内存状态 dump(memory dump) 被包含在快照里。内存快照会消耗时间和资源, 需要较长的时间来创建。若为 false, 则快照电源状态被设置成关闭, 无需处理内存快照。
+quiesce: 若为 true 且创建快照时虚拟机处于开机状态, VMware Tools 通常会用于静默虚拟机中的文件系统, 确保磁盘快照和 GuestOS 文件系统状态是一致
+'''
 def createVMSnapshotRequest(request):
     vmId = request.POST['vmId']
     vmUuid = request.POST['vmUuid']
@@ -972,6 +978,25 @@ def createVMSnapshotRequest(request):
             'message': u"创建快照失败",
         }
         return render_json(res)
+
+
+'''恢复快照的方法需要指定一个目标 Host 和指定虚拟机是否开机,
+   当恢复一个快照的电源状态为 True 的虚拟机时, 就必须指定一
+   个目标的 Host 或者将 SupressPowerOn 指定为 True.'''
+def revertToSnapshotRequest(request):
+    pass
+
+
+
+'''删除一个虚拟机的所有快照.'''
+def removeAllSnapshotsRequest(request):
+    pass
+
+
+
+'''删除一个虚拟机指定的快照, 其中 VirtualMachineSnapshot 是创建快照函数 CreateSnapshot_Task 返回的对象.'''
+def removeSnapshotRequest(request):
+    pass
 
 
 ########################################test request
