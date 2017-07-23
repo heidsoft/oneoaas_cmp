@@ -474,3 +474,22 @@ class VmManage(object):
         Disconnect(self.client)
 
 
+    '''根据uuid信息查询虚拟机信息'''
+    def get_vm_by_uuid(self,vmUuid):
+        content = self.client.content
+        vm = None
+        if vmUuid:
+            search_index = content.searchIndex
+            vm = search_index.FindByUuid(None, vmUuid, True, True)
+        print vm
+        return vm
+
+
+    def ReconfigVM(self,vm,newCpuNum,newMemory):
+        configSpec = vim.vm.VirtualMachineConfigSpec()
+        if newCpuNum is not None :
+            configSpec.numCPUs(newCpuNum)
+
+        updatetask = vm.ReconfigVM_Task(spec=configSpec)
+        # result = updatetask.wait_for_task(updatetask)
+        return self.wait_for_task(updatetask)
