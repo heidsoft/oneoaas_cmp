@@ -14,9 +14,9 @@
         </div>
         <div class='panel-body'>
             <div class="col-sm-8">
-                <div class="form-horizontal mt15" >
+                <div class="form-horizontal mt15" id="account_info">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">vcenter用户：</label>
+                        <label class="col-sm-2 control-label" for="validation_account_name">vcenter用户：</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" placeholder="请输入Vcenter用户" id="account_name" name="account_name">
                             <span class="king-required-tip text-danger ml5">*</span>
@@ -24,7 +24,7 @@
                         <div class="col-sm-1"></div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">vcenter密码：</label>
+                        <label class="col-sm-2 control-label" for="validation_account_password">vcenter密码：</label>
                         <div class="col-sm-10">
                             <input type="password" class="form-control" placeholder="请输入Vcenter密码" id="account_password" name="account_password">
                             <span class="king-required-tip text-danger ml5">*</span>
@@ -33,7 +33,7 @@
 
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">vcenter主机：</label>
+                        <label class="col-sm-2 control-label" for="validation_vcenter_host">vcenter主机：</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" placeholder="请输入Vcenter主机IP" id="vcenter_host" name="vcenter_host">
                             <span class="king-required-tip text-danger ml5">*</span>
@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">vcenter端口：</label>
+                        <label class="col-sm-2 control-label" for="validation_vcenter_port">vcenter端口：</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" placeholder="请输入Vcenter主机端口" id="vcenter_port" name="vcenter_port">
                             <span class="king-required-tip text-danger ml5">*</span>
@@ -49,14 +49,13 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">vcenter版本：</label>
+                        <label class="col-sm-2 control-label" >vcenter版本：</label>
                         <div class="col-sm-10">
                             <div id="vcenter_version" style="display:inline-block;">
                                 <!-- select2 通过javascript start -->
                                 <input type="hidden" class="select2_box" style="width:300px;">
                                 <!-- select2 通过javascript end -->
                             </div>
-                            <span class="king-required-tip text-danger ml5">*</span>
                         </div>
                     </div>
 
@@ -73,24 +72,25 @@
         </div>
     </div>
 
-    <!---->
     <div class="panel panel-default">
+
         <div class="panel-heading">
             vcenter账号列表
         </div>
-        <div class='panel-body'>
-            <div class="table-responsive">
+        <div class="panel-btns">
+            <a type="button" onclick="VCenterConfig.deleteAccount();"class="king-btn king-info pull-left mt15 ml15">
+                <i class="fa fa-user-plus mr5"></i>删除账号
+            </a>
+            <a type="button" data-type="success" onclick="VCenterConfig.desctroyAccount()"  class="king-btn king-info pull-left mt15 ml15">
+                <i class="fa fa-user-plus mr5"></i>清除账号与所属资源
+            </a>
+            <a type="button" onclick="VCenterConfig.setSyncPolicy();"  class="king-btn king-info pull-left mt15 ml15">
+                <i class="fa fa-user-plus mr5"></i>设置同步策略
+            </a>
+        </div>
+        <div class='panel-body panel-search-body'>
+            <div class="panel-content">
                 <table id="vcenter_config_record" class="table table-bordered table-hover table-striped">
-                    <thead>
-                    <tr>
-                        <th>账号名称</th>
-                        <th>账号密码</th>
-                        <th>Vcenter主机</th>
-                        <th>Vcenter端口</th>
-                        <th>Vcenter版本</th>
-                        <th>同步</th>
-                    </tr>
-                    </thead>
                 </table>
             </div>
         </div>
@@ -102,5 +102,38 @@
 </div>
 </%block>
 <%block name="script">
+<script src="https://magicbox.bkclouds.cc/static_api/v3/assets/validate-1.14.0/js/jquery.validate.js"></script>
 <script src="${STATIC_URL}js/vmware_config.js"></script>
+<script type="text/javascript">
+    /*$(document).ready(function() {
+        $('#account_info').validate({
+            errorElement: 'span',
+            errorClass: 'text-danger',
+            rules: {
+                validation_account_name: {
+                    required: true,
+                    minlength: 2
+                },
+                validation_account_password: {
+                    required: true,
+                    minlength: 6,
+                    equalTo: '#account_password'
+                },
+                validation_vcenter_host: {
+                    required: true,
+                },
+                validation_vcenter_port: {
+                    required: true,
+                    minlength: 2
+                }
+            },
+            messages: {
+                validation_account_name: "请输入Venter账号名称(至少两位)",
+                validation_account_password : "请输入VCenter账号密码",
+                validation_vcenter_host: "请输入VCenter主机IP",
+                validation_vcenter_port: "请输入VCenter主机Port",
+            }
+        });
+    });*/
+</script>
 </%block>

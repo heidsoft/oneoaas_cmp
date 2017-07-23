@@ -5,6 +5,9 @@
 function:vcenter manage
 """
 import time
+import traceback
+
+import datetime
 from pygments.styles import vim
 from pyVim.connect import SmartConnectNoSSL, Disconnect
 from pyVmomi import vim, vmodl
@@ -75,13 +78,15 @@ class VmManage(object):
     def wait_for_task(self,task):
         """ wait for a vCenter task to finish """
         task_done = False
+
         while not task_done:
+            print "task.....%s "% task.info.state
             if task.info.state == 'success':
-                return task.info.result
+                return True
 
             if task.info.state == 'error':
                 print "there was an error"
-                task_done = True
+                return False
 
     #根据资源类型和名称，获取资源对象
     def _get_obj(self, vimtype, name):
@@ -295,6 +300,12 @@ class VmManage(object):
         objview.Destroy()
         return obj
 
+    #通过uuid查询对象
+    def find_by_uuid(self,uuid):
+        search_index = self.client.content.searchIndex
+        obj = search_index.FindByUuid(None,uuid, True, True)
+        return obj
+
     #获取主机端口组
     def get_hosts_portgroups(self,hosts):
         hostPgDict = {}
@@ -414,8 +425,9 @@ class VmManage(object):
 
 
 
+
     #关闭虚拟机
-    def stop(self,vmnames):
+    def stop(self,vmnames,uuid=None):
         print 'vm manage stop...'
         content = self.client.content
         objView = content.viewManager.CreateContainerView(content.rootFolder,
@@ -427,52 +439,75 @@ class VmManage(object):
         # Find the vm and power it on
         tasks = [vm.PowerOff() for vm in vmList if vm.name in vmnames]
 
-        from pyVim.task import WaitForTasks
-        WaitForTasks(tasks=tasks,si=self.client)
+        return tasks
+
+    #操作任务等待处理
+    def handleTask(self,tasks=None):
+        if tasks is None:
+            return False
+        else:
+            from pyVim.task import WaitForTasks
+            try:
+                WaitForTasks(tasks=tasks,si=self.client)
+            except Exception as e:
+                traceback.print_exc()
+                print str(e)
+                return False
 
     #开启
-    def start(self,vmnames):
+    def start(self,vmnames,uuid=None):
         print 'vm manage start...'
-        # content = self.client.content
-        # objView = content.viewManager.CreateContainerView(content.rootFolder,
-        #                                                   [vim.VirtualMachine],
-        #                                                   True)
-        # vmList = objView.view
-        # objView.Destroy()
+        content = self.client.content
+        objView = content.viewManager.CreateContainerView(content.rootFolder,
+                                                          [vim.VirtualMachine],
+                                                          True)
+        vmList = objView.view
+        objView.Destroy()
 
+        #如果是多个虚拟机，则返回多个tasks
+        tasks = [vm.PowerOn() for vm in vmList if vm.name in vmnames]
 
-        # tasks = [vm.PowerOn() for vm in vmList if vm.name in vmnames]
-        #
-        # print tasks
-        #
-        # from pyvim.task import WaitForTasks
-        # WaitForTasks(tasks=tasks,si=self.client)
-
-        vm = self.get_vm_by_name(self.client, vmnames)
-        try:
-            print "find vm and start vm ..."
-            vm.PowerOnGuest()
-        except:
-            # forceably shutoff/on
-            # need to do if vmware guestadditions isn't running
-            vm.ResetVM_Task()
-
-        Disconnect(self.client)
+        return  tasks
 
 
     #重启
-    def reboot(self,vmnames):
+    def reboot(self,vmnames,uuid=None):
         print 'vm manage reboot...'
-        vm = self.get_vm_by_name(self.client, vmnames)
-        try:
-            vm.RebootGuest()
-        except:
-            # forceably shutoff/on
-            # need to do if vmware guestadditions isn't running
-            vm.ResetVM_Task()
+        content = self.client.content
+        objView = content.viewManager.CreateContainerView(content.rootFolder,
+                                                          [vim.VirtualMachine],
+                                                          True)
+        vmList = objView.view
+        objView.Destroy()
 
-        Disconnect(self.client)
+        #如果是多个虚拟机，则返回多个tasks
+        tasks = [vm.RebootGuest() for vm in vmList if vm.name in vmnames]
 
+        return  tasks
+        # vm = self.get_vm_by_name(self.client, vmnames)
+        # try:
+        #     vm.RebootGuest()
+        # except:
+        #     # forceably shutoff/on
+        #     # need to do if vmware guestadditions isn't running
+        #     vm.ResetVM_Task()
+        #
+        # Disconnect(self.client)
+
+    #销毁虚拟机
+    def destroy(self,vmnames,uuid=None):
+        print 'vm manage reboot...'
+        content = self.client.content
+        objView = content.viewManager.CreateContainerView(content.rootFolder,
+                                                          [vim.VirtualMachine],
+                                                          True)
+        vmList = objView.view
+        objView.Destroy()
+
+        #如果是多个虚拟机，则返回多个tasks
+        tasks = [vm.Destroy_Task() for vm in vmList if vm.name in vmnames]
+
+        return  tasks
 
     '''根据uuid信息查询虚拟机信息'''
     def get_vm_by_uuid(self,vmUuid):

@@ -120,8 +120,9 @@ def createVCenterAccount(request):
                     'message': "保存账号成功",
                 }
             else:
-                accountExist = VcenterAccount.objects.get(account_name=accountName)
-                if accountExist is not None:
+                accountExist = VcenterAccount.objects.filter(account_name=accountName)
+
+                if len(accountExist) >0:
                     res = {
                         'result': True,
                         'message': "账号已经存在",
@@ -136,12 +137,36 @@ def createVCenterAccount(request):
     except Exception as e:
         res = {
             'result': False,
-            'message': e.message,
+            'message': "账号保持错误",
         }
     return render_json(res)
 
+def deleteAccount(request):
+    accountId = None
+    if request.method == 'POST':
+        accountId = request.POST['id']
+        if accountId is None or accountId <0:
+            res = {
+                'result': True,
+                'message': "该账号不存在",
+            }
+            return render_json(res)
 
+    try:
+        accountModel = VcenterAccount.objects.get(id=accountId)
+        print accountModel
+        accountModel.delete()
+        res = {
+            'result': True,
+            'message': "删除账号成功",
+        }
+    except Exception as e:
+        print str(e)
 
+    return render_json(res)
+
+def desctroyAccount(request):
+    pass
 
 #同步账号
 def syncVCenterAccount(request):
@@ -156,11 +181,11 @@ def syncVCenterAccount(request):
             }
             return render_json(res)
 
-    accountModel = VcenterAccount.objects.get(id=accountId)
-    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    rootFolder = vmManager.content.rootFolder
-
     try:
+        accountModel = VcenterAccount.objects.get(id=accountId)
+        vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+        rootFolder = vmManager.content.rootFolder
+
         if rootFolder is not None and hasattr(rootFolder,"childEntity"):
             print "rootFolder hava child"
             entity_stack = rootFolder.childEntity
@@ -393,36 +418,22 @@ def WriteFile(filename="test",content=""):
 #获取虚拟机列表
 def getVcenterVirtualMachineList(request):
     logger.info("查询配置vcenter 虚拟机")
-
-    accountModelList = VcenterAccount.objects.all()
-    accountModel = accountModelList[0]
-
-    # vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    # vmAllList = vmManager.list()
-    #
-    # for vm in vmAllList:
-    #     if vm is not None and isinstance(vm, vim.VirtualMachine):
-    #         my =  VirtualMachine()
-    #         my.host = str( vm.summary.runtime.host)
-    #         my.connectionState = str(vm.summary.runtime.connectionState)
-    #         my.powerState = str(vm.summary.runtime.powerState)
-            #print my.toJSON()
-
-
     vcenterVirtualMachineObjectList = VcenterVirtualMachine.objects.all()
+    print vcenterVirtualMachineObjectList
     vmJsonList = []
     from django.forms.models import model_to_dict
     for vm in vcenterVirtualMachineObjectList:
         tempvm = model_to_dict(vm)
         vmJsonList.append(tempvm)
 
+
     res = {
         "recordsTotal": len(vmJsonList),
-        "page": 1,
-        "pages": 6,
-        "start": 10,
-        "end": 20,
-        "length": 10,
+        # "page": 1,
+        # "pages": 6,
+        # "start": 10,
+        # "end": 20,
+        # "length": 10,
         'data': vmJsonList
     }
 
@@ -439,7 +450,6 @@ def poweroffVmRequest(request):
             print 'vmid is %s ' % vmId
             vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
             accountModel = vcenterVirtualMachineModel.account
-            print accountModel
 
         if accountModel is None:
             res = {
@@ -449,19 +459,36 @@ def poweroffVmRequest(request):
             return render_json(res)
         else:
             vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-            result = vmManager.stop(vcenterVirtualMachineModel.name)
-            print result
-            res = {
-                'result': True,
-                'message': u"关机成功",
-            }
+            task = vmManager.stop(vcenterVirtualMachineModel.name)
+            result = vmManager.handleTask(task)
+
+            #同步信息
+            if result == False:
+                res = {
+                    'result': True,
+                    'message': u"关机失败",
+                }
+            else:
+                vm = vmManager.find_by_uuid(vcenterVirtualMachineModel.instance_uuid)
+                vcenterVirtualMachineModel.power_state = vm.summary.runtime.powerState
+                vcenterVirtualMachineModel.save()
+                res = {
+                    'result': True,
+                    'message': u"关机成功",
+                }
 
     except Exception as e:
         res = {
             'result': False,
             'message': e.message,
         }
+
     return render_json(res)
+
+#查询状态
+def queryTaskRequest(request):
+    #查询状态
+    pass
 
 #开启
 def startVmRequest(request):
@@ -483,16 +510,29 @@ def startVmRequest(request):
         else:
             vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
 
-            result = vmManager.start(vcenterVirtualMachineModel.name)
-            print result
-            res = {
-                'result': True,
-                'message': u"开启成功",
-            }
+            task = vmManager.start(vcenterVirtualMachineModel.name)
+            result = vmManager.handleTask(task)
+
+            #同步信息
+            if result == False:
+                res = {
+                    'result': True,
+                    'message': u"开机失败",
+                }
+            else:
+                vm = vmManager.find_by_uuid(vcenterVirtualMachineModel.instance_uuid)
+                vcenterVirtualMachineModel.power_state = vm.summary.runtime.powerState
+                vcenterVirtualMachineModel.save()
+                res = {
+                    'result': True,
+                    'message': u"开机成功",
+                }
     except Exception as e:
+        traceback.print_exc()
+        print str(e)
         res = {
             'result': False,
-            'message': e.message,
+            'message': "开机失败"
         }
 
     return render_json(res)
@@ -518,25 +558,30 @@ def rebootVmRequest(request):
         else:
             vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
 
-            result = vmManager.reboot(vcenterVirtualMachineModel.name)
+            task = vmManager.reboot(vcenterVirtualMachineModel.name)
+            result = vmManager.handleTask(task)
 
-            if result is None:
-                res = {
-                    'result': True,
-                    'message': u"重启成功",
-                }
-            else:
+            #同步信息
+            if result == False:
                 res = {
                     'result': True,
                     'message': u"重启失败",
                 }
-
-
+            else:
+                vm = vmManager.find_by_uuid(vcenterVirtualMachineModel.instance_uuid)
+                vcenterVirtualMachineModel.power_state = vm.summary.runtime.powerState
+                vcenterVirtualMachineModel.save()
+                res = {
+                    'result': True,
+                    'message': u"重启成功",
+                }
 
     except Exception as e:
+        traceback.print_exc()
+        print str(e)
         res = {
             'result': False,
-            'message': e.message,
+            'message': u"重启成功",
         }
     return render_json(res)
 
@@ -560,11 +605,22 @@ def destroyVmRequest(request):
         else:
             vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
 
-            #todo 销毁
-            res = {
-                'result': True,
-                'message': u"销毁成功",
-            }
+            task = vmManager.destroy(vcenterVirtualMachineModel.name)
+            result = vmManager.handleTask(task)
+            #同步信息
+            if result == False:
+                res = {
+                    'result': True,
+                    'message': u"销毁失败",
+                }
+            else:
+                # vm = vmManager.find_by_uuid(vcenterVirtualMachineModel.instance_uuid)
+                # vcenterVirtualMachineModel.power_state = vm.summary.runtime.powerState
+                vcenterVirtualMachineModel.delete()
+                res = {
+                    'result': True,
+                    'message': u"销毁成功",
+                }
 
     except Exception as e:
         res = {
@@ -633,20 +689,33 @@ def cloneVmRequest(request):
                                      resource_pool=None,
                                      power_on=True)
 
-            if result is None:
-                res = {
-                    'result': True,
-                    'message': u"克隆成功",
-                }
-            else:
+            #同步信息
+            if result == False:
                 res = {
                     'result': True,
                     'message': u"克隆失败",
                 }
+            else:
+                # vm = vmManager.find_by_uuid(vcenterVirtualMachineModel.instance_uuid)
+                # vcenterVirtualMachineModel.power_state = vm.summary.runtime.powerState
+                vm = vmManager.get_vm_by_name(vmName)
+                cloneVmModel = convertVmEntityToVcenterVirtualMachine(vm)
+                #数据中心，需要通过名字查询 todo
+                cloneVmModel.datacenter = vcenterVirtualMachineModel.datacenter
+                #集群需要通过名字查询 todo
+                cloneVmModel.cluster = vcenterVirtualMachineModel.cluster
+                cloneVmModel.account = vcenterVirtualMachineModel.account
+                cloneVmModel.save()
+                res = {
+                    'result': True,
+                    'message': u"克隆成功",
+                }
     except Exception as e:
+        traceback.print_exc()
+        print str(e)
         res = {
             'result': False,
-            'message': e.message,
+            'message': u"克隆失败",
         }
     return render_json(res)
 
@@ -665,7 +734,7 @@ def getAllDatacenterRequest(request):
     results = {}
 
     datacenterList = []
-    if isinstance(allDatacenter,dict):
+    if allDatacenter is not None:
         for datacenter in allDatacenter:
             # print datacenter.__str__
             # print datacenter.__dict__
@@ -691,9 +760,7 @@ def getAllClusterRequest(request):
     clusterList = []
     if allCluster is not None:
         for cluster in allCluster:
-            print cluster
             clusterList.append({'id':cluster.name,'text':cluster.name})
-
         results['results']=clusterList
     else:
         results['results']=clusterList
@@ -728,7 +795,7 @@ def getAllDatastoreRequest(request):
 
     results = {}
     datastoreList = []
-    if isinstance(allDatastore,dict):
+    if allDatastore is not None:
         for datastore in allDatastore:
             datastoreList.append({'id':datastore.name,'text':datastore.name})
 
