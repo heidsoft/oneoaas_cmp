@@ -568,3 +568,25 @@ class VmManage(object):
             return self.wait_for_task(task)
         else:
             return None
+
+
+    '''为虚拟机创建快照'''
+    def createSnapshot_(self, vm, name, description,memory,quiesce):
+        #如果快照名称为空，给快照创建默认名称：虚拟机名称+当前时间
+        if name is None or name =='':
+            vmname = vm.config.name
+            time = time.now()
+            timestr = time.strftime('%Y-%m-%d %H:%M:%S', time)
+            name = vmname + "-" + timestr
+        desc = None
+        if description:
+            desc = description
+        if memory is None:
+            memory = True
+        if quiesce is None:
+            quiesce = False
+        task = vm.CreateSnapshot_Task(name=name,
+                                      description=desc,
+                                      memory=memory,
+                                      quiesce=quiesce)
+        return self.wait_for_task(task)

@@ -935,6 +935,43 @@ def updateVMConfigurationRequest(request):
             'message': u"调整配置失败，虚拟机信息不存在",
         }
         return render_json(res)
+    # CreateSnapshot_Task CreateContainerView
+
+
+
+'''createVMSnapshotRequest'''
+def createVMSnapshotRequest(request):
+    vmId = request.POST['vmId']
+    vmUuid = request.POST['vmUuid']
+    name = request.POST['name']
+    description = request.POST['description']
+    memory = request.POST['memory']
+    quiesce = request.POST['quiesce']
+    if vmId is None or vmUuid is None:
+        #虚拟机的信息不全无法进行操作
+        res = {
+            'result': False,
+            'message': u"调整配置失败，虚拟机信息有误",
+        }
+        return render_json(res)
+    # 根据vmid查询vmid在vmware中的具体信息
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+    vmManager = VmManage(host=accountModel.vcenter_host, user=accountModel.account_name, password=accountModel.account_password, port=accountModel.vcenter_port, ssl=None)
+    vminfo = vmManager.get_vm_by_uuid(vmUuid)
+    result = vmManager.createSnapshot_(vminfo, name, description, memory, quiesce)
+    if result:
+        res = {
+            'result': True,
+            'message': u"创建快照成功",
+        }
+        return render_json(res)
+    else:
+        res = {
+            'result': False,
+            'message': u"创建快照失败",
+        }
+        return render_json(res)
 
 
 ########################################test request
