@@ -543,6 +543,7 @@ class VmManage(object):
         print vm
         return vm
 
+    '''修改虚拟机配置信息（仅实现cpu和内存，待完善）'''
     def reconfigVM(self, vm, newCpuNum, newMemory):
         configSpec = vim.VirtualMachineConfigSpec()
         if newCpuNum is not None:
@@ -552,7 +553,7 @@ class VmManage(object):
         updatetask = vm.ReconfigVM_Task(spec=configSpec)
         return self.wait_for_task(updatetask)
 
-    #关闭已知虚拟机
+    '''关闭已知虚拟机'''
     def powerOffvm(self,vm):
         if vm is not None:
             task = vm.PowerOff()
@@ -560,7 +561,7 @@ class VmManage(object):
         else:
             return None
 
-    #开启已知虚拟机
+    ''''#开启已知虚拟机'''
     def powerOnvm(self,vm):
         if vm is not None:
             task = vm.PowerOn()
