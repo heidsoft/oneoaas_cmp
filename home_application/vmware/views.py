@@ -872,8 +872,69 @@ def getStorageAnalysisRequest(request):
 
 
 
-
-
+'''
+#更新虚拟机的配置信息，前期支持cpu和内存的调整，后期会提供更多的配置调整
+'''
+def updateVMConfigurationRequest(request):
+    #从前端请求中获得请求的参数
+    if request.method == 'POST':
+        vmId = request.POST['vmId']
+        vmUuid = request.POST['vmUuid']
+        cpuNum = request.POST['cpuNum']
+        memory = request.POST['memory']
+    if vmId is None or vmUuid is None:
+        #虚拟机的信息不全无法进行操作
+        res = {
+            'result': False,
+            'message': u"调整配置失败，虚拟机信息有误",
+        }
+        return render_json(res)
+    if cpuNum is None and memory is None:
+        #表示需要调整的cpu或者内存数据不对，无法进行调整
+        res = {
+            'result': False,
+            'message': u"调整配置失败，配置信息有误",
+        }
+        return render_json(res)
+    cpuNum = int(cpuNum)
+    #根据vmid查询vmid在vmware中的具体信息
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+    vmManager = VmManage(host=accountModel.vcenter_host, user=accountModel.account_name,password=accountModel.account_password, port=accountModel.vcenter_port, ssl=None)
+    vminfo = vmManager.get_vm_by_uuid(vmUuid)
+    vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
+    print vminfo
+    if vminfo is not None:
+        #关闭虚拟机
+        stopresult = vmManager.powerOffvm(vminfo)
+        #调整虚拟机的配置
+        updateresult = vmManager.reconfigVM(vminfo, cpuNum, long(memory))
+        #重新开启虚拟机
+        openresult = vmManager.powerOnvm(vminfo)
+        if stopresult and updateresult and openresult:
+            if cpuNum is not None:
+                vcenterVirtualMachineModel.numCpu = cpuNum
+            if memory is not None:
+                vcenterVirtualMachineModel.memorySizeMB = int(memory)
+            vcenterVirtualMachineModel.power_state = 'poweredOn'
+            vcenterVirtualMachineModel.save()
+            res = {
+                'result': True,
+                'message': u"调整配置成功",
+            }
+            return render_json(res)
+        else:
+            res = {
+                'result': False,
+                'message': u"调整配置，调用vmware接口出错或调整失败",
+            }
+            return render_json(res)
+    else:
+        res = {
+            'result': False,
+            'message': u"调整配置失败，虚拟机信息不存在",
+        }
+        return render_json(res)
 
 
 ########################################test request

@@ -40,6 +40,7 @@ urlpatterns = patterns(
     url(r'api/getAllCluster', 'getAllClusterRequest'),
     url(r'api/getAllDatastore', 'getAllDatastoreRequest'),
     url(r'api/getClusterByDatacenter', 'getClusterByDatacenterRequest'),
+    url(r'api/updateVMConfiguration', 'updateVMConfigurationRequest'),
 
 
 
