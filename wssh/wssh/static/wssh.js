@@ -70,6 +70,7 @@ WSSHClient.prototype.connect = function(options) {
 
     if (window.WebSocket) {
         this._connection = new WebSocket(endpoint);
+
     }
     else if (window.MozWebSocket) {
         this._connection = MozWebSocket(endpoint);

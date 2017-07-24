@@ -193,6 +193,7 @@
             var options = {
                 username: username.val(),
                 hostname: hostname.val(),
+                command: '',
                 authentication_method: authentication
             };
             console.log(options);
@@ -206,15 +207,17 @@
 
             if (authentication == 'password') {
                 var password = $('input:password#password');
-                if (!validate([username, hostname, password]))
+                if (!validate([username, hostname, password])){
                     toastr.warning("请填SSH写登录信息");
                     return false;
+                }
                 $.extend(options, {password: password.val()});
             } else if (authentication == 'private_key') {
                 var private_key = $('textarea#private_key');
-                if (!validate([username, hostname, private_key]))
+                if (!validate([username, hostname, private_key])){
                     toastr.warning("请填写密钥信息");
                     return false;
+                }
                 $.extend(options, {private_key: private_key.val()});
                 var key_passphrase = $('input:password#key_passphrase');
                 if (key_passphrase.val()) {

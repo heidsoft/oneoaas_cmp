@@ -45,18 +45,25 @@ WSSHClient.prototype._generateEndpoint = function(options) {
     } else {
         var protocol = 'ws://';
     }
-    var endpoint = protocol + window.location.host +
+    var endpoint = protocol + "localhost:5000" +
         '/wssh/' + encodeURIComponent(options.hostname) + '/' +
         encodeURIComponent(options.username);
+
+    console.log("endpoint1  :"+endpoint);
+
     if (options.authentication_method == 'password') {
         endpoint += '?password=' + encodeURIComponent(options.password) +
         '&port=' + encodeURIComponent(options.port);
+
+        console.log("endpoint2  :"+endpoint);
     } else if (options.authentication_method == 'private_key') {
         endpoint += '?private_key=' + encodeURIComponent(options.private_key) +
         '&port=' + encodeURIComponent(options.port);
-        if (options.key_passphrase !== undefined)
+        if (options.key_passphrase !== undefined){
             endpoint += '&key_passphrase=' + encodeURIComponent(
                 options.key_passphrase);
+        }
+        console.log("endpoint3  :"+endpoint);
     }
     if (options.command != "") {
         endpoint += '&run=' + encodeURIComponent(
