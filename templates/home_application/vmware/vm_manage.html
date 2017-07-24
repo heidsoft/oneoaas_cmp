@@ -3,6 +3,9 @@
 <%block name="css">
 <!--本模块加载的css-->
 <link href="${STATIC_URL}assets/art-dialog/css/dialog.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="${STATIC_URL}assets/jquery-ui-1.12.1.custom/jquery-ui.css">
+<link rel="stylesheet" href="${STATIC_URL}assets/jquery-ui-1.12.1.custom/jquery-ui.structure.css">
+<link rel="stylesheet" href="${STATIC_URL}assets/jquery-ui-1.12.1.custom/jquery-ui.theme.css">
 </%block>
 
 
@@ -336,13 +339,17 @@
     </div><!-- /.modal -->
 </div>
 
-
+<div id="taskDialog" title="File Download">
+    <div class="progress-label">Starting download...</div>
+    <div id="progressbar"></div>
+</div>
 
 
 </%block>
 
 <%block name="script">
 <!--本模块加载的脚本-->
+<script type="text/javascript" src="${STATIC_URL}assets/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/art-dialog/dist/dialog.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/twitter-bootstrap-wizard/prettify.js"></script>
