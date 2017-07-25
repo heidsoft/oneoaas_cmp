@@ -222,7 +222,7 @@ class VcenterVirtualMachineSnapshot(models.Model):
     account = models.ForeignKey(VcenterAccount, related_name='vcenter_virtualMachine_napshot_ref_account')
     #快照名称
     name = models.CharField(u"快照名称", max_length=120)
-    description = models.CharField(u"快照描述", max_length=500)
+    description = models.CharField(u"快照描述", max_length=500, null=True)
     create_time = models.DateTimeField(u"创建时间", default=timezone.now)
     result = models.CharField(u"创建快照结果:running表示正在创建中，success表示创建快照成功，failed表示创建失败", max_length=20, default='running')
     #自定义表名称

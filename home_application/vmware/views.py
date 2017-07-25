@@ -885,10 +885,11 @@ def getStorageAnalysisRequest(request):
 def updateVMConfigurationRequest(request):
     #从前端请求中获得请求的参数
     if request.method == 'POST':
-        vmId = request.POST['vmId']
-        vmUuid = request.POST['vmUuid']
-        cpuNum = request.POST['cpuNum']
-        memory = request.POST['memory']
+        vmId = request.POST.get('vmId')
+        vmUuid = request.POST.get('vmUuid')
+        cpuNum = request.POST.get('cpuNum')
+        memory = request.POST.get('memory')
+        status = request.POST.get('status')
     if vmId is None or vmUuid is None:
         #虚拟机的信息不全无法进行操作
         res = {
@@ -910,20 +911,28 @@ def updateVMConfigurationRequest(request):
     vmManager = VmManage(host=accountModel.vcenter_host, user=accountModel.account_name,password=accountModel.account_password, port=accountModel.vcenter_port, ssl=None)
     vminfo = vmManager.get_vm_by_uuid(vmUuid)
     vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
-    print vminfo
+    vmstatus = vminfo.summary.runtime.powerState
     if vminfo is not None:
-        #关闭虚拟机
-        stopresult = vmManager.powerOffvm(vminfo)
+        if vmstatus == 'poweredOn':
+            #关闭虚拟机
+            stopresult = vmManager.powerOffvm(vminfo)
+        else:
+            stopresult = True
         #调整虚拟机的配置
         updateresult = vmManager.reconfigVM(vminfo, cpuNum, long(memory))
-        #重新开启虚拟机
-        openresult = vmManager.powerOnvm(vminfo)
+        if status == 'poweredOn':
+            #重新开启虚拟机
+            openresult = vmManager.powerOnvm(vminfo)
+            power_state = 'poweredOn'
+        else:
+            openresult = True
+            power_state = 'poweredOff'
         if stopresult and updateresult and openresult:
             if cpuNum is not None:
                 vcenterVirtualMachineModel.numCpu = cpuNum
             if memory is not None:
                 vcenterVirtualMachineModel.memorySizeMB = int(memory)
-            vcenterVirtualMachineModel.power_state = 'poweredOn'
+            vcenterVirtualMachineModel.power_state = power_state
             vcenterVirtualMachineModel.save()
             res = {
                 'result': True,
@@ -942,7 +951,6 @@ def updateVMConfigurationRequest(request):
             'message': u"调整配置失败，虚拟机信息不存在",
         }
         return render_json(res)
-    # CreateSnapshot_Task CreateContainerView
 
 
 
@@ -954,12 +962,10 @@ memory: 若为 true, 则虚拟机内存状态 dump(memory dump) 被包含在快�
 quiesce: 若为 true 且创建快照时虚拟机处于开机状态, VMware Tools 通常会用于静默虚拟机中的文件系统, 确保磁盘快照和 GuestOS 文件系统状态是一致
 '''
 def createVMSnapshotRequest(request):
-    print "-------------------------"
-    vmId = request.POST['vmId']
-    vmUuid = request.POST['vmUuid']
-    name = request.POST['name']
-    print name
-    description = request.POST['description']
+    vmId = request.POST.get('vmId')
+    vmUuid = request.POST.get('vmUuid')
+    name = request.POST.get('name')
+    description = request.POST.get('description')
     memory = request.POST.get('memory')
     quiesce = request.POST.get('quiesce')
     if vmId is None or vmUuid is None:
@@ -969,6 +975,14 @@ def createVMSnapshotRequest(request):
             'message': u"调整配置失败，虚拟机信息有误",
         }
         return render_json(res)
+    if memory is not None and memory =='true':
+        memory = True
+    elif memory is not None and memory =='false':
+        memory = False
+    if quiesce is not None and quiesce == 'true':
+        quiesce = True
+    elif quiesce is not None and quiesce =='false':
+        quiesce = False
     # 根据vmid查询vmid在vmware中的具体信息
     accountModelList = VcenterAccount.objects.all()
     accountModel = accountModelList[0]
@@ -1003,18 +1017,11 @@ def createVMSnapshotRequest(request):
         'message': u"创建快照成功",
     }
     return render_json(res)
-    # else:
-    #     res = {
-    #         'result': False,
-    #         'message': u"创建快照失败",
-    #     }
-    #     return render_json(res)
 
 
 
 def getVMSnapshotListRequest(request):
     vmId = request.GET.get('vmId')
-    print vmId
     if vmId is None or vmId == "":
         res = {
             'result': False,
@@ -1023,7 +1030,6 @@ def getVMSnapshotListRequest(request):
         }
         return render_json(res)
     else:
-        print VcenterVirtualMachineSnapshot.objects.getListByVmId(vmId)
         list = VcenterVirtualMachineSnapshot.objects.getListByVmId(vmId)
         res = {
             'result': True,
