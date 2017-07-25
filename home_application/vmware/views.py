@@ -1056,9 +1056,30 @@ def revertToSnapshotRequest(request):
 
 '''删除一个虚拟机的所有快照.'''
 def removeAllSnapshotsRequest(request):
+    vmId = request.POST.get('vmId')
+    vmUuid = request.POST.get('vmUuid')
+    if vmId is None or vmUuid is None:
+        #虚拟机的信息不全无法进行操作
+        res = {
+            'result': False,
+            'message': u"需要删除快照的虚拟机信息不正确",
+        }
+        return render_json(res)
     pass
-
-
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+    vmManager = VmManage(host=accountModel.vcenter_host, user=accountModel.account_name,password=accountModel.account_password, port=accountModel.vcenter_port, ssl=None)
+    vminfo = vmManager.get_vm_by_uuid(vmUuid)
+    if vminfo is not None:
+        result = vmManager.removeAllSnapshots(vminfo)
+        if result:
+            # Entry.objects.filter(pub_date__year=2005).delete()
+            rs = VcenterVirtualMachineSnapshot.objects.filter(virtualmachine_id=vmId).delete()
+            res = {
+                'result': True,
+                'message': u"删除虚拟机的所有快照，操作成功",
+            }
+            return render_json(res)
 
 '''删除一个虚拟机指定的快照, 其中 VirtualMachineSnapshot 是创建快照函数 CreateSnapshot_Task 返回的对象.'''
 def removeSnapshotRequest(request):

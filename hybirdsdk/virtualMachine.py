@@ -586,3 +586,15 @@ class VmManage(object):
                                       memory=memory,
                                       quiesce=quiesce)
         return self.wait_for_task(task)
+
+    def revertToSnapshot(self, vm):
+        pass
+        # task = vm.RevertToSnapshot_Task(name=name,
+        #                               description=desc,
+        #                               memory=memory,
+        #                               quiesce=quiesce)
+        # return self.wait_for_task(task)
+
+    def removeAllSnapshots(self, vm):
+        task = vm.RemoveAllSnapshots_Task()
+        return self.wait_for_task(task)

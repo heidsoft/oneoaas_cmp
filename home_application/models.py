@@ -211,6 +211,8 @@ class VcenterVirtualMachineSnapshot_Manager(models.Manager):
         column_names = [d[0] for d in cursor.description]
         return [Row(zip(column_names, row)) for row in cursor]
 
+    # def deleteAllByVmId(self,vmId):
+
 
 """
 虚拟机快照，与虚拟机是多对一的关系
