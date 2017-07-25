@@ -1027,7 +1027,7 @@ def getVMSnapshotListRequest(request):
         list = VcenterVirtualMachineSnapshot.objects.getListByVmId(vmId)
         res = {
             'result': True,
-            'message': u"查询快照信息失败，虚拟机信息有误",
+            'message': u"查询虚拟机信息成功",
             'data': list
         }
         return render_json(res)
