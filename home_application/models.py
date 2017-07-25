@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
 
-import datetime
 from django.db import models
+from django.utils import timezone
+from django.db import connection, transaction
 
 """
 vcenter账号信息对象
@@ -195,3 +196,46 @@ class VcenterVirtualMachine(models.Model):
         db_table = 'vcenter_virtualmachine'
 
 
+'''
+快照数据表管理方法
+'''
+class VcenterVirtualMachineSnapshot_Manager(models.Manager):
+    '''
+    根据虚拟机id获取快照信息
+    '''
+    def getListByVmId(self, vmId):
+        queryStr = 'SELECT vvs.id,vvs.`name`,vvs.description,date_format(vvs.create_time,"%%Y-%%m-%%d %%H:%%i:%%s") as create_time,vvs.account_id,vvs.virtualmachine_id,vvs.result FROM vcenter_virtualMachine_snapshot AS vvs WHERE vvs.virtualmachine_id = %s' % vmId
+        print queryStr
+        cursor = connection.cursor()
+        cursor.execute(queryStr)
+        column_names = [d[0] for d in cursor.description]
+        return [Row(zip(column_names, row)) for row in cursor]
+
+
+"""
+虚拟机快照，与虚拟机是多对一的关系
+"""
+class VcenterVirtualMachineSnapshot(models.Model):
+    #快照属于哪一个虚拟机
+    virtualmachine = models.ForeignKey(VcenterVirtualMachine, related_name='vcenter_virtualMachine_napshot_ref_virtualmachine')
+    # 属于哪一个vcenter 账号
+    account = models.ForeignKey(VcenterAccount, related_name='vcenter_virtualMachine_napshot_ref_account')
+    #快照名称
+    name = models.CharField(u"快照名称", max_length=120)
+    description = models.CharField(u"快照描述", max_length=500)
+    create_time = models.DateTimeField(u"创建时间", default=timezone.now)
+    result = models.CharField(u"创建快照结果:running表示正在创建中，success表示创建快照成功，failed表示创建失败", max_length=20, default='running')
+    #自定义表名称
+    class Meta:
+        db_table = 'vcenter_virtualMachine_snapshot'
+
+    objects = VcenterVirtualMachineSnapshot_Manager()
+
+
+class Row(dict):
+    """A dict that allows for object-like property access syntax."""
+    def __getattr__(self, name):
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError(name)

@@ -4,13 +4,14 @@
 """
 function:vcenter manage
 """
-import time
+
 import traceback
 
 import datetime
 from pygments.styles import vim
 from pyVim.connect import SmartConnectNoSSL, Disconnect
 from pyVmomi import vim, vmodl
+import time
 
 from common.log import logger
 
@@ -571,13 +572,8 @@ class VmManage(object):
 
 
     '''为虚拟机创建快照'''
-    def createSnapshot_(self, vm, name, description,memory,quiesce):
+    def createSnapshot(self, vm, name, description,memory,quiesce):
         #如果快照名称为空，给快照创建默认名称：虚拟机名称+当前时间
-        if name is None or name =='':
-            vmname = vm.config.name
-            time = time.now()
-            timestr = time.strftime('%Y-%m-%d %H:%M:%S', time)
-            name = vmname + "-" + timestr
         desc = None
         if description:
             desc = description

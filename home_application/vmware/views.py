@@ -9,7 +9,7 @@ from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect
 from gevent import Greenlet
 from pyVmomi.VmomiSupport import DataObject
-
+import time
 from blueking.component.base import logger
 from common.mymako import render_mako_context, render_json
 from home_application.celery_tasks import execute_task
@@ -17,6 +17,9 @@ from home_application.models import *
 from home_application.vmware.object_convert import convertVmEntityToVcenterVirtualMachine
 from hybirdsdk.virtualMachine import VmManage
 from pyVmomi import vim, vmodl
+from datetime import datetime
+import threading
+
 
 """
 虚拟机
@@ -947,12 +950,14 @@ memory: 若为 true, 则虚拟机内存状态 dump(memory dump) 被包含在快�
 quiesce: 若为 true 且创建快照时虚拟机处于开机状态, VMware Tools 通常会用于静默虚拟机中的文件系统, 确保磁盘快照和 GuestOS 文件系统状态是一致
 '''
 def createVMSnapshotRequest(request):
+    print "-------------------------"
     vmId = request.POST['vmId']
     vmUuid = request.POST['vmUuid']
     name = request.POST['name']
+    print name
     description = request.POST['description']
-    memory = request.POST['memory']
-    quiesce = request.POST['quiesce']
+    memory = request.POST.get('memory')
+    quiesce = request.POST.get('quiesce')
     if vmId is None or vmUuid is None:
         #虚拟机的信息不全无法进行操作
         res = {
@@ -963,30 +968,81 @@ def createVMSnapshotRequest(request):
     # 根据vmid查询vmid在vmware中的具体信息
     accountModelList = VcenterAccount.objects.all()
     accountModel = accountModelList[0]
+    vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
     vmManager = VmManage(host=accountModel.vcenter_host, user=accountModel.account_name, password=accountModel.account_password, port=accountModel.vcenter_port, ssl=None)
     vminfo = vmManager.get_vm_by_uuid(vmUuid)
-    result = vmManager.createSnapshot_(vminfo, name, description, memory, quiesce)
-    if result:
+    if name is None or name == '':
+        vmname = vminfo.config.name
+        nowtime = time.time()
+        timestr = time.strftime('%Y-%m-%d %H:%M', time.localtime(float(nowtime)))
+        name = vmname + "-" + timestr
+        # result = vmManager.createSnapshot_(vminfo, name, description, memory, quiesce)
+        # result = True
+        # if result:
+    createtime = datetime.now()
+    snaphot = VcenterVirtualMachineSnapshot()
+    # vcenterVirtualMachineModel, accountModel, name, description, time
+    snaphot.virtualmachine = vcenterVirtualMachineModel
+    snaphot.account = accountModel
+    snaphot.name = name
+    snaphot.description = description
+    snaphot.create_time = createtime
+    snaphot.result = "running"
+    rs = snaphot.save()
+    t = threading.Thread(target=createSnapshot, args=(vmManager, vminfo, name, description, memory, quiesce, snaphot))
+    t.start()
+    res = {
+        'data': {
+            'snaphotid':snaphot.id
+        },
+        'result': True,
+        'message': u"创建快照成功",
+    }
+    return render_json(res)
+    # else:
+    #     res = {
+    #         'result': False,
+    #         'message': u"创建快照失败",
+    #     }
+    #     return render_json(res)
+
+
+
+def getVMSnapshotListRequest(request):
+    vmId = request.GET.get('vmId')
+    print vmId
+    if vmId is None or vmId == "":
         res = {
-            'result': True,
-            'message': u"创建快照成功",
+            'result': False,
+            'message': u"查询快照信息失败，虚拟机信息有误",
+            'data': []
         }
         return render_json(res)
     else:
+        print VcenterVirtualMachineSnapshot.objects.getListByVmId(vmId)
+        list = VcenterVirtualMachineSnapshot.objects.getListByVmId(vmId)
         res = {
-            'result': False,
-            'message': u"创建快照失败",
+            'result': True,
+            'message': u"查询快照信息失败，虚拟机信息有误",
+            'data': list
         }
         return render_json(res)
+
+
+
+def createSnapshot(vmManager, vminfo, name, description, memory, quiesce,snaphotModel):
+    result = vmManager.createSnapshot(vminfo, name, description, memory, quiesce)
+    if result:
+        # snaphotModel = VcenterVirtualMachineSnapshot.objects.get(id=snapshotid)
+        snaphotModel.result = "success"
+        snaphotModel.save()
 
 
 '''恢复快照的方法需要指定一个目标 Host 和指定虚拟机是否开机,
    当恢复一个快照的电源状态为 True 的虚拟机时, 就必须指定一
    个目标的 Host 或者将 SupressPowerOn 指定为 True.'''
 def revertToSnapshotRequest(request):
-    pass
-
-
+   pass
 
 '''删除一个虚拟机的所有快照.'''
 def removeAllSnapshotsRequest(request):
