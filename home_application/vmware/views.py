@@ -94,6 +94,10 @@ def getStorageManageView(request):
         request, '/home_application/vmware/storage_manage.html'
     )
 
+def getWebsshView(request):
+    return render_mako_context(
+        request, '/home_application/vmware/webssh.html'
+    )
 
 
 """

@@ -12,6 +12,7 @@ urlpatterns = patterns(
     url(r'^department/resource/manage', 'getDepartmentResourceManageView'),
     url(r'^user/manage', 'getUserManageView'),
     url(r'^storage/manage', 'getStorageManageView'),
+    url(r'^webssh/manage$', 'getWebsshView'),
 
     #配置类
     url(r'^monitor/config/$', 'getMonitorConfigView'),
