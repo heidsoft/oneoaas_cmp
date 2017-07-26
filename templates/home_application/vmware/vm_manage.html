@@ -10,7 +10,7 @@
 
 
 <%block name="content">
-<article class="content" id="bp_index">
+<article class="content">
 
     <!-- Page Heading -->
     <div class="row page-header-box">
@@ -100,9 +100,6 @@
                     <a type="button" onclick="VCenterManage.RDP();" class="king-btn king-info pull-left mt15 ml15">
                         <i class="fa fa-user-plus mr5"></i>RDP
                     </a>
-                    <a type="button" onclick="open_shield_side();" class="king-btn king-info pull-left mt15 ml15">
-                        <i class="fa fa-user-plus mr5"></i>打开slide
-                    </a>
                 </div>
 
                 <div class='panel-body panel-search-body'>
@@ -124,7 +121,7 @@
         </style>
     </section>
 
-    <section class="side-content-wrapper hidden" id="shield_side" data-type="close">
+    <section class="side-content-wrapper hidden" id="vm_side" data-type="close">
         <div class="side-content open shield-edit">
             <div class="side-detail" id="shield-detail">
                 <div class="strategy-detail info-item new-strategy">
@@ -133,6 +130,14 @@
                     </div>
 
                     <div class="detail">
+
+                        <div class="detail-row">
+                            <div class="subtitle lh-30">基本信息</div>
+                            <div class="subcontent">
+                                <label class="config__inputItem">虚拟机名称{{vminfo.name}}</label>
+                            </div>
+                        </div>
+
                         <table class="table table-header-bg table-bordered mb0">
                             <thead>
                             <tr>
@@ -143,23 +148,23 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <template v-if="checked_host_alarm_strategy_table.length>0">
-                                <template v-for="strategy in checked_host_alarm_strategy_table">
-                                    <tr data-id="{{strategy.id}}">
-                                        <td>{{strategy.monitor_field}}</td>
-                                        <td>{{strategy.strategy_name}}</td>
-                                        <td class="{{strategy.monitor_level_color}}">{{strategy.monitor_level_name}}</td>
+                            <template v-if="snapshot_data.length>0">
+                                <template v-for="snapshot in snapshot_data">
+                                    <tr data-id="{{snapshot.id}}">
+                                        <td>{{snapshot.name}}</td>
+                                        <td>{{snapshot.time}}</td>
+                                        <td>{{snapshot.description}}</td>
                                         <td class="operation">
-                                            ##                                                        <div class="switch switch-mini mr10" data-on="success" data-on-label="ON" data-off-label="OFF">
-                                            <input v-model="strategy.is_enabled" type="checkbox" name="status"/>
-                                            ##                                                        </div>
-                                            <i class="iconfont icon-bianji edit" @click="add_alarm_strategy($event, strategy)"></i>
-                                            <i class="iconfont icon-guanbi delete" @click="del_alarm_strategy($event, strategy)"></i>
+                                            ##<div class="switch switch-mini mr10" data-on="success" data-on-label="ON" data-off-label="OFF">
+                                            <input v-model="snapshot.is_enabled" type="checkbox" name="status"/>
+                                            ##</div>
+                                            <i class="iconfont icon-bianji edit" @click="add_alarm_strategy($event, snapshot)"></i>
+                                            <i class="iconfont icon-guanbi delete" @click="del_alarm_strategy($event, snapshot)"></i>
                                         </td>
                                     </tr>
                                 </template>
                             </template>
-                            <template v-if="checked_host_alarm_strategy_table.length==0">
+                            <template v-if="snapshot_data.length==0">
                                 <tr>
                                     <td colspan="9" class="no-data">
                                         无查询数据

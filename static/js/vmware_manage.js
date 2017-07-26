@@ -3,6 +3,8 @@
  * @description vcenter配置操作模块
  */
 
+
+
 //vcenter 管理插件
 var VCenterManage = (function ($,toastr) {
     return {
@@ -65,9 +67,9 @@ var VCenterManage = (function ($,toastr) {
                         title : '名称',
                         data: "name",
                         render: function ( data, type, row ) {
-                            var html='<span class="group-expand" data-type="group-mark">'+data+'</span>';
-                            return html;
-                        }
+                            var opHTML='<button class="btn btn-xs btn-danger" @click="test();">'+data+'</button>';
+                            return opHTML;
+                        },
                     },
                     {
                         title : '内存(MB)',
@@ -439,10 +441,9 @@ var VCenterManage = (function ($,toastr) {
 
 //扩展到jquery
 //$.fn.extend(VCenterManage);
-//扩展函数
 
-function open_shield_side(){
-    var sideContent = $('#shield_side');
+function open_vm_side(){
+    var sideContent = $('#vm_side');
     sideContent.removeClass('hidden');
     getComputedStyle(document.querySelector('body')).display;
     sideContent.find('#close').addClass('open');
@@ -452,8 +453,8 @@ function open_shield_side(){
     $('article.shield-content').css('overflow', 'hidden');
 }
 
-function close_shield_side(){
-    var sideContent = $('#shield_side');
+function close_vm_side(){
+    var sideContent = $('#vm_side');
     sideContent.find('.shield-edit').removeClass('open').children('#shield-detail').addClass('hidden');
     sideContent.find('#close').removeClass('open');
     setTimeout(function(){
@@ -464,6 +465,8 @@ function close_shield_side(){
 }
 
 
+
+
 $(document).ready(function(){
 
     $("#ccAppList .select2_box").select2({
@@ -472,7 +475,6 @@ $(document).ready(function(){
             cache: false,
             //对返回的数据进行处理
             results: function(data){
-                console.log(data);
                 return data;
             }
         }
@@ -484,7 +486,6 @@ $(document).ready(function(){
             cache: false,
             //对返回的数据进行处理
             results: function(data){
-                console.log(data);
                 return data;
             }
         }
@@ -496,7 +497,6 @@ $(document).ready(function(){
             cache: false,
             //对返回的数据进行处理
             results: function(data){
-                console.log(data);
                 return data;
             }
         }
@@ -541,28 +541,79 @@ $(document).ready(function(){
     VCenterManage.init('#vcenter_manage_record');
 
 
-    $("#shield_side").find("#cancel").click(function(){
-        close_shield_side();
+    $("#vm_side").find("#cancel").click(function(){
+        close_vm_side();
     });
     //关闭侧边栏
     $('#close, #sideContent').on('click', function(event){
         if($(event.target).attr('data-type') == 'close') {
-            close_shield_side();
+            close_vm_side();
         }
     });
 
+    //表格行选中事件
+    // VCenterManage.vmTable.on( 'select', function ( e, dt, type, indexes ) {
+    //     if ( type === 'row' ) {
+    //         var data = VCenterManage.vmTable.rows( indexes ).data().pluck( 'id' );
+    //     }
+    // } );
+
     $('#vcenter_manage_record').on( 'click', 'tr', function () {
 
-        if ( $(this).hasClass('selected') ) {
-            $(this).removeClass('selected');
-        } else {
-            VCenterManage.vmTable.$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
-        }
+        // if ( $(this).hasClass('selected') ) {
+        //     $(this).removeClass('selected');
+        // } else {
+        //     VCenterManage.vmTable.$('tr.selected').removeClass('selected');
+        //     $(this).addClass('selected');
+        // }
 
-        var data = VCenterManage.vmTable.row( this ).data();
-        open_shield_side();
+        var currentVm = VCenterManage.vmTable.row( this ).data();
+
+        //基于vue实例,使用单向数据绑定
+        vm_view = new Vue({
+            el: '#vm_side',
+            data: {
+                disk_data:[],//磁盘数据
+                network_data:[],//网卡数据
+                snapshot_data:[], //快照数据,
+                vminfo:{}
+            },
+            created:function () {
+                var _self=this;
+                $.ajax({
+                    url: site_url+'vmware/api/getVMSnapshotList',
+                    type: 'get',
+                    dataType:'json',
+                    data: {
+                        "vmId":currentVm.id,
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        var tmp = [{"id":1,"name":"vm-snaphost01","time":"2017-07-21","description":"调试jvm快照","is_enabled":true},
+                            {"id":2,"name":"vm-snaphost02","time":"2017-07-21","description":"调试jvm快照","is_enabled":true},
+                            {"id":3,"name":"vm-snaphost03","time":"2017-07-21","description":"调试jvm快照","is_enabled":true}]
+                        _self.snapshot_data = tmp;
+                        console.log(_self.snapshot_data);
+                        _self.vminfo = currentVm;
+                    }
+                });
+            },
+            mounted: function () {
+
+            },
+            watch: {
+
+            },
+            methods: {
+
+            }
+        })
+
+        open_vm_side();
+
+
     } );
+
 
 
 })
