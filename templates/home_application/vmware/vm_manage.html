@@ -10,114 +10,183 @@
 
 
 <%block name="content">
+<article class="content" id="bp_index">
 
-<!-- Page Heading -->
-<div class="row page-header-box">
-    <div class="col-lg-12">
-        <h1 class="page-header">
-            虚拟机管理
-        </h1>
+    <!-- Page Heading -->
+    <div class="row page-header-box">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                虚拟机管理
+            </h1>
+        </div>
     </div>
-</div>
 
-<div class="main-wrap">
+    <section class="main-list">
+        <div class="main-wrap">
+            <!--div class="panel panel-default">
+                <div class="panel-heading">
+                    虚拟机搜索
+                </div>
+                <div class='panel-body'>
+                    <div class="col-sm-8">
+                        <form class="form-horizontal mt15" id="user_form" action="${SITE_URL}event/addEventSource/" method="post">
+                            <div style="display:none">
+                                <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">操作系统类型：</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" id="event_role" name="event_role">
+                                        <option value="1">centos7</option>
+                                        <option value="2">centos6</option>
+                                        <option value="2">window</option>
+                                        <option value="2">ubuntu</option>
+                                    </select>
+                                    <span class="king-required-tip text-danger ml5">*</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">虚拟机名称：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" placeholder="请输入虚拟机名称" id="user_account" name="user_account">
+                                    <span class="king-required-tip text-danger ml5">*</span>
+                                </div>
+                                <div class="col-sm-1"></div>
+                            </div>
 
-    <!--div class="panel panel-default">
-        <div class="panel-heading">
-            虚拟机搜索
-        </div>
-        <div class='panel-body'>
-            <div class="col-sm-8">
-                <form class="form-horizontal mt15" id="user_form" action="${SITE_URL}event/addEventSource/" method="post">
-                    <div style="display:none">
-                        <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"></label>
+                                <div class="col-sm-10">
+                                    <button class="king-btn king-info mr10" title="搜索" type="submit">
+                                        <i class="fa fa-save btn-icon"></i>搜索
+                                    </button>
+                                    <a href="${SITE_URL}vmware/manage" class="king-btn king-default" title="返回">
+                                        <i class="fa fa-mail-reply-all btn-icon"></i>返回
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">操作系统类型：</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id="event_role" name="event_role">
-                                <option value="1">centos7</option>
-                                <option value="2">centos6</option>
-                                <option value="2">window</option>
-                                <option value="2">ubuntu</option>
-                            </select>
-                            <span class="king-required-tip text-danger ml5">*</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">虚拟机名称：</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" placeholder="请输入虚拟机名称" id="user_account" name="user_account">
-                            <span class="king-required-tip text-danger ml5">*</span>
-                        </div>
-                        <div class="col-sm-1"></div>
-                    </div>
+                </div>
+            </div-->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    虚拟机列表
+                </div>
 
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-10">
-                            <button class="king-btn king-info mr10" title="搜索" type="submit">
-                                <i class="fa fa-save btn-icon"></i>搜索
-                            </button>
-                            <a href="${SITE_URL}vmware/manage" class="king-btn king-default" title="返回">
-                                <i class="fa fa-mail-reply-all btn-icon"></i>返回
-                            </a>
-                        </div>
+                <div class="panel-btns">
+                    <a type="button" onclick="VCenterManage.create();"  class="king-btn king-success pull-left mt15 ml15">
+                        <i class="fa fa-gavel mr5"></i>创建虚拟机
+                    </a>
+                    <a type="button" onclick="VCenterManage.clone();"class="king-btn king-info pull-left mt15 ml15">
+                        <i class="fa fa-user-plus mr5"></i>克隆虚拟机
+                    </a>
+                    <a type="button" data-type="success" onclick="VCenterManage.poweroff();"  class="king-btn king-info pull-left mt15 ml15">
+                        <i class="fa fa-user-plus mr5"></i>关闭虚拟机
+                    </a>
+
+                    <a type="button" onclick="VCenterManage.start();"  class="king-btn king-info pull-left mt15 ml15">
+                        <i class="fa fa-user-plus mr5"></i>开启虚拟机
+                    </a>
+                    <a type="button" onclick="VCenterManage.reboot();"  class="king-btn king-info pull-left mt15 ml15">
+                        <i class="fa fa-user-plus mr5"></i>重启虚拟机
+                    </a>
+                    <a type="button" onclick="VCenterManage.destroy();"  class="king-btn king-info pull-left mt15 ml15">
+                        <i class="fa fa-user-plus mr5"></i>销毁虚拟机
+                    </a>
+                    <a type="button" href="${SITE_URL}vmware/webssh/manage" class="king-btn king-info pull-left mt15 ml15">
+                        <i class="fa fa-user-plus mr5"></i>WebSSH
+                    </a>
+                    <a type="button" onclick="VCenterManage.RDP();" class="king-btn king-info pull-left mt15 ml15">
+                        <i class="fa fa-user-plus mr5"></i>RDP
+                    </a>
+                    <a type="button" onclick="open_shield_side();" class="king-btn king-info pull-left mt15 ml15">
+                        <i class="fa fa-user-plus mr5"></i>打开slide
+                    </a>
+                </div>
+
+                <div class='panel-body panel-search-body'>
+                    <div class="panel-content">
+                        <table id="vcenter_manage_record" class="table table-bordered table-striped table-hover">
+                        </table>
                     </div>
-                </form>
+                    <div id="advance">
+
+                    </div>
+                </div>
+
             </div>
         </div>
-    </div-->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            虚拟机列表
-        </div>
+        <style>
+            .tab-content-hide-border{
+                border: none !important;
+            }
+        </style>
+    </section>
 
-        <div class="panel-btns">
-                <a type="button" onclick="VCenterManage.create();"  class="king-btn king-success pull-left mt15 ml15">
-                    <i class="fa fa-gavel mr5"></i>创建虚拟机
-                </a>
-                <a type="button" onclick="VCenterManage.clone();"class="king-btn king-info pull-left mt15 ml15">
-                    <i class="fa fa-user-plus mr5"></i>克隆虚拟机
-                </a>
-                <a type="button" data-type="success" onclick="VCenterManage.poweroff();"  class="king-btn king-info pull-left mt15 ml15">
-                    <i class="fa fa-user-plus mr5"></i>关闭虚拟机
-                </a>
+    <section class="side-content-wrapper hidden" id="shield_side" data-type="close">
+        <div class="side-content open shield-edit">
+            <div class="side-detail" id="shield-detail">
+                <div class="strategy-detail info-item new-strategy">
+                    <div class="title">
+                        <span id="shield_action">快照列表</span>
+                    </div>
 
-                <a type="button" onclick="VCenterManage.start();"  class="king-btn king-info pull-left mt15 ml15">
-                    <i class="fa fa-user-plus mr5"></i>开启虚拟机
-                </a>
-                <a type="button" onclick="VCenterManage.reboot();"  class="king-btn king-info pull-left mt15 ml15">
-                    <i class="fa fa-user-plus mr5"></i>重启虚拟机
-                </a>
-                <a type="button" onclick="VCenterManage.destroy();"  class="king-btn king-info pull-left mt15 ml15">
-                    <i class="fa fa-user-plus mr5"></i>销毁虚拟机
-                </a>
-                <a type="button" href="${SITE_URL}vmware/webssh/manage" class="king-btn king-info pull-left mt15 ml15">
-                    <i class="fa fa-user-plus mr5"></i>WebSSH
-                </a>
-                <a type="button" onclick="VCenterManage.RDP();" class="king-btn king-info pull-left mt15 ml15">
-                    <i class="fa fa-user-plus mr5"></i>RDP
-                </a>
-        </div>
+                    <div class="detail">
+                        <table class="table table-header-bg table-bordered mb0">
+                            <thead>
+                            <tr>
+                                <td>快照名称</td>
+                                <td>快照时间</td>
+                                <td>快照描述</td>
+                                <td>操作</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <template v-if="checked_host_alarm_strategy_table.length>0">
+                                <template v-for="strategy in checked_host_alarm_strategy_table">
+                                    <tr data-id="{{strategy.id}}">
+                                        <td>{{strategy.monitor_field}}</td>
+                                        <td>{{strategy.strategy_name}}</td>
+                                        <td class="{{strategy.monitor_level_color}}">{{strategy.monitor_level_name}}</td>
+                                        <td class="operation">
+                                            ##                                                        <div class="switch switch-mini mr10" data-on="success" data-on-label="ON" data-off-label="OFF">
+                                            <input v-model="strategy.is_enabled" type="checkbox" name="status"/>
+                                            ##                                                        </div>
+                                            <i class="iconfont icon-bianji edit" @click="add_alarm_strategy($event, strategy)"></i>
+                                            <i class="iconfont icon-guanbi delete" @click="del_alarm_strategy($event, strategy)"></i>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                            <template v-if="checked_host_alarm_strategy_table.length==0">
+                                <tr>
+                                    <td colspan="9" class="no-data">
+                                        无查询数据
+                                    </td>
+                                </tr>
+                            </template>
+                            </tbody>
+                        </table>
+                        <div class="loading hidden" id="alarms_strategy_table_loading">
+                            <div class="loading-wrapper">
+                                <img alt="loadding" src="${STATIC_URL}img/hourglass_36.gif">
+                                刷新中，请稍等
+                            </div>
+                        </div>
+                        <div class="paging-wrapper clearfix" id="alarm_strategy_paging_footer">
 
-        <div class='panel-body panel-search-body'>
-            <div class="panel-content">
-                <table id="vcenter_manage_record" class="table table-bordered table-striped table-hover">
-                </table>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            <div id="advance">
-
-            </div>
         </div>
+        <div class="close-btn open" id="close" data-type="close">关闭</div>
+    </section>
 
-    </div>
-</div>
-<style>
-    .tab-content-hide-border{
-        border: none !important;
-    }
-</style>
+</article>
+
 
 <div id="createVmWizard" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -141,39 +210,39 @@
                 </div>
                 <div class="tab-content tab-content-hide-border">
                     <div class="tab-pane" id="tab1">
-                       <div class="row">
-                           <form class="form-horizontal">
-                               <div class="form-group clearfix ">
-                                   <label class="col-sm-3 control-label bk-lh30 pt0">虚拟机名称：</label>
-                                   <div class="col-sm-9">
-                                       <input type="text" class="form-control bk-valign-top" id="" placeholder="请输入虚拟机名称"> </div>
-                               </div>
-                               <div class="form-group clearfix ">
-                                   <label class="col-sm-3 control-label bk-lh30 pt0">虚拟机个数：</label>
-                                   <div class="col-sm-9">
-                                       <input type="text" class="form-control bk-valign-top" id="" placeholder="请输入虚拟机个数"> </div>
-                               </div>
-                               <div class="form-group clearfix ">
-                                   <label class="col-sm-3 control-label bk-lh30 pt0">虚拟机描述：</label>
-                                   <div class="col-sm-9">
-                                       <input type="text" class="form-control bk-valign-top" id="" placeholder="请输入虚拟机描述"> </div>
-                               </div>
+                        <div class="row">
+                            <form class="form-horizontal">
+                                <div class="form-group clearfix ">
+                                    <label class="col-sm-3 control-label bk-lh30 pt0">虚拟机名称：</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control bk-valign-top" id="" placeholder="请输入虚拟机名称"> </div>
+                                </div>
+                                <div class="form-group clearfix ">
+                                    <label class="col-sm-3 control-label bk-lh30 pt0">虚拟机个数：</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control bk-valign-top" id="" placeholder="请输入虚拟机个数"> </div>
+                                </div>
+                                <div class="form-group clearfix ">
+                                    <label class="col-sm-3 control-label bk-lh30 pt0">虚拟机描述：</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control bk-valign-top" id="" placeholder="请输入虚拟机描述"> </div>
+                                </div>
 
-                               <div class="form-group clearfix ">
-                                   <label class="col-sm-3 control-label bk-lh30 pt0">所属业务：</label>
-                                   <div class="col-sm-9">
-                                       <div id="ccAppList" style="display:inline-block;">
-                                           <!-- select2 通过ajax start -->
-                                           <input type="hidden" class="select2_box" style="width:300px;">
-                                           <!-- select2 通过ajax end -->
-                                       </div>
-                                   </div>
+                                <div class="form-group clearfix ">
+                                    <label class="col-sm-3 control-label bk-lh30 pt0">所属业务：</label>
+                                    <div class="col-sm-9">
+                                        <div id="ccAppList" style="display:inline-block;">
+                                            <!-- select2 通过ajax start -->
+                                            <input type="hidden" class="select2_box" style="width:300px;">
+                                            <!-- select2 通过ajax end -->
+                                        </div>
+                                    </div>
 
 
 
-                               </div>
-                           </form>
-                       </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     <div class="tab-pane" id="tab2">
                         <div class="row">
@@ -348,7 +417,7 @@
 </%block>
 
 <%block name="script">
-<!--本模块加载的脚本-->
+<link rel="stylesheet" type="text/css" href="${STATIC_URL}css/vmware-manage.css">
 <script type="text/javascript" src="${STATIC_URL}assets/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/art-dialog/dist/dialog.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js"></script>

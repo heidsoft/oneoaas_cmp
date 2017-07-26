@@ -64,6 +64,10 @@ var VCenterManage = (function ($,toastr) {
                     {
                         title : '名称',
                         data: "name",
+                        render: function ( data, type, row ) {
+                            var html='<span class="group-expand" data-type="group-mark">'+data+'</span>';
+                            return html;
+                        }
                     },
                     {
                         title : '内存(MB)',
@@ -437,6 +441,28 @@ var VCenterManage = (function ($,toastr) {
 //$.fn.extend(VCenterManage);
 //扩展函数
 
+function open_shield_side(){
+    var sideContent = $('#shield_side');
+    sideContent.removeClass('hidden');
+    getComputedStyle(document.querySelector('body')).display;
+    sideContent.find('#close').addClass('open');
+    sideContent.find('.shield-edit').addClass('open');
+    sideContent.find('#shield-detail').removeClass('hidden');
+
+    $('article.shield-content').css('overflow', 'hidden');
+}
+
+function close_shield_side(){
+    var sideContent = $('#shield_side');
+    sideContent.find('.shield-edit').removeClass('open').children('#shield-detail').addClass('hidden');
+    sideContent.find('#close').removeClass('open');
+    setTimeout(function(){
+        sideContent.addClass('hidden');
+        $('article.shield-content').css('overflow', 'auto');
+    }, 300);
+
+}
+
 
 $(document).ready(function(){
 
@@ -513,6 +539,31 @@ $(document).ready(function(){
     });
 
     VCenterManage.init('#vcenter_manage_record');
+
+
+    $("#shield_side").find("#cancel").click(function(){
+        close_shield_side();
+    });
+    //关闭侧边栏
+    $('#close, #sideContent').on('click', function(event){
+        if($(event.target).attr('data-type') == 'close') {
+            close_shield_side();
+        }
+    });
+
+    $('#vcenter_manage_record').on( 'click', 'tr', function () {
+
+        if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+        } else {
+            VCenterManage.vmTable.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+
+        var data = VCenterManage.vmTable.row( this ).data();
+        open_shield_side();
+    } );
+
 
 })
 
