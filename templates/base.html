@@ -7,14 +7,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>OneOaaS CMP</title>
+    <link href="${STATIC_URL}css/cmp_icon/iconfont.css" rel="stylesheet">
 
     <%block name="cssfile"></%block>
     <%block name="css"></%block>
-
 </head>
 
 <body>
+<%block name="menu">
 
+<%
+overView = vmwareDatacenterManage = vmwareClusterManage = vmwareStorageManage =vmwareVmManage = vmwareSystemConfig = ''
+relative_path = APP_PATH
+if relative_path.startswith(SITE_URL + "overview/"):
+    overView = 'active'
+elif relative_path.startswith(SITE_URL + "vmware/datacenter/manage/"):
+    vmwareDatacenterManage = 'active'
+elif relative_path.startswith(SITE_URL + "vmware/cluster/manage/"):
+    vmwareClusterManage = 'active'
+elif relative_path.startswith(SITE_URL + "vmware/storage/manage/"):
+    vmwareStorageManage = 'active'
+elif relative_path.startswith(SITE_URL + "vmware/vm/manage/"):
+    vmwareVmManage = 'active'
+elif relative_path.startswith(SITE_URL + "vmware/system/config/"):
+    vmwareSystemConfig = 'active'
+%>
+
+<style type="text/css">
+    .logo-lg{
+        display: inline-block;
+        font-weight: 400;
+    }
+    .logo-img{
+        margin-top: -14px;
+    }
+</style>
 <div id="wrapper">
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -27,8 +54,8 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="${SITE_URL}">
-                <i class="fa fa-leaf f20 mr5"></i>
-                OneOaaS CMP-v0.1beta
+                <img src="${STATIC_URL}img/cmp-logo.png" class="king-J-icon inline-block logo-img">
+                <span class="logo-lg">OneOaaS CMP-v0.1beta</span>
             </a>
         </div>
         <!-- Top Menu Items -->
@@ -49,24 +76,24 @@
         <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav">
-                <li class="active">
-                    <a href="${SITE_URL}overview/"><i class="fa fa-fw fa-dashboard"></i>资源统计</a>
+                <li class="${overView}">
+                    <a href="${SITE_URL}overview/"><i class="icon iconfont icon-tongjifenxi"></i>资源统计</a>
                 </li>
 
-                <li>
-                    <a href="${SITE_URL}vmware/datacenter/manage/"><i class="fa fa-fw fa-book"></i>数据中心管理</a>
+                <li class="${vmwareDatacenterManage}">
+                    <a href="${SITE_URL}vmware/datacenter/manage/"><i class="icon iconfont icon-shujuzhongxin"></i>数据中心</a>
                 </li>
 
-                <li>
-                    <a href="${SITE_URL}vmware/cluster/manage/"><i class="fa fa-fw fa-book"></i>集群管理</a>
+                <li class="${vmwareClusterManage}">
+                    <a href="${SITE_URL}vmware/cluster/manage/"><i class="icon iconfont icon-cluster"></i>集群</a>
                 </li>
 
-                <li>
-                    <a href="${SITE_URL}vmware/storage/manage/"><i class="fa fa-fw fa-book"></i>存储管理</a>
+                <li class="${vmwareStorageManage}">
+                    <a href="${SITE_URL}vmware/storage/manage/"><i class="icon iconfont icon-cunchu"></i>存储</a>
                 </li>
 
-                <li>
-                    <a href="${SITE_URL}vmware/vm/manage/"><i class="fa fa-fw fa-book"></i>虚拟机管理</a>
+                <li class="${vmwareVmManage}">
+                    <a href="${SITE_URL}vmware/vm/manage/"><i class="icon iconfont icon-xuniji"></i>虚拟机管理</a>
                 </li>
 
                 <!--<li>
@@ -81,8 +108,8 @@
                     <a href="${SITE_URL}vmware/department/manage/"><i class="fa fa-fw fa-book"></i>部门管理</a>
                 </li>-->
 
-                <li>
-                    <a href="${SITE_URL}vmware/system/config/"><i class="fa fa-fw fa-pencil"></i>系统配置</a>
+                <li class="${vmwareSystemConfig}">
+                    <a href="${SITE_URL}vmware/system/config/"><i class="icon iconfont icon-xitongpeizhi2"></i>系统配置</a>
                 </li>
 
                 <!--li>
@@ -132,8 +159,7 @@
 <!-- /#page-wrapper -->
     <!-- /#page-wrapper -->
 
-</div>
-<!-- /#wrapper -->
+</%block>
 
 
 <%block name="scriptfile"></%block>
