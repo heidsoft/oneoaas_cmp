@@ -36,7 +36,10 @@ elif relative_path.startswith(SITE_URL + "vmware/system/config/"):
 <style type="text/css">
     .logo-lg{
         display: inline-block;
-        font-weight: 400;
+        font-weight: bold;
+        text-shadow:5px 5px 15px #1296db;
+        font-size: 2.8rem;
+
     }
     .logo-img{
         margin-top: -14px;
@@ -55,7 +58,7 @@ elif relative_path.startswith(SITE_URL + "vmware/system/config/"):
             </button>
             <a class="navbar-brand" href="${SITE_URL}">
                 <img src="${STATIC_URL}img/cmp-logo.png" class="king-J-icon inline-block logo-img">
-                <span class="logo-lg">OneOaaS CMP-v0.1beta</span>
+                <span class="logo-lg">CMP-V0.1</span>
             </a>
         </div>
         <!-- Top Menu Items -->
@@ -63,9 +66,9 @@ elif relative_path.startswith(SITE_URL + "vmware/system/config/"):
             <li class="dropdown">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> ${request.user.username} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li>
+                    <!--li>
                         <a href="javascript:;"><i class="fa fa-fw fa-user"></i>用户管理</a>
-                    </li>
+                    </li-->
                     <li class="divider"></li>
                     <li>
                         <a id="logout" href="${SITE_URL}account/logout/"><i class="fa fa-fw fa-power-off"></i> 退出</a>
@@ -93,7 +96,7 @@ elif relative_path.startswith(SITE_URL + "vmware/system/config/"):
                 </li>
 
                 <li class="${vmwareVmManage}">
-                    <a href="${SITE_URL}vmware/vm/manage/"><i class="icon iconfont icon-xuniji"></i>虚拟机管理</a>
+                    <a href="${SITE_URL}vmware/vm/manage/"><i class="icon iconfont icon-xuniji"></i>虚拟机</a>
                 </li>
 
                 <!--<li>

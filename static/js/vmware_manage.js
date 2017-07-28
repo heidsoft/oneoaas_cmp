@@ -51,14 +51,14 @@ var VCenterManage = (function ($,toastr) {
                         }
                     }
                 ],
-                // select: {
-                //     style:    'os',
-                //     selector: 'td:first-child'
-                // },
-                //多选
-                'select': {
-                    'style': 'multi'
+                select: {
+                    style:    'os',
+                    //selector: 'td:first-child'
                 },
+                //多选
+                // 'select': {
+                //     'style': 'multi'
+                // },
                 columns: [
                     {
                         data: "id",
@@ -429,7 +429,8 @@ var VCenterManage = (function ($,toastr) {
         },
         //webssh控制台
         webssh:function () {
-            toastr.warning("这是高级功能，蓝鲸社区版暂不支持该功能,如果需要请联系OneOaaS");
+            window.location.href = site_url + "vmware/webssh/manage";
+            //toastr.warning("这是高级功能，蓝鲸社区版暂不支持该功能,如果需要请联系OneOaaS");
             return
         },
         RDP:function () {
