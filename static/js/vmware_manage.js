@@ -593,61 +593,61 @@ $(document).ready(function(){
     //     }
     // } );
 
-    $('#vcenter_manage_record').on( 'click', 'tr', function () {
-
-        // if ( $(this).hasClass('selected') ) {
-        //     $(this).removeClass('selected');
-        // } else {
-        //     VCenterManage.vmTable.$('tr.selected').removeClass('selected');
-        //     $(this).addClass('selected');
-        // }
-
-        var currentVm = VCenterManage.vmTable.row( this ).data();
-
-        //基于vue实例,使用单向数据绑定
-        vm_view = new Vue({
-            el: '#vm_side',
-            data: {
-                disk_data:[],//磁盘数据
-                network_data:[],//网卡数据
-                snapshot_data:[], //快照数据,
-                vminfo:{}
-            },
-            created:function () {
-                var _self=this;
-                $.ajax({
-                    url: site_url+'vmware/api/getVMSnapshotList',
-                    type: 'get',
-                    dataType:'json',
-                    data: {
-                        "vmId":currentVm.id,
-                    },
-                    success: function (data) {
-                        console.log(data);
-                        var tmp = [{"id":1,"name":"vm-snaphost01","time":"2017-07-21","description":"调试jvm快照","is_enabled":true},
-                            {"id":2,"name":"vm-snaphost02","time":"2017-07-21","description":"调试jvm快照","is_enabled":true},
-                            {"id":3,"name":"vm-snaphost03","time":"2017-07-21","description":"调试jvm快照","is_enabled":true}]
-                        _self.snapshot_data = tmp;
-                        console.log(_self.snapshot_data);
-                        _self.vminfo = currentVm;
-                    }
-                });
-            },
-            mounted: function () {
-
-            },
-            watch: {
-
-            },
-            methods: {
-
-            }
-        });
-
-        open_vm_side();
-
-
-    } );
+    // $('#vcenter_manage_record').on( 'click', 'tr', function () {
+    //
+    //     // if ( $(this).hasClass('selected') ) {
+    //     //     $(this).removeClass('selected');
+    //     // } else {
+    //     //     VCenterManage.vmTable.$('tr.selected').removeClass('selected');
+    //     //     $(this).addClass('selected');
+    //     // }
+    //
+    //     var currentVm = VCenterManage.vmTable.row( this ).data();
+    //
+    //     //基于vue实例,使用单向数据绑定
+    //     vm_view = new Vue({
+    //         el: '#vm_side',
+    //         data: {
+    //             disk_data:[],//磁盘数据
+    //             network_data:[],//网卡数据
+    //             snapshot_data:[], //快照数据,
+    //             vminfo:{}
+    //         },
+    //         created:function () {
+    //             var _self=this;
+    //             $.ajax({
+    //                 url: site_url+'vmware/api/getVMSnapshotList',
+    //                 type: 'get',
+    //                 dataType:'json',
+    //                 data: {
+    //                     "vmId":currentVm.id,
+    //                 },
+    //                 success: function (data) {
+    //                     console.log(data);
+    //                     var tmp = [{"id":1,"name":"vm-snaphost01","time":"2017-07-21","description":"调试jvm快照","is_enabled":true},
+    //                         {"id":2,"name":"vm-snaphost02","time":"2017-07-21","description":"调试jvm快照","is_enabled":true},
+    //                         {"id":3,"name":"vm-snaphost03","time":"2017-07-21","description":"调试jvm快照","is_enabled":true}]
+    //                     _self.snapshot_data = tmp;
+    //                     console.log(_self.snapshot_data);
+    //                     _self.vminfo = currentVm;
+    //                 }
+    //             });
+    //         },
+    //         mounted: function () {
+    //
+    //         },
+    //         watch: {
+    //
+    //         },
+    //         methods: {
+    //
+    //         }
+    //     });
+    //
+    //     open_vm_side();
+    //
+    //
+    // } );
 
 
 
