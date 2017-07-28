@@ -963,43 +963,43 @@ quiesce: 若为 true 且创建快照时虚拟机处于开机状态, VMware Tools
 '''
 def createVMSnapshotRequest(request):
     vmId = request.POST.get('vmId')
-    vmUuid = request.POST.get('vmUuid')
+    #vmUuid = request.POST.get('vmUuid')
     name = request.POST.get('name')
     description = request.POST.get('description')
-    memory = request.POST.get('memory')
-    quiesce = request.POST.get('quiesce')
-    if vmId is None or vmUuid is None:
+    #memory = None #request.POST.get('memory')
+    #quiesce = None #request.POST.get('quiesce')
+    if vmId is None:
         #虚拟机的信息不全无法进行操作
         res = {
             'result': False,
-            'message': u"调整配置失败，虚拟机信息有误",
+            'message': u"快照参数错误，快照失败",
         }
         return render_json(res)
-    if memory is not None and memory =='true':
-        memory = True
-    elif memory is not None and memory =='false':
-        memory = False
-    if quiesce is not None and quiesce == 'true':
-        quiesce = True
-    elif quiesce is not None and quiesce =='false':
-        quiesce = False
+
+    if name is None or name == '':
+        res = {
+            'result': False,
+            'message': u"快照名称参数错误，快照失败",
+        }
+        return render_json(res)
+
+    # if memory is not None and memory =='true':
+    #     memory = True
+    # elif memory is not None and memory =='false':
+    #     memory = False
+    # if quiesce is not None and quiesce == 'true':
+    #     quiesce = True
+    # elif quiesce is not None and quiesce =='false':
+    #     quiesce = False
     # 根据vmid查询vmid在vmware中的具体信息
     accountModelList = VcenterAccount.objects.all()
     accountModel = accountModelList[0]
     vcenterVirtualMachineModel = VcenterVirtualMachine.objects.get(id=vmId)
     vmManager = VmManage(host=accountModel.vcenter_host, user=accountModel.account_name, password=accountModel.account_password, port=accountModel.vcenter_port, ssl=None)
-    vminfo = vmManager.get_vm_by_uuid(vmUuid)
-    if name is None or name == '':
-        vmname = vminfo.config.name
-        nowtime = time.time()
-        timestr = time.strftime('%Y-%m-%d %H:%M', time.localtime(float(nowtime)))
-        name = vmname + "-" + timestr
-        # result = vmManager.createSnapshot_(vminfo, name, description, memory, quiesce)
-        # result = True
-        # if result:
+    vminfo = vmManager.get_vm_by_uuid(vcenterVirtualMachineModel.instance_uuid)
+
     createtime = datetime.now()
     snaphot = VcenterVirtualMachineSnapshot()
-    # vcenterVirtualMachineModel, accountModel, name, description, time
     snaphot.virtualmachine = vcenterVirtualMachineModel
     snaphot.account = accountModel
     snaphot.name = name
@@ -1007,18 +1007,42 @@ def createVMSnapshotRequest(request):
     snaphot.create_time = createtime
     snaphot.result = "running"
     rs = snaphot.save()
-    t = threading.Thread(target=createSnapshot, args=(vmManager, vminfo, name, description, memory, quiesce, snaphot))
-    t.start()
-    res = {
-        'data': {
-            'snaphotid':snaphot.id
-        },
-        'result': True,
-        'message': u"创建快照成功",
-    }
+
+    try:
+        t = threading.Thread(target=createSnapshot, args=(vmManager, vminfo, name, description, None, None, snaphot))
+        t.start()
+
+        if snaphot.result =="success":
+            res = {
+                'data': {
+                    'snaphotid':snaphot.id
+                },
+                'result': True,
+                'message': u"创建快照成功",
+            }
+        else:
+            res = {
+                'result': False,
+                'message': u"创建快照失败",
+            }
+
+    except Exception as e:
+        logger.info(str(e))
+        res = {
+            'result': False,
+            'message': u"快照发生错误",
+        }
+        return render_json(res)
+
+
     return render_json(res)
 
-
+def createSnapshot(manager=None, vm=None, name="", description="", memory=None, quiesce=None,snaphotModel=None):
+    result = manager.createSnapshot(vm, name, description, memory, quiesce)
+    print result
+    if result:
+        snaphotModel.result = "success"
+        snaphotModel.save()
 
 def getVMSnapshotListRequest(request):
     vmId = request.GET.get('vmId')
@@ -1040,12 +1064,7 @@ def getVMSnapshotListRequest(request):
 
 
 
-def createSnapshot(vmManager, vminfo, name, description, memory, quiesce,snaphotModel):
-    result = vmManager.createSnapshot(vminfo, name, description, memory, quiesce)
-    if result:
-        # snaphotModel = VcenterVirtualMachineSnapshot.objects.get(id=snapshotid)
-        snaphotModel.result = "success"
-        snaphotModel.save()
+
 
 
 '''恢复快照的方法需要指定一个目标 Host 和指定虚拟机是否开机,

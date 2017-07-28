@@ -51,14 +51,14 @@ var VCenterManage = (function ($,toastr) {
                         }
                     }
                 ],
-                select: {
-                    style:    'os',
-                    //selector: 'td:first-child'
-                },
-                //多选
-                // 'select': {
-                //     'style': 'multi'
+                // select: {
+                //     style:    'os',
+                //     selector: 'td:first-child'
                 // },
+                //多选
+                'select': {
+                    'style': 'multi'
+                },
                 columns: [
                     {
                         data: "id",
@@ -66,10 +66,6 @@ var VCenterManage = (function ($,toastr) {
                     {
                         title : '名称',
                         data: "name",
-                        render: function ( data, type, row ) {
-                            var opHTML='<button class="btn btn-xs btn-danger" @click="test();">'+data+'</button>';
-                            return opHTML;
-                        },
                     },
                     {
                         title : '内存(MB)',
@@ -129,16 +125,16 @@ var VCenterManage = (function ($,toastr) {
                     {
                         title : 'IP',
                         data: "ipaddress",
-                    },
-
-                    {
-                        title : '操作',
-                        data: "name",
-                        render: function ( data, type, row ) {
-                            var opHTML='<button class="btn btn-xs btn-danger" onclick="VCenterManage.snapshot()">执行快照</button>';
-                            return opHTML;
-                        },
-                    },
+                    }
+                    //
+                    // {
+                    //     title : '操作',
+                    //     data: "id",
+                    //     render: function ( data, type, row ) {
+                    //         var opHTML='<a class="king-btn king-info" onclick="VCenterManage.lookup('+data+')">查看详情</a>';
+                    //         return opHTML;
+                    //     },
+                    // },
                 ],
             });
 
@@ -257,73 +253,73 @@ var VCenterManage = (function ($,toastr) {
                 return
             }
 
-            var progressTimer,
-                progressbar = $( "#progressbar" ),
-                progressLabel = $( ".progress-label" ),
-                dialogButtons = [{
-                    text: "Cancel Download",
-                    click: closeDownload
-                }],
-                dialog = $( "#dialog" ).dialog({
-                    autoOpen: false,
-                    closeOnEscape: false,
-                    resizable: false,
-                    buttons: dialogButtons,
-                    open: function() {
-                        progressTimer = setTimeout( progress, 2000 );
-                    },
-                    beforeClose: function() {
-                        downloadButton.button( "option", {
-                            disabled: false,
-                            label: "Start Download"
-                        });
-                    }
-                }),
-                downloadButton = $( "#downloadButton" )
-                    .button()
-                    .on( "click", function() {
-                        $( this ).button( "option", {
-                            disabled: true,
-                            label: "Downloading..."
-                        });
-                        dialog.dialog( "open" );
-                    });
-
-            progressbar.progressbar({
-                value: false,
-                change: function() {
-                    progressLabel.text( "Current Progress: " + progressbar.progressbar( "value" ) + "%" );
-                },
-                complete: function() {
-                    progressLabel.text( "Complete!" );
-                    dialog.dialog( "option", "buttons", [{
-                        text: "Close",
-                        click: closeDownload
-                    }]);
-                    $(".ui-dialog button").last().trigger( "focus" );
-                }
-            });
-
-            function progress() {
-                var val = progressbar.progressbar( "value" ) || 0;
-
-                progressbar.progressbar( "value", val + Math.floor( Math.random() * 3 ) );
-
-                if ( val <= 99 ) {
-                    progressTimer = setTimeout( progress, 50 );
-                }
-            }
-
-            function closeDownload() {
-                clearTimeout( progressTimer );
-                dialog
-                    .dialog( "option", "buttons", dialogButtons )
-                    .dialog( "close" );
-                progressbar.progressbar( "value", false );
-                progressLabel
-                    .text( "Starting download..." );
-                downloadButton.trigger( "focus" );
-            }
+            // var progressTimer,
+            //     progressbar = $( "#progressbar" ),
+            //     progressLabel = $( ".progress-label" ),
+            //     dialogButtons = [{
+            //         text: "Cancel Download",
+            //         click: closeDownload
+            //     }],
+            //     dialog = $( "#dialog" ).dialog({
+            //         autoOpen: false,
+            //         closeOnEscape: false,
+            //         resizable: false,
+            //         buttons: dialogButtons,
+            //         open: function() {
+            //             progressTimer = setTimeout( progress, 2000 );
+            //         },
+            //         beforeClose: function() {
+            //             downloadButton.button( "option", {
+            //                 disabled: false,
+            //                 label: "Start Download"
+            //             });
+            //         }
+            //     }),
+            //     downloadButton = $( "#downloadButton" )
+            //         .button()
+            //         .on( "click", function() {
+            //             $( this ).button( "option", {
+            //                 disabled: true,
+            //                 label: "Downloading..."
+            //             });
+            //             dialog.dialog( "open" );
+            //         });
+            //
+            // progressbar.progressbar({
+            //     value: false,
+            //     change: function() {
+            //         progressLabel.text( "Current Progress: " + progressbar.progressbar( "value" ) + "%" );
+            //     },
+            //     complete: function() {
+            //         progressLabel.text( "Complete!" );
+            //         dialog.dialog( "option", "buttons", [{
+            //             text: "Close",
+            //             click: closeDownload
+            //         }]);
+            //         $(".ui-dialog button").last().trigger( "focus" );
+            //     }
+            // });
+            //
+            // function progress() {
+            //     var val = progressbar.progressbar( "value" ) || 0;
+            //
+            //     progressbar.progressbar( "value", val + Math.floor( Math.random() * 3 ) );
+            //
+            //     if ( val <= 99 ) {
+            //         progressTimer = setTimeout( progress, 50 );
+            //     }
+            // }
+            //
+            // function closeDownload() {
+            //     clearTimeout( progressTimer );
+            //     dialog
+            //         .dialog( "option", "buttons", dialogButtons )
+            //         .dialog( "close" );
+            //     progressbar.progressbar( "value", false );
+            //     progressLabel
+            //         .text( "Starting download..." );
+            //     downloadButton.trigger( "focus" );
+            // }
 
 
             $.ajax({
@@ -407,7 +403,45 @@ var VCenterManage = (function ($,toastr) {
             });
         },
         snapshot:function () {
-            toastr.warning("这是高级功能，蓝鲸社区版暂不支持该功能,如果需要请联系OneOaaS");
+
+            if(!this.beforeAction()){
+                return
+            }
+            if(this.selectedRows.length>1){
+                toastr.warning("蓝鲸版克隆操作只支持选择一台虚拟机");
+                return
+            }
+
+
+            $('#snapshotVmWizard').modal('show');
+
+
+
+        },
+        executeSnapshot:function () {
+            var snapshotName = $("#snapshotName").val();
+            var snapshotDesc = $("#snapshotDesc").val();
+            $.ajax({
+                url: site_url+'vmware/api/createVMSnapshot',
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    "vmId":this.selectedRows[0],
+                    "name":snapshotName,
+                    "description":snapshotDesc,
+                },
+                success: function (data) {
+                    $('#snapshotVmWizard').modal('hide');
+                    if(data.result){
+                        toastr.success(data.message);
+                    }else{
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        },
+        lookup: function (data) {
+            console.log("查看详情1"+data);
         },
         //同步虚拟机
         async: function (data) {
@@ -608,7 +642,7 @@ $(document).ready(function(){
             methods: {
 
             }
-        })
+        });
 
         open_vm_side();
 
