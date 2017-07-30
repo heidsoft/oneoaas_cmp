@@ -238,9 +238,14 @@ def syncVCenterAccount(request):
                                     pgs =  switch.portgroup
                                     if pgs is not None and len(pgs) > 0:
                                         portgroup = ''.join(map(str, pgs))
-                                        print portgroup
                                         vcenterNetwork.portgroup = portgroup
-                                    vcenterNetwork.save()
+
+                                    tempSwitch = VcenterNetwork.objects.filter(host=vcenterNetwork.host)
+                                    if len(tempSwitch)>0:
+                                        #存在记录
+                                        pass
+                                    else:
+                                        vcenterNetwork.save()
 
                     vcDatacenterModel =  VcenterDatacenter()
                     vcDatacenterModel.name = entity.name
