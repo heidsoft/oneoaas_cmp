@@ -3,12 +3,7 @@ import random
 import traceback
 
 import gevent
-import pyVmomi
-import simplejson as simplejson
-from django.core import serializers
-from django.http import HttpResponse, HttpResponseRedirect
 from gevent import Greenlet
-from pyVmomi.VmomiSupport import DataObject
 import time
 from blueking.component.base import logger
 from common.mymako import render_mako_context, render_json
@@ -16,7 +11,7 @@ from home_application.celery_tasks import execute_task
 from home_application.models import *
 from home_application.vmware.object_convert import convertVmEntityToVcenterVirtualMachine
 from hybirdsdk.virtualMachine import VmManage
-from pyVmomi import vim, vmodl
+from pyVmomi import vim
 from datetime import datetime
 import threading
 
@@ -211,7 +206,21 @@ def syncVCenterAccount(request):
                     # print(entity.hostFolder)
                     # print(entity.networkFolder)
                     # print(entity.vmFolder)
+                    vcDatacenterModel =  VcenterDatacenter()
+                    vcDatacenterModel.name = entity.name
+
                     hostEntityList = vmManager.get_hosts(entity.hostFolder)
+                    vcDatacenterModel.hostNum = len(hostEntityList)
+
+                    clusterEntityList = vmManager.get_cluster_pools(entity.hostFolder)
+                    vcDatacenterModel.clusterNum = len(clusterEntityList)
+
+                    datastoreEntityList = vmManager.get_datastores(entity.datastoreFolder)
+                    vcDatacenterModel.datastoreNum = len(datastoreEntityList)
+
+                    vmEntityList = vmManager.get_vms(entity.vmFolder)
+                    vcDatacenterModel.vmNum = len(vmEntityList)
+
                     if hostEntityList is not  None:
                         for host in hostEntityList:
                             # hostIpRouteConfig = host.config.network.consoleIpRouteConfig
@@ -228,6 +237,7 @@ def syncVCenterAccount(request):
 
                             hostVirtualSwitchs = host.config.network.vswitch
                             if hostVirtualSwitchs is not None and len(hostVirtualSwitchs)>0:
+                                vcDatacenterModel.networkNum = len(hostVirtualSwitchs)
                                 for switch in hostVirtualSwitchs:
                                     vcenterNetwork =  VcenterNetwork()
                                     vcenterNetwork.name = switch.name
@@ -247,24 +257,25 @@ def syncVCenterAccount(request):
                                     else:
                                         vcenterNetwork.save()
 
-                    vcDatacenterModel =  VcenterDatacenter()
-                    vcDatacenterModel.name = entity.name
+
                     try:
                         tempDc = VcenterDatacenter.objects.filter(name=entity.name)
                         if len(tempDc)>0:
-                            #如果存在则更新
-                            #VcenterDatacenter.objects.filter(name='yangmv').update(pwd='520')
-                            vcDatacenterModel = tempDc[0]
+                            logger.info("数据中心已经存，更新当前数据中心信息")
+                            tempDc[0].update(hostNum=vcDatacenterModel.hostNum,
+                                             networkNum = vcDatacenterModel.networkNumm,
+                                             clusterNum = vcDatacenterModel.clusterNum,
+                                             datastoreNum = vcDatacenterModel.datastoreNum,
+                                             vmNum = vcDatacenterModel.vmNum
+                                             )
                         else:
                             saveVcDatacenterModel = vcDatacenterModel.save()
                     except Exception as e:
                         #说明不存在
                         strException =  str(e)
                         logger.info("同步处理数据中心出错,错误是 %s" % strException)
-                        vcDatacenterModel.save()
 
-                    clusterEntityList = vmManager.get_cluster_pools(entity.hostFolder)
-                    vcDatacenterModel.clusterNum = len(clusterEntityList)
+
                     if clusterEntityList is not None:
                         for clusterEntity in clusterEntityList:
                             vcClusterModel = VcenterCluster()
@@ -297,11 +308,10 @@ def syncVCenterAccount(request):
                                     vcClusterModel.save()
                             except Exception as e:
                                 #说明不存在
-                                print "cluster update  %s" % str(e)
-                                vcClusterModel.save()
+                                logger.info("cluster update  %s" % str(e))
 
-                    datastoreEntityList = vmManager.get_datastores(entity.datastoreFolder)
-                    vcDatacenterModel.datastoreNum = len(datastoreEntityList)
+
+
                     datastoreTotal = 0
                     if datastoreEntityList is not None:
                         for datastoreEntity in datastoreEntityList:
@@ -342,8 +352,7 @@ def syncVCenterAccount(request):
                                 print "datastore update  %s" % str(e)
                                 vcDatastoreModel.save()
 
-                    vmEntityList = vmManager.get_vms(entity.vmFolder)
-                    vcDatacenterModel.vmNum = len(vmEntityList)
+
                     if vmEntityList is not None:
                         for vmEntity in vmEntityList:
                             vcenterVirtualMachineModel = convertVmEntityToVcenterVirtualMachine(vmEntity)
