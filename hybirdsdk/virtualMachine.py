@@ -7,8 +7,6 @@ function:vcenter manage
 
 import traceback
 
-import datetime
-from pygments.styles import vim
 from pyVim.connect import SmartConnectNoSSL, Disconnect
 from pyVmomi import vim, vmodl
 import time
@@ -81,7 +79,7 @@ class VmManage(object):
         task_done = False
 
         while not task_done:
-            # print "task.....%s "% task.info.state
+            print "task.....%s "% task.info.state
             if task.info.state == 'success':
                 return True
 

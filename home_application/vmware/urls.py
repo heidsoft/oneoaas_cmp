@@ -5,13 +5,14 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns(
     'home_application.vmware.views',
     #视图处理
-    url(r'^vm/manage', 'getVmManageView'),
-    url(r'^cluster/manage', 'getClusterManageView'),
-    url(r'^datacenter/manage', 'getDatacenterManageView'),
+    url(r'^vm/manage$', 'getVmManageView'),
+    url(r'^cluster/manage$', 'getClusterManageView'),
+    url(r'^datacenter/manage$', 'getDatacenterManageView'),
     url(r'^department/manage', 'getDepartmentManageView'),
     url(r'^department/resource/manage', 'getDepartmentResourceManageView'),
     url(r'^user/manage', 'getUserManageView'),
-    url(r'^storage/manage', 'getStorageManageView'),
+    url(r'^storage/manage$', 'getStorageManageView'),
+    url(r'^network/manage$', 'getNetworkManageView'),
     url(r'^webssh/manage$', 'getWebsshView'),
 
     #配置类
