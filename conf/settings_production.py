@@ -2,7 +2,8 @@
 """
 用于正式环境的全局配置
 """
-from settings import APP_ID
+import os
+
 
 
 # ===============================================================================
@@ -10,11 +11,11 @@ from settings import APP_ID
 # ===============================================================================
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # 默认用mysql
-        'NAME': '',                        # 数据库名 (默认与APP_ID相同)
-        'USER': '',                         # 你的数据库user
-        'PASSWORD': '',                  # 你的数据库password
-        'HOST': '',                    # 数据库HOST
-        'PORT': '',                        # 默认3306
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USERNAME'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
     },
 }
