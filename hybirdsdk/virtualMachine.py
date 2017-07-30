@@ -170,6 +170,19 @@ class VmManage(object):
 
         return self._get_obj([vim.HostSystem], name)
 
+    def get_hosts(self,hostFolder):
+        """
+        Find a virtual machine by it's name and return it
+        """
+
+        return self._get_all_objs([vim.HostSystem],hostFolder)
+
+    def get_distributed_virtual_switchs(self,networkFolder):
+        """
+        获取分布式交换机
+        """
+        return self._get_all_objs([vim.DistributedVirtualSwitch],None)
+
     def get_resource_pool(self, name):
         """
         Find a virtual machine by it's name and return it
@@ -261,11 +274,11 @@ class VmManage(object):
 
         return datastores
 
-    def get_hosts(self):
+    def get_hosts(self,hostFolder):
         """
         Returns all hosts
         """
-        return self._get_all_objs([vim.HostSystem])
+        return self._get_all_objs([vim.HostSystem],hostFolder)
 
     def get_hosts_array(self):
         host_view = self.content.viewManager.CreateContainerView(self.content.rootFolder,

@@ -267,3 +267,86 @@ def convertVmEntityToVcenterVirtualMachine(vm,depth=1):
     else:
         vcenterVirtualMachineModel.ipaddress=""
     return vcenterVirtualMachineModel
+
+
+"""
+封装端口组相关属性
+"""
+class PortgroupVO(object):
+    def __init__(self):
+        pass
+
+"""
+端口属性： pgs = host.config.network.portgroup
+"""
+def convertPortGroupEntityToPortGroupVo(pgs):
+    if pgs is None:
+        return None
+    if pgs is not None and len(pgs)>0:
+        for portgroup in pgs:
+            hostPortGroupPorts = portgroup.port
+            if hostPortGroupPorts is not None and len(hostPortGroupPorts)>0:
+                for hostPortGroupPort in hostPortGroupPorts:
+                    macs = hostPortGroupPort.mac
+                    if macs is not None and len(macs)>0:
+                        for mac in macs:
+                            print "mac is %s" % mac
+
+            portGroupSpec = portgroup.spec
+            if portGroupSpec is not  None:
+                print "port group is %s" %portGroupSpec.name
+                print "vlanId is %s" % portGroupSpec.vlanId
+                print "vswitchName is %s" %portGroupSpec.vswitchName
+                hostNetworkPolicy  = portGroupSpec.policy
+
+                hostNetOffloadCapabilities = hostNetworkPolicy.offloadPolicy
+                if hostNetOffloadCapabilities is not None:
+                    print "hostNetOffloadCapabilities info "
+                    print hostNetOffloadCapabilities.csumOffload
+                    print hostNetOffloadCapabilities.tcpSegmentation
+                    print hostNetOffloadCapabilities.zeroCopyXmit
+
+                hostNetworkSecurityPolicy = hostNetworkPolicy.security
+                if hostNetworkSecurityPolicy is not None:
+                    print "hostNetworkSecurityPolicy info "
+                    print hostNetworkSecurityPolicy.allowPromiscuous
+                    print hostNetworkSecurityPolicy.forgedTransmits
+                    print hostNetworkSecurityPolicy.macChanges
+
+                hostNetworkTrafficShapingPolicy = hostNetworkPolicy.shapingPolicy
+                if hostNetworkTrafficShapingPolicy is not None:
+                    print "hostNetworkTrafficShapingPolicy info "
+                    print hostNetworkTrafficShapingPolicy.averageBandwidth
+                    print hostNetworkTrafficShapingPolicy.burstSize
+                    print hostNetworkTrafficShapingPolicy.enabled
+                    print hostNetworkTrafficShapingPolicy.peakBandwidth
+
+                if hostNetworkPolicy is not None:
+                    hostNicTeamingPolicy = hostNetworkPolicy.nicTeaming
+                    if hostNicTeamingPolicy is not None:
+                        reversePolicy = hostNicTeamingPolicy.reversePolicy
+                        rollingOrder = hostNicTeamingPolicy.rollingOrder
+                        notifySwitches = hostNicTeamingPolicy.notifySwitches
+                        policy = hostNicTeamingPolicy.policy
+                        print "notifySwitches is %s" % notifySwitches
+                        print "policy is %s" % policy
+
+                        print "reversePolicy is %s" % reversePolicy
+                        print "rollingOrder is %s" % rollingOrder
+
+                        hostNicFailureCriteria = hostNicTeamingPolicy.failureCriteria
+                        if hostNicFailureCriteria is not None:
+                            print "hostNicFailureCriteria info"
+                            print hostNicFailureCriteria.checkBeacon
+                            print hostNicFailureCriteria.checkDuplex
+                            print hostNicFailureCriteria.checkErrorPercent
+                            print hostNicFailureCriteria.checkSpeed
+                            print hostNicFailureCriteria.fullDuplex
+                            print hostNicFailureCriteria.percentage
+                            print hostNicFailureCriteria.speed
+
+                        hostNicOrderPolicy = hostNicTeamingPolicy.nicOrder
+                        if hostNicOrderPolicy is not None:
+                            print "hostNicOrderPolicy info "
+                            print hostNicOrderPolicy.activeNic
+                            print hostNicOrderPolicy.standbyNic

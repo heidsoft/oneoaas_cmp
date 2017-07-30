@@ -188,7 +188,7 @@ def syncVCenterAccount(request):
     accountId = None
     if request.method == 'POST':
         accountId = request.POST['id']
-        print "accountId is %s" % accountId
+        logger.info( "accountId is %s" % accountId)
         if accountId is None or accountId <0:
             res = {
                 'result': True,
@@ -202,9 +202,7 @@ def syncVCenterAccount(request):
         rootFolder = vmManager.content.rootFolder
 
         if rootFolder is not None and hasattr(rootFolder,"childEntity"):
-            print "rootFolder hava child"
             entity_stack = rootFolder.childEntity
-
             while entity_stack:
                 entity = entity_stack.pop()
                 if isinstance(entity, vim.Datacenter):
@@ -213,6 +211,36 @@ def syncVCenterAccount(request):
                     # print(entity.hostFolder)
                     # print(entity.networkFolder)
                     # print(entity.vmFolder)
+                    hostEntityList = vmManager.get_hosts(entity.hostFolder)
+                    if hostEntityList is not  None:
+                        for host in hostEntityList:
+                            # hostIpRouteConfig = host.config.network.consoleIpRouteConfig
+                            # if hostIpRouteConfig is not None:
+                            #     print "hostIpRouteConfig info "
+                            #     if hostIpRouteConfig.defaultGateway is not None:
+                            #         print hostIpRouteConfig.defaultGateway
+                            #     if hostIpRouteConfig.gatewayDevice is not None:
+                            #         print hostIpRouteConfig.gatewayDevice
+                            #     if hostIpRouteConfig.ipV6DefaultGateway is not None:
+                            #         print hostIpRouteConfig.ipV6DefaultGateway
+                            #     if hostIpRouteConfig.ipV6GatewayDevice is not None:
+                            #         print hostIpRouteConfig.ipV6GatewayDevice
+
+                            hostVirtualSwitchs = host.config.network.vswitch
+                            if hostVirtualSwitchs is not None and len(hostVirtualSwitchs)>0:
+                                for switch in hostVirtualSwitchs:
+                                    vcenterNetwork =  VcenterNetwork()
+                                    vcenterNetwork.name = switch.name
+                                    vcenterNetwork.mtu = switch.mtu
+                                    vcenterNetwork.num_ports = switch.numPorts
+                                    vcenterNetwork.num_ports_available = switch.numPortsAvailable
+                                    vcenterNetwork.host = host.summary.config.name
+                                    pgs =  switch.portgroup
+                                    if pgs is not None and len(pgs) > 0:
+                                        portgroup = ''.join(map(str, pgs))
+                                        print portgroup
+                                        vcenterNetwork.portgroup = portgroup
+                                    vcenterNetwork.save()
 
                     vcDatacenterModel =  VcenterDatacenter()
                     vcDatacenterModel.name = entity.name
@@ -224,10 +252,10 @@ def syncVCenterAccount(request):
                             vcDatacenterModel = tempDc[0]
                         else:
                             saveVcDatacenterModel = vcDatacenterModel.save()
-                            print "save dc %s" % saveVcDatacenterModel
                     except Exception as e:
                         #说明不存在
-                        print "dc update  %s" % str(e)
+                        strException =  str(e)
+                        logger.info("同步处理数据中心出错,错误是 %s" % strException)
                         vcDatacenterModel.save()
 
                     clusterEntityList = vmManager.get_cluster_pools(entity.hostFolder)
@@ -278,7 +306,6 @@ def syncVCenterAccount(request):
                             vcDatastoreModel.datacenter = vcDatacenterModel
                             vcDatastoreModel.mountHostNum = len(datastoreEntity.host)
 
-                            print "container %s "% datastoreEntity.info.containerId
                             vcDatastoreModel.datastoreContainerId = datastoreEntity.info.containerId
                             vcDatastoreModel.accessible  = datastoreEntity.summary.accessible
 
@@ -422,6 +449,21 @@ def getVcenterDatastoreList(request):
     return render_json(res)
 
 
+def getVcenterNetworkList(request):
+    logger.info("查询配置vcenter 网络")
+
+    networkObjectList = VcenterNetwork.objects.all()
+    networkJsonList = []
+    from django.forms.models import model_to_dict
+    for store in networkObjectList:
+        tempStore = model_to_dict(store)
+        networkJsonList.append(tempStore)
+
+    res = {
+        "recordsTotal": len(networkObjectList),
+        'data': networkJsonList
+    }
+    return render_json(res)
 
 #写入文件
 def WriteFile(filename="test",content=""):

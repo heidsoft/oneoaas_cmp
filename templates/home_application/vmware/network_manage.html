@@ -20,23 +20,20 @@
 <div class="main-wrap">
     <div class="panel panel-default">
         <div class="panel-heading">
-            存储列表
+            网络列表
         </div>
 
         <div class='panel-body'>
             <div class="panel-content">
-                <table id="storage_manage_record" class="table table-bordered table-hover table-striped">
+                <table id="network_manage_record" class="table table-bordered table-hover table-striped">
                     <thead>
                     <tr>
-                        <th>存储名称</th>
-                        <th>挂载主机数</th>
-                        <th>是否可访问</th>
-                        <th>容量大小</th>
-                        <th>剩余空间</th>
-                        <th>维护模式</th>
-                        <th>多主机访问是否开启</th>
-                        <th>文件系统类型</th>
-                        <th>存储节点路径</th>
+                        <th>vSwitch名称</th>
+                        <th>所属主机</th>
+                        <th>最大传输包</th>
+                        <th>端口数</th>
+                        <th>可用端口数</th>
+                        <th>端口组信息</th>
                     </tr>
                     </thead>
                 </table>
@@ -60,5 +57,5 @@
 <script type="text/javascript" src="${STATIC_URL}assets/art-dialog/dist/dialog.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/twitter-bootstrap-wizard/prettify.js"></script>
-<script type="text/javascript" src="${STATIC_URL}js/storage_manage.js"></script>
+<script type="text/javascript" src="${STATIC_URL}js/network_manage.js"></script>
 </%block>

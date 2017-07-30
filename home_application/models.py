@@ -116,13 +116,29 @@ class VcenterDatastore(models.Model):
         db_table = 'vcenter_datastore'
 
 """
-存储节点，与数据中心是一对多关系
+网络信息
 """
 class VcenterNetwork(models.Model):
-    #网络所在的数据中心
-    datacenter = models.ForeignKey(VcenterDatacenter, related_name='vcenter_network_ref_datacenter')
-    #数据中心名称
-    name = models.CharField(max_length=60)
+    #vswitch名称
+    name = models.CharField(max_length=60,default="")
+
+    #属于哪一台主机
+    host = models.CharField(max_length=32,default="")
+
+    #最大传输数
+    mtu = models.IntegerField(default=0)
+
+    #端口数
+    num_ports = models.IntegerField(default=0)
+
+    #可用端口数
+    num_ports_available = models.IntegerField(default=0)
+
+    #端口组名称信息
+    portgroup = models.CharField(max_length=120,default="")
+
+    #虚拟机网卡个数
+    vnic = models.IntegerField(default=0)
 
     #自定义表名称
     class Meta:
@@ -159,7 +175,7 @@ class VcenterVirtualMachine(models.Model):
     #虚拟机IP
     ipaddress = models.CharField(max_length=30)
     #实例uuid
-    instance_uuid = models.CharField(max_length=40)
+    instance_uuid = models.CharField(max_length=40,unique=True)
     #最后启动时间
     boot_time = models.TimeField(null=True)
 
@@ -229,7 +245,7 @@ class VcenterVirtualMachineSnapshot(models.Model):
     result = models.CharField(u"创建快照结果:running表示正在创建中，success表示创建快照成功，failed表示创建失败", max_length=20, default='running')
     #自定义表名称
     class Meta:
-        db_table = 'vcenter_virtualMachine_snapshot'
+        db_table = 'vcenter_virtualmachine_snapshot'
 
     objects = VcenterVirtualMachineSnapshot_Manager()
 

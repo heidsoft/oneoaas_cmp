@@ -16,14 +16,17 @@ urlpatterns = patterns(
     url(r'^webssh/manage$', 'getWebsshView'),
 
     #配置类
-    url(r'^monitor/config/$', 'getMonitorConfigView'),
-    url(r'^system/config/$', 'getVmConfigView'),
+    url(r'^monitor/config$', 'getMonitorConfigView'),
+    url(r'^system/config$', 'getVmConfigView'),
 
     #表格
     url(r'api/getVcenterAccountList$', 'getVcenterAccountList'),
     url(r'api/getVcenterDatacenterList$', 'getVcenterDatacenterList'),
     url(r'api/getVcenterClusterList$', 'getVcenterClusterList'),
     url(r'api/getVcenterDatastoreList$', 'getVcenterDatastoreList'),
+    url(r'api/getVcenterNetworkList$', 'getVcenterNetworkList'),
+
+
 
     #管理类
     url(r'api/deleteAccount', 'deleteAccount'),
