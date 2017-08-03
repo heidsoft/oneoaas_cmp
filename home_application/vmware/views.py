@@ -231,6 +231,24 @@ def syncVCenterAccount(request):
 
                     if hostEntityList is not  None:
                         for host in hostEntityList:
+                            print "host......"
+                            print host.summary.config.name
+                            print host.summary.config.product.apiType
+                            print host.summary.config.product.apiVersion
+                            print host.summary.config.product.build
+                            print host.summary.config.product.fullName
+                            print host.summary.config.product.instanceUuid
+                            print host.summary.config.product.licenseProductName
+                            print host.summary.config.product.licenseProductVersion
+                            print host.summary.config.product.localeBuild
+                            print host.summary.config.product.localeVersion
+                            print host.summary.config.product.name
+                            print host.summary.config.product.osType
+                            print host.summary.config.product.productLineId
+                            print host.summary.config.product.vendor
+                            print host.summary.config.product.version
+
+
                             # hostIpRouteConfig = host.config.network.consoleIpRouteConfig
                             # if hostIpRouteConfig is not None:
                             #     print "hostIpRouteConfig info "

@@ -144,9 +144,38 @@ class VcenterNetwork(models.Model):
     class Meta:
         db_table = 'vcenter_network'
 
+"""
+主机对象
+"""
 class VcenterHost(models.Model):
     #host名称
     name = models.CharField(max_length=60,default="")
+
+    api_type = models.CharField(max_length=20,default="")
+
+    api_version = models.CharField(max_length=20,default="")
+
+    build = models.CharField(max_length=20,default="")
+
+    full_name = models.CharField(max_length=20,default="")
+
+    instance_uuid = models.CharField(max_length=20,default="")
+
+    license_product_name = models.CharField(max_length=20,default="")
+
+    license_product_version = models.CharField(max_length=20,default="")
+
+    locale_build = models.CharField(max_length=20,default="")
+
+    locale_version = models.CharField(max_length=20,default="")
+
+    os_type = models.CharField(max_length=20,default="")
+
+    product_line_id = models.CharField(max_length=20,default="")
+
+    vendor = models.CharField(max_length=20,default="")
+
+    version = models.CharField(max_length=20,default="")
 
     #自定义表名称
     class Meta:
