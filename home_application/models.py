@@ -157,7 +157,7 @@ class VcenterHost(models.Model):
 
     build = models.CharField(max_length=20,default="")
 
-    full_name = models.CharField(max_length=20,default="")
+    full_name = models.CharField(max_length=60,default="")
 
     instance_uuid = models.CharField(max_length=20,default="")
 

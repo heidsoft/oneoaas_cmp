@@ -42,30 +42,51 @@ var VCenterManage = (function ($,toastr) {
                 columns: [
                     {
                         data: "name",
+                        title:"主机名称"
                     },
                     {
-                        data: "mountHostNum",
+                        data: "api_type",
+                        title:"API类型"
                     },
                     {
-                        data: "accessible",
+                        data: "api_version",
+                        title:"API版本"
                     },
                     {
-                        data: "capacity",
+                        data: "build",
+                        title:"构建时间"
                     },
                     {
-                        data: "freeSpace",
+                        data: "full_name",
+                        title:"全称"
                     },
                     {
-                        data: "maintenanceMode",
+                        data: "instance_uuid",
+                        title:"uuid"
                     },
                     {
-                        data: "multipleHostAccess",
+                        data: "license_product_name",
+                        title:"证书产品名称"
                     },
                     {
-                        data: "filesystemType",
+                        data: "license_product_version",
+                        title:"证书产品版本"
                     },
                     {
-                        data: "url",
+                        data: "locale_version",
+                        title:"本地版本"
+                    },
+                    {
+                        data: "os_type",
+                        title:"操作系统类型"
+                    },
+                    {
+                        data: "vendor",
+                        title:"厂商"
+                    },
+                    {
+                        data: "version",
+                        title:"版本"
                     },
                 ],
             });

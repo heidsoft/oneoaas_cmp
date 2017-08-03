@@ -231,22 +231,29 @@ def syncVCenterAccount(request):
 
                     if hostEntityList is not  None:
                         for host in hostEntityList:
-                            print "host......"
-                            print host.summary.config.name
-                            print host.summary.config.product.apiType
-                            print host.summary.config.product.apiVersion
-                            print host.summary.config.product.build
-                            print host.summary.config.product.fullName
-                            print host.summary.config.product.instanceUuid
-                            print host.summary.config.product.licenseProductName
-                            print host.summary.config.product.licenseProductVersion
-                            print host.summary.config.product.localeBuild
-                            print host.summary.config.product.localeVersion
-                            print host.summary.config.product.name
-                            print host.summary.config.product.osType
-                            print host.summary.config.product.productLineId
-                            print host.summary.config.product.vendor
-                            print host.summary.config.product.version
+
+                            VcenterHost.objects.filter(name="abc")
+                            vcenterHost =  VcenterHost()
+                            vcenterHost.name = host.summary.config.name
+                            vcenterHost.api_type = host.summary.config.product.apiType
+                            vcenterHost.api_version = host.summary.config.product.apiVersion
+                            vcenterHost.build = host.summary.config.product.build
+                            vcenterHost.full_name = host.summary.config.product.fullName
+                            vcenterHost.instance_uuid = host.summary.config.product.instanceUuid
+                            vcenterHost.license_product_name = host.summary.config.product.licenseProductName
+                            vcenterHost.license_product_version = host.summary.config.product.licenseProductVersion
+                            vcenterHost.locale_build = host.summary.config.product.localeBuild
+                            vcenterHost.locale_version = host.summary.config.product.localeVersion
+                            vcenterHost.os_type = host.summary.config.product.osType
+                            vcenterHost.product_line_id = host.summary.config.product.productLineId
+                            vcenterHost.vendor = host.summary.config.product.vendor
+                            vcenterHost.version = host.summary.config.product.version
+                            vcHosts = VcenterHost.objects.filter(name=vcenterHost.name)
+                            if vcHosts is not None and len(vcHosts)> 0:
+                                #如果存在则暂时不更新
+                                pass
+                            else:
+                                vcenterHost.save()
 
 
                             # hostIpRouteConfig = host.config.network.consoleIpRouteConfig
@@ -507,7 +514,18 @@ def getVcenterNetworkList(request):
 
 def getVcenterHostList(request):
     logger.info("查询配置vcenter host")
-    pass
+    hostObjectList = VcenterHost.objects.all()
+    hostJsonList = []
+    from django.forms.models import model_to_dict
+    for host in hostObjectList:
+        tempHost = model_to_dict(host)
+        hostJsonList.append(tempHost)
+
+    res = {
+        "recordsTotal": len(hostObjectList),
+        'data': hostJsonList
+    }
+    return render_json(res)
 
 #写入文件
 def WriteFile(filename="test",content=""):
