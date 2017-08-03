@@ -144,6 +144,14 @@ class VcenterNetwork(models.Model):
     class Meta:
         db_table = 'vcenter_network'
 
+class VcenterHost(models.Model):
+    #host名称
+    name = models.CharField(max_length=60,default="")
+
+    #自定义表名称
+    class Meta:
+        db_table = 'vcenter_host'
+
 """
 定义vm管理器
 """

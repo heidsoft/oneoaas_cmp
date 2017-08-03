@@ -1,0 +1,66 @@
+<%inherit file="/home_application/base_new.html"/>
+
+<%block name="css">
+<!--本模块加载的css-->
+<link href="${STATIC_URL}assets/art-dialog/css/dialog.css" rel="stylesheet" type="text/css" />
+</%block>
+
+
+<%block name="content">
+
+<!-- Page Heading -->
+<div class="row page-header-box">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            主机管理
+        </h1>
+    </div>
+</div>
+
+<div class="main-wrap">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            主机列表
+        </div>
+
+        <div class='panel-body'>
+            <div class="panel-content">
+                <table id="host_manage_record" class="table table-bordered table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>类型</th>
+                        <th>型号</th>
+                        <th>处理器类型</th>
+                        <th>逻辑处理器</th>
+                        <th>网卡</th>
+                        <th>虚拟机</th>
+                        <th>状态</th>
+                        <th>正常运行时间</th>
+                        <th>CPU</th>
+                        <th>内存</th>
+                        <th>存储</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+<style>
+    .tab-content-hide-border{
+        border: none !important;
+    }
+</style>
+
+
+
+</%block>
+
+<%block name="script">
+<!--本模块加载的脚本-->
+<script type="text/javascript" src="${STATIC_URL}assets/art-dialog/dist/dialog.js"></script>
+<script type="text/javascript" src="${STATIC_URL}assets/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js"></script>
+<script type="text/javascript" src="${STATIC_URL}assets/twitter-bootstrap-wizard/prettify.js"></script>
+<script type="text/javascript" src="${STATIC_URL}js/host_manage.js"></script>
+</%block>

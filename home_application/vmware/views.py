@@ -25,6 +25,14 @@ def getVmManageView(request):
     )
 
 """
+虚拟机
+"""
+def getHostManageView(request):
+    return render_mako_context(
+        request, '/home_application/vmware/host_manage.html'
+    )
+
+"""
 虚拟机配置
 """
 def getVmConfigView(request):
@@ -478,6 +486,10 @@ def getVcenterNetworkList(request):
         'data': networkJsonList
     }
     return render_json(res)
+
+def getVcenterHostList(request):
+    logger.info("查询配置vcenter host")
+    pass
 
 #写入文件
 def WriteFile(filename="test",content=""):

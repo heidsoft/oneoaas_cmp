@@ -6,6 +6,7 @@ urlpatterns = patterns(
     'home_application.vmware.views',
     #视图处理
     url(r'^vm/manage$', 'getVmManageView'),
+    url(r'^host/manage$', 'getHostManageView'),
     url(r'^cluster/manage$', 'getClusterManageView'),
     url(r'^datacenter/manage$', 'getDatacenterManageView'),
     url(r'^department/manage', 'getDepartmentManageView'),
@@ -25,6 +26,7 @@ urlpatterns = patterns(
     url(r'api/getVcenterClusterList$', 'getVcenterClusterList'),
     url(r'api/getVcenterDatastoreList$', 'getVcenterDatastoreList'),
     url(r'api/getVcenterNetworkList$', 'getVcenterNetworkList'),
+    url(r'api/getVcenterHostList$', 'getVcenterHostList'),
 
 
 
