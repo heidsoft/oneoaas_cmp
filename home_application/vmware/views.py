@@ -239,7 +239,13 @@ def syncVCenterAccount(request):
                             vcenterHost.api_version = host.summary.config.product.apiVersion
                             vcenterHost.build = host.summary.config.product.build
                             vcenterHost.full_name = host.summary.config.product.fullName
-                            vcenterHost.instance_uuid = host.summary.config.product.instanceUuid
+
+                            instanceUuid = host.summary.config.product.instanceUuid
+                            if instanceUuid is not None:
+                                vcenterHost.instance_uuid = instanceUuid
+                            else:
+                                vcenterHost.instance_uuid = ""
+
                             vcenterHost.license_product_name = host.summary.config.product.licenseProductName
                             vcenterHost.license_product_version = host.summary.config.product.licenseProductVersion
                             vcenterHost.locale_build = host.summary.config.product.localeBuild

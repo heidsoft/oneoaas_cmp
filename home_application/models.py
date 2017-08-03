@@ -159,7 +159,7 @@ class VcenterHost(models.Model):
 
     full_name = models.CharField(max_length=60,default="")
 
-    instance_uuid = models.CharField(max_length=20,default="")
+    instance_uuid = models.CharField(max_length=40,default="")
 
     license_product_name = models.CharField(max_length=20,default="")
 
