@@ -29,8 +29,76 @@
                 </table>
             </div>
         </div>
-
     </div>
+
+    <section class="side-content-wrapper hidden" id="host_side" data-type="close">
+        <div class="side-content open shield-edit">
+            <div class="side-detail" id="shield-detail">
+                <div class="strategy-detail info-item new-strategy">
+                    <div class="title">
+                        <span id="shield_action">快照列表</span>
+                    </div>
+
+                    <div class="detail">
+
+                        <div class="detail-row">
+                            <div class="subtitle lh-30">基本信息</div>
+                            <div class="subcontent">
+                                <label class="config__inputItem">虚拟机名称{{vminfo.name}}</label>
+                            </div>
+                        </div>
+
+                        <table class="table table-header-bg table-bordered mb0">
+                            <thead>
+                            <tr>
+                                <td>快照名称</td>
+                                <td>快照时间</td>
+                                <td>快照描述</td>
+                                <td>操作</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <template v-if="snapshot_data.length>0">
+                                <template v-for="snapshot in snapshot_data">
+                                    <tr data-id="{{snapshot.id}}">
+                                        <td>{{snapshot.name}}</td>
+                                        <td>{{snapshot.time}}</td>
+                                        <td>{{snapshot.description}}</td>
+                                        <td class="operation">
+                                            ##<div class="switch switch-mini mr10" data-on="success" data-on-label="ON" data-off-label="OFF">
+                                            <input v-model="snapshot.is_enabled" type="checkbox" name="status"/>
+                                            ##</div>
+                                            <i class="iconfont icon-bianji edit" @click="add_alarm_strategy($event, snapshot)"></i>
+                                            <i class="iconfont icon-guanbi delete" @click="del_alarm_strategy($event, snapshot)"></i>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                            <template v-if="snapshot_data.length==0">
+                                <tr>
+                                    <td colspan="9" class="no-data">
+                                        无查询数据
+                                    </td>
+                                </tr>
+                            </template>
+                            </tbody>
+                        </table>
+                        <div class="loading hidden" id="vm_snapshot_table_loading">
+                            <div class="loading-wrapper">
+                                <img alt="loadding" src="${STATIC_URL}img/hourglass_36.gif">
+                                刷新中，请稍等
+                            </div>
+                        </div>
+                        <div class="paging-wrapper clearfix" id="vm_snapshot_paging_footer">
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="close-btn open" id="close" data-type="close">关闭</div>
+    </section>
 </div>
 <style>
     .tab-content-hide-border{
