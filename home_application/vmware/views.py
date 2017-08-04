@@ -1313,6 +1313,126 @@ def getVmMonitorInfosRequest(request):
         }
         return render_json(res)
 
+
+
+'''根据监控指标以及相关信息获取虚拟机的监控数据'''
+def getHostMonitorInfosRequest(request):
+    hostId = request.POST.get('hostId')
+    hostName = request.POST.get('hostName')
+    # hostIp = request.POST.get('hostIp')
+    startTime = request.POST.get('startTime')
+    endTime = request.POST.get('endTime')
+    intervalId = request.POST.get('intervalId')
+    maxSample = request.POST.get('maxSample')
+    metricName = request.POST.get('metricName')
+    responseResult = {
+        'result': True,
+        "content": {},
+        "message": u"操作成功"
+    }
+    if hostId is None or hostName is None :
+        #虚拟机的信息不全无法进行操作
+        res = {
+            'result': False,
+            'message': u"主机信息不正确,无法获取有效监控信息",
+        }
+        return render_json(res)
+    if metricName is None or metricName == '':
+        res = {
+            'result': False,
+            'message': u"监控指标信息不正确,无法获取有效监控信息",
+        }
+        return render_json(res)
+    if startTime is None or endTime is None or startTime == '' or endTime == '':
+        end = datetime.datetime.now()
+        start = end - datetime.timedelta(days=1)
+    else:
+        if '&nbsp;' in startTime:
+            startDatetime = startTime.replace('&nbsp;', ' ')
+        start = datetime.datetime.strptime(startDatetime, '%Y-%m-%d %H:%M')
+        if '&nbsp;' in endTime:
+            endDatetime = endTime.replace('&nbsp;', ' ')
+        end = datetime.datetime.strptime(endDatetime, '%Y-%m-%d %H:%M')
+    if intervalId is not None and intervalId.isdigit():
+        intervalId = int(intervalId)
+    if maxSample is not None and maxSample.isdigit():
+        maxSample = int(maxSample)
+    accountModelList = VcenterAccount.objects.all()
+    accountModel = accountModelList[0]
+    responseResult['content']['metricName'] = metricName
+    dataValue = []
+    vmManager = VmManage(host=accountModel.vcenter_host, user=accountModel.account_name,
+                         password=accountModel.account_password, port=accountModel.vcenter_port, ssl=None)
+    host = vmManager.get_host_by_name(hostName)
+    if host is not None:
+        result = vmManager.getVmMonitorInfos(host, start, end, intervalId, metricName, maxSample)
+        print "result-----------------------------------------"
+        print result
+        if result:
+            for i in range(len(result)):
+                print "------------------------------"
+                entity = result[i].entity
+                print 'entity : %s' % entity
+                sampleInfos = result[i].sampleInfo
+                print len(sampleInfos)
+                #判断简单信息是否存在
+                if sampleInfos is None or len(sampleInfos) <= 0:
+                    pass
+                values = result[i].value
+                print len(values)
+                if values and len(values) > 0:
+                    for j in range(len(values)):
+                        valuelist =values[j].value
+                        if valuelist and len(valuelist) > 0:
+                            for k in range(len(sampleInfos)):
+                                timestamp = sampleInfos[k].timestamp
+                                times = time.mktime(timestamp.timetuple())
+                                monitorValue = valuelist[k]
+                                print "timestamp :%s,value :%s" % (times, monitorValue)
+                            # "unix_time": 1501811478, "value": 1031
+                                valueobj = {
+                                    "unix_time": int(times),
+                                    "value": monitorValue
+                                }
+                                dataValue.append(valueobj)
+                            responseResult['content']['data'] = dataValue
+                            return render_json(responseResult)
+                        else:
+                            for k in range(len(sampleInfos)):
+                                timestamp = sampleInfos[k].timestamp
+                                times = time.mktime(timestamp.timetuple())
+                                valueobj = {
+                                    "unix_time": int(times),
+                                    "value": 0
+                                }
+                                dataValue.append(valueobj)
+                            responseResult['content']['data'] = dataValue
+                            return render_json(responseResult)
+                else:
+                    #未获取到有效的监控项数据值，此处进行补零操作
+                    for k in range(len(sampleInfos)):
+                        timestamp = sampleInfos[k].timestamp
+                        times = time.mktime(timestamp.timetuple())
+                        valueobj = {
+                            "unix_time": int(times),
+                            "value": 0
+                        }
+                        dataValue.append(valueobj)
+                    responseResult['content']['data'] = dataValue
+                    return render_json(responseResult)
+        else:
+            responseResult['content']['data'] = dataValue
+            return render_json(responseResult)
+    else:
+        # 虚拟机的信息不全无法进行操作
+        res = {
+            'result': False,
+            'message': u"需要删除快照的虚拟机信息不正确",
+        }
+        return render_json(res)
+
+
+
 ########################################test request
 """
 并发测试

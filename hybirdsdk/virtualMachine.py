@@ -638,3 +638,14 @@ class VmManage(object):
             metricId=[metricId])
         perfResults = perfManager.QueryPerf(querySpec=[query])
         return perfResults
+
+
+    '''根据name信息查询主机信息'''
+    def get_host_by_name(self, hostname):
+        content = self.client.content
+        host = None
+        if hostname:
+            search_index = content.searchIndex
+            host = search_index.FindByDnsName(dnsName=hostname, vmSearch=False)
+        # print host
+        return host

@@ -63,6 +63,7 @@ urlpatterns = patterns(
     url(r'api/getCpuAnalysis', 'getCpuAnalysisRequest'),
     url(r'api/getStorageAnalysis', 'getStorageAnalysisRequest'),
     url(r'api/getVmMonitorInfos', 'getVmMonitorInfosRequest'),
+    url(r'api/getHostMonitorInfos', 'getHostMonitorInfosRequest'),
 
 
     #测试api
