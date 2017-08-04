@@ -3,6 +3,7 @@
  * @description vcenter配置操作模块
  */
 
+
 //vcenter 管理插件
 var VCenterManage = (function ($,toastr) {
     return {
@@ -131,7 +132,7 @@ var VCenterManage = (function ($,toastr) {
 //扩展函数
 
 function open_host_side(){
-    var sideContent = $('#vm_side');
+    var sideContent = $('#host_side');
     sideContent.removeClass('hidden');
     getComputedStyle(document.querySelector('body')).display;
     sideContent.find('#close').addClass('open');
@@ -141,8 +142,8 @@ function open_host_side(){
     $('article.shield-content').css('overflow', 'hidden');
 }
 
-function close_vm_side(){
-    var sideContent = $('#vm_side');
+function close_host_side(){
+    var sideContent = $('#host_side');
     sideContent.find('.shield-edit').removeClass('open').children('#shield-detail').addClass('hidden');
     sideContent.find('#close').removeClass('open');
     setTimeout(function(){
@@ -152,6 +153,155 @@ function close_vm_side(){
 
 }
 
+function make_single_graphs(){
+    $(".single-contain").each(function(){
+        console.log("aaaaaaaaaaaaaaa");
+        make_contain_graph($(this));
+    });
+}
+
+function make_contain_graph(contain, _type){
+    var chart_div = contain.find(".line-chart");
+    var host_id = chart_div.attr("data-host_id");
+    if (!host_id){
+        host_id = hosts_view.checked_host_index_table.id;
+    }
+    var params = {
+        graph_date: _type?$("#multiple_graph_date").val():$("#single_graph_date").val(),
+        host_id: host_id,
+        index_id: chart_div.attr("data-index_id"),
+        dimension_field_value: chart_div.attr("data-dimension_field_value")
+    };
+
+    chart_div.html('<img class="graph-loading" alt="loadding" src="'+static_url+'img/hourglass_36.gif" style="margin-top: 75px;margin-left:45%;">');
+
+    $.get(site_url+'vmware/api/getVcenterAccountList', params, function(res){
+        chart_div.html("");
+
+        var  resp ={
+            "msg": "",
+            "message": "",
+            "data": {
+                "echo_sql": "",
+                "data": {
+                    "min_y": 0,
+                    "pointStart": 1501804800000,
+                    "series": [
+                        {
+                            "count": [
+                                1.46,
+                                0.87,
+                                0.26,
+                                0.19,
+                                0.18
+                            ],
+                            "x_axis_list": [
+                                "2017-08-04 00:00:00",
+                                "2017-08-04 00:01:00",
+                                "2017-08-04 00:02:00",
+                                "2017-08-04 00:03:00",
+                                "2017-08-04 00:04:00"
+                            ],
+                            "name": "cpu总使用率",
+                            "type": "spline",
+                            "delay_info": {
+                                "1501806600": true,
+                                "1501808640": true,
+                                "1501814820": true,
+                                "1501816860": true,
+                                "1501818900": true
+                            },
+                            "zones": [],
+                            "zoneAxis": "x",
+                            "data": [
+                                [
+                                    1501804800000,
+                                    1.46
+                                ],
+                                [
+                                    1501804860000,
+                                    0.87
+                                ],
+                                [
+                                    1501804920000,
+                                    0.26
+                                ],
+                                [
+                                    1501804980000,
+                                    0.19
+                                ],
+                                [
+                                    1501805040000,
+                                    0.18
+                                ]
+                            ]
+                        }
+                    ],
+                    "x_axis": {
+                        "minRange": 3600000,
+                        "type": "datetime"
+                    },
+                    "pointInterval": 300000,
+                    "show_percent": false,
+                    "series_name_list": [
+                        "cpu总使用率"
+                    ],
+                    "chart_type": "spline",
+                    "color_list": "",
+                    "unit": "%",
+                    "max_y": 5.93
+                },
+                "update_time": "2017-08-04 17:06:06"
+            },
+            "result": true
+        }
+        if(resp.result){
+            var chart_data =resp.data.data;
+            console.log(chart_data);
+            var series_info = {};
+            for (var i = 0; i < chart_data.series.length; i++) {
+                series_info[chart_data.series[i].name] = chart_data.series[i];
+            }
+            Hchart.spline(chart_data, chart_div[0], series_info);
+        }else{
+            var error_tips_html = '<div class="chart-error">' +
+                '<span class="error-mark">' +
+                '<i class="fa fa-exclamation"></i>' +
+                '</span><span class="error-text">'+
+                res.message + '</span></div>';
+            //chart_div.html(error_tips_html);
+            chart_div.html(res.message);
+        }
+    }, 'json');
+}
+
+
+//基于vue实例,使用单向数据绑定
+var hosts_view = new Vue({
+    el: '#host_side',
+    data: {
+        checked_host_index_table:{},//选择主机
+    },
+    created:function () {
+
+    },
+    methods: {
+
+    },
+    watch: {
+        'checked_host_index_table.length': {
+            handler: function(newVal,oldVal) {
+                if (this.checked_host_index_table.name !=='' ){
+                    console.log(checked_host_index_table);
+                    make_single_graphs();
+                }
+            },
+            deep: true,
+        },
+    }
+
+});
+
 
 
 $(document).ready(function(){
@@ -160,50 +310,8 @@ $(document).ready(function(){
 
     $('#host_manage_record').on( 'click', 'tr', function () {
         var currentHost = VCenterManage.vmTable.row( this ).data();
-
-        //基于vue实例,使用单向数据绑定
-        vm_view = new Vue({
-            el: '#host_side',
-            data: {
-                disk_data:[],//磁盘数据
-                network_data:[],//网卡数据
-                snapshot_data:[], //快照数据,
-                vminfo:{}
-            },
-            created:function () {
-                // var _self=this;
-                // $.ajax({
-                //     url: site_url+'vmware/api/getVMSnapshotList',
-                //     type: 'get',
-                //     dataType:'json',
-                //     data: {
-                //         "vmId":currentVm.id,
-                //     },
-                //     success: function (data) {
-                //         console.log(data);
-                //         var tmp = [{"id":1,"name":"vm-snaphost01","time":"2017-07-21","description":"调试jvm快照","is_enabled":true},
-                //             {"id":2,"name":"vm-snaphost02","time":"2017-07-21","description":"调试jvm快照","is_enabled":true},
-                //             {"id":3,"name":"vm-snaphost03","time":"2017-07-21","description":"调试jvm快照","is_enabled":true}]
-                //         _self.snapshot_data = tmp;
-                //         console.log(_self.snapshot_data);
-                //         _self.vminfo = currentVm;
-                //     }
-                // });
-            },
-            mounted: function () {
-
-            },
-            watch: {
-
-            },
-            methods: {
-
-            }
-        });
-
+        hosts_view.checked_host_index_table=currentHost;
         open_host_side();
-
-
     });
 
     $("#host_side").find("#cancel").click(function(){

@@ -7,90 +7,96 @@
 
 
 <%block name="content">
-
+<article class="content">
 <!-- Page Heading -->
-<div class="row page-header-box">
-    <div class="col-lg-12">
-        <h1 class="page-header">
-            物理机
-        </h1>
-    </div>
-</div>
-
-<div class="main-wrap">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            主机列表
+    <div class="row page-header-box">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                物理机
+            </h1>
         </div>
+    </div>
 
-        <div class='panel-body'>
-            <div class="panel-content">
-                <table id="host_manage_record" class="table table-bordered table-hover table-striped">
-                </table>
+    <section class="main-list">
+        <div class="main-wrap">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    主机列表
+                </div>
+
+                <div class='panel-body'>
+                    <div class="panel-content">
+                        <table id="host_manage_record" class="table table-bordered table-hover table-striped">
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
     <section class="side-content-wrapper hidden" id="host_side" data-type="close">
         <div class="side-content open shield-edit">
             <div class="side-detail" id="shield-detail">
                 <div class="strategy-detail info-item new-strategy">
-                    <div class="title">
-                        <span id="shield_action">快照列表</span>
+                    <!-- 主机信息 -->
+                    <div class="mainframe-info info-item">
+                        <p class="title">
+                            <i class="iconfont icon-zhujixinxi"></i>
+                            主机信息
+                        </p>
+                        <div class="detail">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <span class="sub-title">物理机名称：</span>
+                                    <span class="sub-content">{{checked_host_index_table?checked_host_index_table.HostName || "空":""}}</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="sub-title">IP：</span>
+                                    <span class="sub-content">{{checked_host_index_table?checked_host_index_table.name || "空":""}}</span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <span class="sub-title">状态：</span>
+                                    <span class='sub-content {{checked_host_index_table?(checked_host.agent_status==0?"on":"off"):""}}'>{{{agent_status_display}}}</span>
+                                </div>
+                                <div class="col-sm-6">
+                                    <span class="sub-title">OS类型：</span>
+                                    <span class="sub-content">{{checked_host_index_table?checked_host.OSName || "空":""}}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="detail">
 
-                        <div class="detail-row">
-                            <div class="subtitle lh-30">基本信息</div>
-                            <div class="subcontent">
-                                <label class="config__inputItem">虚拟机名称{{vminfo.name}}</label>
+
+
+                    <!-- 监控服务视图 -->
+                    <div class="monitor-info info-item">
+                        <div class="clearfix">
+                            <div class="title pull-left">
+                                <i class="iconfont icon-shitu"></i>
+                                监控服务视图
                             </div>
+                            <!--div class="date-select pull-right mt15">
+                                查看日期：
+                                <input type="text" class="form-control time-picker" id="single_graph_date" placeholder="选择日期...">
+                            </div-->
                         </div>
 
-                        <table class="table table-header-bg table-bordered mb0">
-                            <thead>
-                            <tr>
-                                <td>快照名称</td>
-                                <td>快照时间</td>
-                                <td>快照描述</td>
-                                <td>操作</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <template v-if="snapshot_data.length>0">
-                                <template v-for="snapshot in snapshot_data">
-                                    <tr data-id="{{snapshot.id}}">
-                                        <td>{{snapshot.name}}</td>
-                                        <td>{{snapshot.time}}</td>
-                                        <td>{{snapshot.description}}</td>
-                                        <td class="operation">
-                                            ##<div class="switch switch-mini mr10" data-on="success" data-on-label="ON" data-off-label="OFF">
-                                            <input v-model="snapshot.is_enabled" type="checkbox" name="status"/>
-                                            ##</div>
-                                            <i class="iconfont icon-bianji edit" @click="add_alarm_strategy($event, snapshot)"></i>
-                                            <i class="iconfont icon-guanbi delete" @click="del_alarm_strategy($event, snapshot)"></i>
-                                        </td>
-                                    </tr>
-                                </template>
+                        <div class="monitor-chart">
+                            <template v-if="checked_host && checked_host.component">
+                                <div class="row">
+                                        <div class="col-sm-12 mb20 single-contain">
+                                            <div class="chart-item">
+                                                <p class="sub-title">{{checked_host_index_table.id}}</p>
+                                                <div class="line-chart"></div>
+                                            </div>
+                                        </div>
+                                </div>
                             </template>
-                            <template v-if="snapshot_data.length==0">
-                                <tr>
-                                    <td colspan="9" class="no-data">
-                                        无查询数据
-                                    </td>
-                                </tr>
-                            </template>
-                            </tbody>
-                        </table>
-                        <div class="loading hidden" id="vm_snapshot_table_loading">
-                            <div class="loading-wrapper">
-                                <img alt="loadding" src="${STATIC_URL}img/hourglass_36.gif">
-                                刷新中，请稍等
-                            </div>
-                        </div>
-                        <div class="paging-wrapper clearfix" id="vm_snapshot_paging_footer">
-
                         </div>
                     </div>
 
@@ -99,19 +105,17 @@
         </div>
         <div class="close-btn open" id="close" data-type="close">关闭</div>
     </section>
-</div>
-<style>
-    .tab-content-hide-border{
-        border: none !important;
-    }
-</style>
-
+</article>
 
 
 </%block>
 
 <%block name="script">
 <!--本模块加载的脚本-->
+<link rel="stylesheet" type="text/css" href="${STATIC_URL}css/left-side.css">
+<script type="text/javascript" src="${STATIC_URL}assets/highcharts-4.1.7/js/highcharts.js"></script>
+<script type="text/javascript" src="${STATIC_URL}assets/highcharts-4.1.7/js/highcharts-more.js"></script>
+<script type="text/javascript" src="${STATIC_URL}js/graph-highcharts.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/art-dialog/dist/dialog.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/twitter-bootstrap-wizard/jquery.bootstrap.wizard.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/twitter-bootstrap-wizard/prettify.js"></script>
