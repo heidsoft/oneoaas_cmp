@@ -1252,14 +1252,12 @@ def getVmMonitorInfosRequest(request):
         result = vmManager.getVmMonitorInfos(vminfo, start, end, intervalId, metricName, maxSample)
         if result:
             for i in range(len(result)):
-                print "------------------------------"
                 entity = result[i].entity
-                print 'entity : %s' % entity
                 sampleInfos = result[i].sampleInfo
-                print len(sampleInfos)
                 #判断简单信息是否存在
                 if sampleInfos is None or len(sampleInfos) <= 0:
-                    pass
+                    responseResult['content']['data'] = dataValue
+                    return render_json(responseResult)
                 values = result[i].value
                 print len(values)
                 if values and len(values) > 0:
@@ -1366,20 +1364,15 @@ def getHostMonitorInfosRequest(request):
     host = vmManager.get_host_by_name(hostName)
     if host is not None:
         result = vmManager.getVmMonitorInfos(host, start, end, intervalId, metricName, maxSample)
-        print "result-----------------------------------------"
-        print result
         if result:
             for i in range(len(result)):
-                print "------------------------------"
                 entity = result[i].entity
-                print 'entity : %s' % entity
                 sampleInfos = result[i].sampleInfo
-                print len(sampleInfos)
                 #判断简单信息是否存在
                 if sampleInfos is None or len(sampleInfos) <= 0:
-                    pass
+                    responseResult['content']['data'] = dataValue
+                    return render_json(responseResult)
                 values = result[i].value
-                print len(values)
                 if values and len(values) > 0:
                     for j in range(len(values)):
                         valuelist =values[j].value
@@ -1388,8 +1381,6 @@ def getHostMonitorInfosRequest(request):
                                 timestamp = sampleInfos[k].timestamp
                                 times = time.mktime(timestamp.timetuple())
                                 monitorValue = valuelist[k]
-                                print "timestamp :%s,value :%s" % (times, monitorValue)
-                            # "unix_time": 1501811478, "value": 1031
                                 valueobj = {
                                     "unix_time": int(times),
                                     "value": monitorValue
