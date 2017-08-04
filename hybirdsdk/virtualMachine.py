@@ -609,3 +609,32 @@ class VmManage(object):
     def removeAllSnapshots(self, vm):
         task = vm.RemoveAllSnapshots_Task()
         return self.wait_for_task(task)
+
+    '''
+    该接口为虚拟机获取监控数据的通用接口，使用者可以根据自己的需求传入相应的监控指标，方法将返回接口的原始数据
+    需要调用者进行自主解析，具体的参数如下：
+    vm：虚拟机对象
+    startTime：获取监控数据的开始时间
+    endTime：获取监控数据的结束时间
+    intervalId 采集监控数据的间隔
+    '''
+    def getVmMonitorInfos(self, vm, startTime, endTime, intervalId, metricName,maxSample):
+        content = self.content
+        perfManager = content.perfManager
+        perfList = content.perfManager.perfCounter
+        perf_dict = {}
+        for counter in perfList:
+            counter_full = "{}.{}.{}".format(counter.groupInfo.key, counter.nameInfo.key, counter.rollupType)
+            perf_dict[counter_full] = counter.key
+        print perf_dict
+        perfDictID = perf_dict[metricName]
+        metricId = vim.PerformanceManager.MetricId(counterId=perfDictID, instance="")
+        query = vim.PerformanceManager.QuerySpec(
+            startTime=startTime,
+            endTime=endTime,
+            intervalId=intervalId,
+            maxSample=maxSample,
+            entity=vm,
+            metricId=[metricId])
+        perfResults = perfManager.QueryPerf(querySpec=[query])
+        return perfResults
