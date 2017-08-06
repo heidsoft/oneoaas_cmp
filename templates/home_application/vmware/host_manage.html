@@ -43,28 +43,28 @@
                     <div class="mainframe-info info-item">
                         <p class="title">
                             <i class="iconfont icon-zhujixinxi"></i>
-                            主机信息
+                            ESXI主机基本信息
                         </p>
                         <div class="detail">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <span class="sub-title">物理机名称：</span>
-                                    <span class="sub-content">{{checked_host_index_table?checked_host_index_table.HostName || "空":""}}</span>
+                                    <span class="sub-content">{{checked_host_index_table?checked_host_index_table.name || "空":""}}</span>
                                 </div>
                                 <div class="col-sm-6">
-                                    <span class="sub-title">IP：</span>
-                                    <span class="sub-content">{{checked_host_index_table?checked_host_index_table.name || "空":""}}</span>
+                                    <span class="sub-title">API类型：</span>
+                                    <span class="sub-content">{{checked_host_index_table?checked_host_index_table.api_type || "空":""}}</span>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <span class="sub-title">状态：</span>
-                                    <span class='sub-content {{checked_host_index_table?(checked_host.agent_status==0?"on":"off"):""}}'>{{{agent_status_display}}}</span>
+                                    <span class="sub-title">证书产品版本：</span>
+                                    <span class='sub-content {{checked_host_index_table?(checked_host_index_table.license_product_version || "空":""}}'></span>
                                 </div>
                                 <div class="col-sm-6">
-                                    <span class="sub-title">OS类型：</span>
-                                    <span class="sub-content">{{checked_host_index_table?checked_host.OSName || "空":""}}</span>
+                                    <span class="sub-title">操作系统类型：</span>
+                                    <span class="sub-content">{{checked_host_index_table?checked_host_index_table.os_type || "空":""}}</span>
                                 </div>
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                         <div class="clearfix">
                             <div class="title pull-left">
                                 <i class="iconfont icon-shitu"></i>
-                                监控服务视图
+                                ESXI主机监视信息
                             </div>
                             <!--div class="date-select pull-right mt15">
                                 查看日期：
@@ -87,16 +87,70 @@
                         </div>
 
                         <div class="monitor-chart">
-                            <template v-if="checked_host && checked_host.component">
-                                <div class="row">
-                                        <div class="col-sm-12 mb20 single-contain">
-                                            <div class="chart-item">
-                                                <p class="sub-title">{{checked_host_index_table.id}}</p>
-                                                <div class="line-chart"></div>
-                                            </div>
-                                        </div>
+                            <div class="row">
+                                <div class="col-sm-12 mb20 single-contain" id="cpu_usage_maximum">
+                                    <div class="chart-item">
+                                        <p class="sub-title">{{checked_host_index_table.name}}</p>
+                                        <div class="line-chart"></div>
+                                    </div>
                                 </div>
-                            </template>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 mb20 single-contain" id="cpu_usage_minimum">
+                                    <div class="chart-item">
+                                        <p class="sub-title">{{checked_host_index_table.name}}</p>
+                                        <div class="line-chart"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 mb20 single-contain" id="mem_usage_maximum">
+                                    <div class="chart-item">
+                                        <p class="sub-title">{{checked_host_index_table.name}}</p>
+                                        <div class="line-chart"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 mb20 single-contain" id="mem_usage_minimum">
+                                    <div class="chart-item">
+                                        <p class="sub-title">{{checked_host_index_table.name}}</p>
+                                        <div class="line-chart"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 mb20 single-contain" id="disk_usage_maximum">
+                                    <div class="chart-item">
+                                        <p class="sub-title">{{checked_host_index_table.name}}</p>
+                                        <div class="line-chart"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 mb20 single-contain" id="disk_usage_minimum">
+                                    <div class="chart-item">
+                                        <p class="sub-title">{{checked_host_index_table.name}}</p>
+                                        <div class="line-chart"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 mb20 single-contain" id="net_usage_maximum">
+                                    <div class="chart-item">
+                                        <p class="sub-title">{{checked_host_index_table.name}}</p>
+                                        <div class="line-chart"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 mb20 single-contain" id="net_usage_minimum">
+                                    <div class="chart-item">
+                                        <p class="sub-title">{{checked_host_index_table.name}}</p>
+                                        <div class="line-chart"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

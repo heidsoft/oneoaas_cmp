@@ -618,7 +618,7 @@ class VmManage(object):
     endTime：获取监控数据的结束时间
     intervalId 采集监控数据的间隔
     '''
-    def getVmMonitorInfos(self, vm, startTime, endTime, intervalId, metricName,maxSample):
+    def getVmMonitorInfos(self, entityObject, startTime, endTime, intervalId, metricName,maxSample):
         content = self.content
         perfManager = content.perfManager
         perfList = content.perfManager.perfCounter
@@ -629,15 +629,24 @@ class VmManage(object):
         print perf_dict
         perfDictID = perf_dict[metricName]
         metricId = vim.PerformanceManager.MetricId(counterId=perfDictID, instance="")
-        query = vim.PerformanceManager.QuerySpec(
-            startTime=startTime,
-            endTime=endTime,
-            intervalId=intervalId,
-            maxSample=maxSample,
-            entity=vm,
-            metricId=[metricId])
+
+        query = vim.PerformanceManager.QuerySpec(entity=entityObject,metricId=[metricId],intervalId=20,startTime=startTime,endTime=endTime)
         perfResults = perfManager.QueryPerf(querySpec=[query])
-        return perfResults
+
+        count=0
+        output=[]
+        if perfResults is not None and len(perfResults):
+            for val in perfResults[0].value[0].value:
+                perfinfo={}
+                val=float(val/100)
+
+                monitor_time = perfResults[0].sampleInfo[count].timestamp
+                perfinfo['unix_time']=time.mktime(monitor_time.timetuple())
+                perfinfo['value']=val
+                output.append(perfinfo)
+                count+=1
+
+        return output
 
 
     '''根据name信息查询主机信息'''

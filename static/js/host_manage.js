@@ -46,10 +46,6 @@ var VCenterManage = (function ($,toastr) {
                         title:"主机名称"
                     },
                     {
-                        data: "api_type",
-                        title:"API类型"
-                    },
-                    {
                         data: "api_version",
                         title:"API版本"
                     },
@@ -66,20 +62,8 @@ var VCenterManage = (function ($,toastr) {
                         title:"uuid"
                     },
                     {
-                        data: "license_product_name",
-                        title:"证书产品名称"
-                    },
-                    {
-                        data: "license_product_version",
-                        title:"证书产品版本"
-                    },
-                    {
                         data: "locale_version",
                         title:"本地版本"
-                    },
-                    {
-                        data: "os_type",
-                        title:"操作系统类型"
                     },
                     {
                         data: "vendor",
@@ -154,114 +138,91 @@ function close_host_side(){
 }
 
 function make_single_graphs(){
-    $(".single-contain").each(function(){
-        console.log("aaaaaaaaaaaaaaa");
-        make_contain_graph($(this));
-    });
+
+    /*
+    cpu.usage.maximum
+    cpu.usage.minimum
+    cpu.ready.summation
+    cpu.capacity.contention.average
+
+    mem.usage.minimum
+    mem.usage.maximum
+
+    disk.usage.minimum
+    disk.usage.maximum
+
+    net.usage.minimum
+    net.usage.maximum
+    */
+    make_contain_graph($("#cpu_usage_maximum"),'cpu.usage.maximum','CPU最大利用率');
+    make_contain_graph($("#cpu_usage_minimum"),'cpu.usage.minimum','CPU最小利用率');
+
+    make_contain_graph($("#mem_usage_minimum"),'mem.usage.minimum','内存最小利用率');
+    make_contain_graph($("#mem_usage_maximum"),'mem.usage.maximum','内存最大利用率');
+
+    make_contain_graph($("#disk_usage_maximum"),'disk.usage.maximum','磁盘最大利用率');
+    make_contain_graph($("#disk_usage_minimum"),'disk.usage.minimum','磁盘最小利用率');
+
+    make_contain_graph($("#net_usage_maximum"),'net.usage.minimum','网络流量最小利用率');
+    make_contain_graph($("#net_usage_maximum"),'net.usage.maximum','网络流量最大利用率');
+    // $(".single-contain").each(function(){
+    //
+    // });
 }
 
-function make_contain_graph(contain, _type){
+function make_contain_graph(contain, _type,_type_cn_name){
     var chart_div = contain.find(".line-chart");
     var host_id = chart_div.attr("data-host_id");
     if (!host_id){
         host_id = hosts_view.checked_host_index_table.id;
     }
+
+
     var params = {
-        graph_date: _type?$("#multiple_graph_date").val():$("#single_graph_date").val(),
-        host_id: host_id,
-        index_id: chart_div.attr("data-index_id"),
-        dimension_field_value: chart_div.attr("data-dimension_field_value")
+        hostId: host_id,
+        hostName: hosts_view.checked_host_index_table.name,
+        metricName:_type,
+        intervalId:86400,
+        maxSample:86400,
+        startTime:'',
+        endTime:''
     };
 
     chart_div.html('<img class="graph-loading" alt="loadding" src="'+static_url+'img/hourglass_36.gif" style="margin-top: 75px;margin-left:45%;">');
 
-    $.get(site_url+'vmware/api/getVcenterAccountList', params, function(res){
+    $.get(site_url+'vmware/api/getHostMonitorInfos', params, function(res){
         chart_div.html("");
-
-        var  resp ={
-            "msg": "",
-            "message": "",
-            "data": {
-                "echo_sql": "",
-                "data": {
-                    "min_y": 0,
-                    "pointStart": 1501804800000,
-                    "series": [
-                        {
-                            "count": [
-                                1.46,
-                                0.87,
-                                0.26,
-                                0.19,
-                                0.18
-                            ],
-                            "x_axis_list": [
-                                "2017-08-04 00:00:00",
-                                "2017-08-04 00:01:00",
-                                "2017-08-04 00:02:00",
-                                "2017-08-04 00:03:00",
-                                "2017-08-04 00:04:00"
-                            ],
-                            "name": "cpu总使用率",
-                            "type": "spline",
-                            "delay_info": {
-                                "1501806600": true,
-                                "1501808640": true,
-                                "1501814820": true,
-                                "1501816860": true,
-                                "1501818900": true
-                            },
-                            "zones": [],
-                            "zoneAxis": "x",
-                            "data": [
-                                [
-                                    1501804800000,
-                                    1.46
-                                ],
-                                [
-                                    1501804860000,
-                                    0.87
-                                ],
-                                [
-                                    1501804920000,
-                                    0.26
-                                ],
-                                [
-                                    1501804980000,
-                                    0.19
-                                ],
-                                [
-                                    1501805040000,
-                                    0.18
-                                ]
-                            ]
-                        }
-                    ],
-                    "x_axis": {
-                        "minRange": 3600000,
-                        "type": "datetime"
-                    },
-                    "pointInterval": 300000,
-                    "show_percent": false,
-                    "series_name_list": [
-                        "cpu总使用率"
-                    ],
-                    "chart_type": "spline",
-                    "color_list": "",
-                    "unit": "%",
-                    "max_y": 5.93
-                },
-                "update_time": "2017-08-04 17:06:06"
+        var chart_data ={
+            series: [],
+            x_axis: {
+                "minRange": 1000,
+                "type": "datetime"
             },
-            "result": true
+            chart_type: "spline",
+            unit: "%",
+
         }
-        if(resp.result){
-            var chart_data =resp.data.data;
-            console.log(chart_data);
+        if(res.result){
+
+            var monitor_data = res.content.data;
+            var x_axis_list_data = [];
             var series_info = {};
-            for (var i = 0; i < chart_data.series.length; i++) {
-                series_info[chart_data.series[i].name] = chart_data.series[i];
+            var data_array =[];
+            for (var i = 0; i <  monitor_data.length ; i++) {
+                x_axis_list_data[i] = moment(monitor_data[i].unix_time).format('YYYY-MM-DD HH:mm:ss');
+                var data_object=[];
+                series_info[monitor_data[i].unix_time] = monitor_data[i].value;
+                data_object[0] = monitor_data[i].unix_time*1000;
+                data_object[1] = monitor_data[i].value;
+                data_array[i] = data_object;
             }
+            var serie_object = {
+                x_axis_list:x_axis_list_data,
+                data:data_array,
+                name:_type_cn_name,
+                type:"spline",
+            }
+            chart_data.series[0] = serie_object;
             Hchart.spline(chart_data, chart_div[0], series_info);
         }else{
             var error_tips_html = '<div class="chart-error">' +
@@ -292,7 +253,6 @@ var hosts_view = new Vue({
         'checked_host_index_table.length': {
             handler: function(newVal,oldVal) {
                 if (this.checked_host_index_table.name !=='' ){
-                    console.log(checked_host_index_table);
                     make_single_graphs();
                 }
             },

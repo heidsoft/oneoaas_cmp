@@ -73,7 +73,7 @@ var Hchart = {
 
     line: function(chart_data, selector, monitor_id){
 
-		$(selector).highcharts(get_line_chart_opt(chart_data, monitor_id));
+		$(selector).highcharts(get_line_chart_monitor_opt(chart_data, monitor_id));
     },
 
     spline: function(chart_data, selector, monitor_id){
@@ -92,7 +92,7 @@ function get_line_chart_opt(chart_data, monitor_id){
             text: null
         },
         chart: {
-            type: chart_data.chart_type,
+            type: chart_data.data.data.chart_type,
             zoomType: "x"
         },
         plotOptions: {
@@ -119,7 +119,7 @@ function get_line_chart_opt(chart_data, monitor_id){
             text: "",
             href: "###"
         },
-        xAxis: chart_data.x_axis,
+        xAxis: chart_data.data.data.x_axis,
         yAxis: [{
             title: {
                 enabled: false
@@ -143,7 +143,7 @@ function get_line_chart_opt(chart_data, monitor_id){
             headerFormat: '<small>{point.key}</small><table>',
             pointFormatter: function(){
                 var delay_info = "";
-                if (this.series.zoneAxis){
+                if (this.series.data.data.zoneAxis){
                     var key = this.x / 1000;
                     if (this.series.userOptions.delay_info[key]){
                         delay_info = '<font color="#f3b760">(数据延时)</font>'
@@ -155,7 +155,7 @@ function get_line_chart_opt(chart_data, monitor_id){
             footerFormat: '</table>'
             //valueDecimals: 2
         },
-            series: chart_data.series
+        series: chart_data.data.data.series[0].data
     };
 
     //实时图
@@ -262,5 +262,119 @@ function get_line_chart_opt(chart_data, monitor_id){
             }
         }
     }
+
+    return defaultOptions
+}
+
+function get_line_chart_monitor_opt(chart_data, monitor_id){
+    var defaultOptions = {
+        colors: ['#f45b5b', '#8085e9', '#8d4654', '#7798BF', '#aaeeee', '#ff0066', '#eeaaee',
+            '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+        title: {
+            text: null
+        },
+        subtitle: {
+            text: null
+        },
+        credits:{
+            enabled: true,
+            text: "",
+            href: "###"
+        },
+        chart: {
+            backgroundColor: null,
+            style: {
+                fontFamily: 'Signika, serif'
+            }
+        },
+        tooltip: {
+            xDateFormat: '%Y-%m-%d %H:%M:%S',
+            followPointer: true,
+            followTouchMove: true,
+            crosshairs:  {
+                width: 1,
+                color: "#e2e2e2"
+            },
+            shared: true,
+            useHTML: true,
+            headerFormat: '<small>{point.key}</small><table>',
+            pointFormatter:function () {
+                return '<tr><td style="color: #FFFFFF;"><b>'+this.y+'%</b></td></tr>';
+            },
+            footerFormat: '</table>'
+            //valueDecimals: 2
+        },
+        legend: {
+            itemStyle: {
+                fontWeight: 'bold',
+                fontSize: '13px'
+            }
+        },
+        xAxis: chart_data.x_axis,
+        yAxis:{
+            min: 0,
+            title: {
+                text: '利用率'
+            },
+            labels : {
+                formatter : function() {//设置纵坐标值的样式
+                    return this.value + '%';
+                }
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    threshold: 0,
+                    symbol: 'circle',
+                    radius: 1,
+                    enabled: true
+                }
+            },
+            line: {
+                marker: {
+                    symbol: 'circle',
+                    radius: 1
+                }
+            },
+            series : {
+
+            }
+        },
+        tooltip: {
+            xDateFormat: '%Y-%m-%d %H:%M:%S',
+            valueDecimals: 2
+        },
+        navigator: {
+            xAxis: {
+                gridLineColor: '#D0D0D8'
+            }
+        },
+        rangeSelector: {
+            buttonTheme: {
+                fill: 'white',
+                stroke: '#C0C0C8',
+                'stroke-width': 1,
+                states: {
+                    select: {
+                        fill: '#D0D0D8'
+                    }
+                }
+            }
+        },
+        scrollbar: {
+            trackBorderColor: '#C0C0C8'
+        },
+
+        // General
+        background2: '#E0E0E8',
+        series: chart_data.series
+    };
+
     return defaultOptions
 }

@@ -1315,14 +1315,13 @@ def getVmMonitorInfosRequest(request):
 
 '''根据监控指标以及相关信息获取虚拟机的监控数据'''
 def getHostMonitorInfosRequest(request):
-    hostId = request.POST.get('hostId')
-    hostName = request.POST.get('hostName')
-    # hostIp = request.POST.get('hostIp')
-    startTime = request.POST.get('startTime')
-    endTime = request.POST.get('endTime')
-    intervalId = request.POST.get('intervalId')
-    maxSample = request.POST.get('maxSample')
-    metricName = request.POST.get('metricName')
+    hostId = request.GET.get('hostId')
+    hostName = request.GET.get('hostName')
+    startTime = request.GET.get('startTime')
+    endTime = request.GET.get('endTime')
+    intervalId = request.GET.get('intervalId')
+    maxSample = request.GET.get('maxSample')
+    metricName = request.GET.get('metricName')
     responseResult = {
         'result': True,
         "content": {},
@@ -1365,52 +1364,54 @@ def getHostMonitorInfosRequest(request):
     if host is not None:
         result = vmManager.getVmMonitorInfos(host, start, end, intervalId, metricName, maxSample)
         if result:
-            for i in range(len(result)):
-                entity = result[i].entity
-                sampleInfos = result[i].sampleInfo
-                #判断简单信息是否存在
-                if sampleInfos is None or len(sampleInfos) <= 0:
-                    responseResult['content']['data'] = dataValue
-                    return render_json(responseResult)
-                values = result[i].value
-                if values and len(values) > 0:
-                    for j in range(len(values)):
-                        valuelist =values[j].value
-                        if valuelist and len(valuelist) > 0:
-                            for k in range(len(sampleInfos)):
-                                timestamp = sampleInfos[k].timestamp
-                                times = time.mktime(timestamp.timetuple())
-                                monitorValue = valuelist[k]
-                                valueobj = {
-                                    "unix_time": int(times),
-                                    "value": monitorValue
-                                }
-                                dataValue.append(valueobj)
-                            responseResult['content']['data'] = dataValue
-                            return render_json(responseResult)
-                        else:
-                            for k in range(len(sampleInfos)):
-                                timestamp = sampleInfos[k].timestamp
-                                times = time.mktime(timestamp.timetuple())
-                                valueobj = {
-                                    "unix_time": int(times),
-                                    "value": 0
-                                }
-                                dataValue.append(valueobj)
-                            responseResult['content']['data'] = dataValue
-                            return render_json(responseResult)
-                else:
-                    #未获取到有效的监控项数据值，此处进行补零操作
-                    for k in range(len(sampleInfos)):
-                        timestamp = sampleInfos[k].timestamp
-                        times = time.mktime(timestamp.timetuple())
-                        valueobj = {
-                            "unix_time": int(times),
-                            "value": 0
-                        }
-                        dataValue.append(valueobj)
-                    responseResult['content']['data'] = dataValue
-                    return render_json(responseResult)
+            responseResult['content']['data'] = result
+            return render_json(responseResult)
+            # for i in range(len(result)):
+            #     entity = result[i].entity
+            #     sampleInfos = result[i].sampleInfo
+            #     #判断简单信息是否存在
+            #     if sampleInfos is None or len(sampleInfos) <= 0:
+            #         responseResult['content']['data'] = dataValue
+            #         return render_json(responseResult)
+            #     values = result[i].value
+            #     if values and len(values) > 0:
+            #         for j in range(len(values)):
+            #             valuelist =values[j].value
+            #             if valuelist and len(valuelist) > 0:
+            #                 for k in range(len(sampleInfos)):
+            #                     timestamp = sampleInfos[k].timestamp
+            #                     times = time.mktime(timestamp.timetuple())
+            #                     monitorValue = valuelist[k]
+            #                     valueobj = {
+            #                         "unix_time": int(times),
+            #                         "value": monitorValue
+            #                     }
+            #                     dataValue.append(valueobj)
+            #                 responseResult['content']['data'] = dataValue
+            #                 return render_json(responseResult)
+            #             else:
+            #                 for k in range(len(sampleInfos)):
+            #                     timestamp = sampleInfos[k].timestamp
+            #                     times = time.mktime(timestamp.timetuple())
+            #                     valueobj = {
+            #                         "unix_time": int(times),
+            #                         "value": 0
+            #                     }
+            #                     dataValue.append(valueobj)
+            #                 responseResult['content']['data'] = dataValue
+            #                 return render_json(responseResult)
+            #     else:
+            #         #未获取到有效的监控项数据值，此处进行补零操作
+            #         for k in range(len(sampleInfos)):
+            #             timestamp = sampleInfos[k].timestamp
+            #             times = time.mktime(timestamp.timetuple())
+            #             valueobj = {
+            #                 "unix_time": int(times),
+            #                 "value": 0
+            #             }
+            #             dataValue.append(valueobj)
+            #         responseResult['content']['data'] = dataValue
+            #         return render_json(responseResult)
         else:
             responseResult['content']['data'] = dataValue
             return render_json(responseResult)
