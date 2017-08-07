@@ -268,7 +268,7 @@ $(document).ready(function(){
 
     VCenterManage.init('#host_manage_record');
 
-    $('#host_manage_record').on( 'click', 'tr', function () {
+    $('#host_manage_record').on( 'click', 'tr:gt(0)', function () {
         var currentHost = VCenterManage.vmTable.row( this ).data();
         hosts_view.checked_host_index_table=currentHost;
         open_host_side();
