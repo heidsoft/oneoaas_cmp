@@ -187,6 +187,14 @@ $(document).ready(function(){
         {id:5.5,text:"5.5"},
         {id:6.0,text:"6.0"}
     ];
+    var cloudProviderList =[
+        {id:'qcloud',text:"腾讯云"},
+        {id:'ucloud',text:"UCLOUD"},
+        {id:'vcenter',text:"VMware"},
+        {id:'aliyun',text:"阿里云"}
+    ];
+    $("#cloud_provider .select2_box").select2({ data: cloudProviderList });
+
     $("#vcenter_version .select2_box").select2({ data: vcenterVersionList });
     VCenterConfig.init();
 })
