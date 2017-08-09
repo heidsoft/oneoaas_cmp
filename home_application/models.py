@@ -10,10 +10,14 @@ vcenter账号信息对象
 """
 class VcenterAccount(models.Model):
     account_name = models.CharField(max_length=60)
-    account_password = models.CharField(max_length=20)
-    vcenter_host = models.CharField(max_length=30)
-    vcenter_port = models.IntegerField(default=443)
-    vcenter_version = models.CharField(max_length=10)
+    account_password = models.CharField(max_length=20,null=True,default="")
+    vcenter_host = models.CharField(max_length=30,null=True,default="")
+    vcenter_port = models.IntegerField(default=443,null=True)
+    vcenter_version = models.CharField(max_length=10,null=True,default="")
+    cloud_provider = models.CharField(max_length=20,null=True,default="")
+    cloud_private_key = models.CharField(max_length=60,null=True,default="")
+    cloud_public_key = models.CharField(max_length=60,null=True,default="")
+    project_id = models.CharField(max_length=20,null=True,default="")
 
     #自定义表名称
     class Meta:
