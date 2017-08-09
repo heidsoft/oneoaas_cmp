@@ -178,26 +178,64 @@ var VCenterConfig = (function ($,toastr) {
     }
 })($,window.toastr);
 
-$(document).ready(function(){
+var account_info_vue = new Vue({
+    el: '#account_info',
+    data: {
+        cloudProviderList:{
+            data:[
+                {id:'qcloud',text:"腾讯云"},
+                {id:'ucloud',text:"UCLOUD"},
+                {id:'vcenter',text:"VMware"},
+                // {id:'aliyun',text:"阿里云"}
+            ],
+            cloudProviderSelected:'vcenter',
+        },
+        vcenterVersionList: [
+            {id:5.0,text:"5.0"},
+            {id:5.1,text:"5.1"},
+            {id:5.5,text:"5.5"},
+            {id:6.0,text:"6.0"}
+        ]
+    },
+    created: function () {
+        var _self = this;
+        $("#cloud_provider .select2_box").select2({
+            placeholder: "请选择云提供商",
+            allowClear: true,
+            data: this.cloudProviderList.data
+        });
+        $("#vcenter_version .select2_box").select2({
+            placeholder: "请选择VCenter版本",
+            allowClear: true,
+            data: this.vcenterVersionList
+        });
 
-    //默认支持vcenter版本列表
-    var vcenterVersionList =[
-        {id:5.0,text:"5.0"},
-        {id:5.1,text:"5.1"},
-        {id:5.5,text:"5.5"},
-        {id:6.0,text:"6.0"}
-    ];
-    var cloudProviderList =[
-        {id:'qcloud',text:"腾讯云"},
-        {id:'ucloud',text:"UCLOUD"},
-        {id:'vcenter',text:"VMware"},
-        {id:'aliyun',text:"阿里云"}
-    ];
-    $("#cloud_provider .select2_box").select2({ data: cloudProviderList });
 
-    $("#vcenter_version .select2_box").select2({ data: vcenterVersionList });
-    VCenterConfig.init();
+        $("#cloud_provider .select2_box").on("change", function (e) {
+            _self.cloudProviderList.cloudProviderSelected = $("#cloud_provider .select2_box").select2("val");
+        });
+
+        VCenterConfig.init();
+    },
+    watch: {
+        cloudProviderSelected: {
+            handler(newValue, oldValue) {
+                console.log("aaaaaaaaaaaaa");
+                console.log(newValue);
+                console.log("bbbbbbbbbbbbb");
+                console.log(oldValue);
+            },
+            deep: true
+        }
+    },
+    ready:{
+        
+    }
 })
+
+// $(document).ready(function(){
+//     $("#cloud_provider .select2_box").on("change", function (e) { console.log("change"); });
+// })
 
 
 

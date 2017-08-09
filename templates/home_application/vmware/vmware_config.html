@@ -12,13 +12,13 @@
         <div class="panel-heading">
             云账号配置
         </div>
-        <div class='panel-body'>
+        <div class='panel-body' id="account_info">
             <div class="col-sm-8">
-                <div class="form-horizontal mt15" id="account_info">
+                <div class="form-horizontal mt15" >
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label" >云提供商类型：</label>
-                        <div class="col-sm-10">
+                        <label class="col-sm-3 control-label" >云提供商类型：</label>
+                        <div class="col-sm-9">
                             <div id="cloud_provider" style="display:inline-block;">
                                 <!-- select2 通过javascript start -->
                                 <input type="hidden" class="select2_box" style="width:300px;">
@@ -27,53 +27,85 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="validation_account_name">vcenter用户：</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" placeholder="请输入Vcenter用户" id="account_name" name="account_name">
-                            <span class="king-required-tip text-danger ml5">*</span>
-                        </div>
-                        <div class="col-sm-1"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="validation_account_password">vcenter密码：</label>
-                        <div class="col-sm-10">
-                            <input type="password" class="form-control" placeholder="请输入Vcenter密码" id="account_password" name="account_password">
-                            <span class="king-required-tip text-danger ml5">*</span>
-                        </div>
-                    </div>
 
-
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="validation_vcenter_host">vcenter主机：</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" placeholder="请输入Vcenter主机IP" id="vcenter_host" name="vcenter_host">
-                            <span class="king-required-tip text-danger ml5">*</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="validation_vcenter_port">vcenter端口：</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" placeholder="请输入Vcenter主机端口" id="vcenter_port" name="vcenter_port">
-                            <span class="king-required-tip text-danger ml5">*</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" >vcenter版本：</label>
-                        <div class="col-sm-10">
-                            <div id="vcenter_version" style="display:inline-block;">
-                                <!-- select2 通过javascript start -->
-                                <input type="hidden" class="select2_box" style="width:300px;">
-                                <!-- select2 通过javascript end -->
+                    <template v-if="cloudProviderList.cloudProviderSelected ==='vcenter'">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">帐号名称:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="请输入Vcenter用户" id="account_name" name="account_name">
+                                <span class="king-required-tip text-danger ml5">*</span>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">帐号密码:</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" placeholder="请输入Vcenter密码" id="account_password" name="account_password">
+                                <span class="king-required-tip text-danger ml5">*</span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">主机地址:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="请输入Vcenter主机IP" id="vcenter_host" name="vcenter_host">
+                                <span class="king-required-tip text-danger ml5">*</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">访问端口:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="请输入Vcenter主机端口" id="vcenter_port" name="vcenter_port">
+                                <span class="king-required-tip text-danger ml5">*</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">版本:</label>
+                            <div class="col-sm-9">
+                                <div id="vcenter_version" style="display:inline-block;">
+                                    <!-- select2 通过javascript start -->
+                                    <input type="hidden" class="select2_box" style="width:300px;">
+                                    <!-- select2 通过javascript end -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </template>
+                    <template  v-if="cloudProviderList.cloudProviderSelected ==='qcloud'">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">PublicKey:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="请输入Vcenter用户" id="account_name" name="account_name">
+                                <span class="king-required-tip text-danger ml5">*</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">PrivateKey:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="请输入Vcenter用户" id="account_name" name="account_name">
+                                <span class="king-required-tip text-danger ml5">*</span>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template  v-if="cloudProviderList.cloudProviderSelected ==='ucloud'">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">PublicKey:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="请输入Vcenter用户" id="account_name" name="account_name">
+                                <span class="king-required-tip text-danger ml5">*</span>
+                            </div>
+                        </div>
+                    </template>
+
+
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-10">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="col-sm-9">
                             <button class="king-btn king-info mr10" title="保存" onclick="VCenterConfig.createVCenterAccount();">
                                 <i class="fa fa-save btn-icon"></i>保存
                             </button>
