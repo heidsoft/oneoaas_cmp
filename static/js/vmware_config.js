@@ -55,6 +55,10 @@ var VCenterConfig = (function ($,toastr) {
                         title : '账号名称',
                         data: "account_name",
                     },
+                    //{
+                    //    title : '供应商类型',
+                    //    data: "vcenter_type",
+                    //},
                     {
                         title : 'VCenter主机',
                         data: "vcenter_host",
@@ -85,6 +89,7 @@ var VCenterConfig = (function ($,toastr) {
         },
         //创建vcenter账号
         createVCenterAccount: function () {
+            var vcenterType =  $("#vcenter_type").val();
             var accountName =  $("#account_name").val();
             var accountPassword = $("#account_password").val();
             var vcenterHost = $("#vcenter_host").val();
@@ -110,6 +115,7 @@ var VCenterConfig = (function ($,toastr) {
                 type: 'post',
                 dataType: 'json',
                 data: {
+                    "vcenterType":vcenterType,
                     "accountName":accountName,
                     "accountPassword":accountPassword,
                     "vcenterHost":vcenterHost,
@@ -181,15 +187,6 @@ var VCenterConfig = (function ($,toastr) {
 var account_info_vue = new Vue({
     el: '#account_info',
     data: {
-        cloudProviderList:{
-            data:[
-                {id:'qcloud',text:"腾讯云"},
-                {id:'ucloud',text:"UCLOUD"},
-                {id:'vcenter',text:"VMware"},
-                // {id:'aliyun',text:"阿里云"}
-            ],
-            cloudProviderSelected:'vcenter',
-        },
         vcenterVersionList: [
             {id:5.0,text:"5.0"},
             {id:5.1,text:"5.1"},
@@ -199,20 +196,10 @@ var account_info_vue = new Vue({
     },
     created: function () {
         var _self = this;
-        $("#cloud_provider .select2_box").select2({
-            placeholder: "请选择云提供商",
-            allowClear: true,
-            data: this.cloudProviderList.data
-        });
         $("#vcenter_version .select2_box").select2({
             placeholder: "请选择VCenter版本",
             allowClear: true,
             data: this.vcenterVersionList
-        });
-
-
-        $("#cloud_provider .select2_box").on("change", function (e) {
-            _self.cloudProviderList.cloudProviderSelected = $("#cloud_provider .select2_box").select2("val");
         });
 
         VCenterConfig.init();
@@ -227,16 +214,10 @@ var account_info_vue = new Vue({
             },
             deep: true
         }
-    },
-    ready:{
-        
     }
 })
 
 // $(document).ready(function(){
 //     $("#cloud_provider .select2_box").on("change", function (e) { console.log("change"); });
 // })
-
-
-
 
