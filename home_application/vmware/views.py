@@ -120,15 +120,38 @@ def createVCenterAccount(request):
     try:
         if request.method == 'POST':
             accountName = request.POST['accountName']
-            accountPassword = request.POST['accountPassword']
-            vcenterHost = request.POST['vcenterHost']
-            vcenterPort = request.POST['vcenterPort']
-            vcenterVersion = request.POST['vcenterVersion']
-            account = VcenterAccount(account_name=accountName,
-                         account_password=accountPassword,
-                         vcenter_host=vcenterHost,
-                         vcenter_port=vcenterPort,
-                         vcenter_version=vcenterVersion)
+            cloudProvider = request.POST['cloudProvider']
+            if cloudProvider == 'vmware':
+                accountPassword = request.POST['accountPassword']
+                vcenterHost = request.POST['vcenterHost']
+                vcenterPort = request.POST['vcenterPort']
+                vcenterVersion = request.POST['vcenterVersion']
+                account = VcenterAccount(account_name=accountName,
+                                         account_password=accountPassword,
+                                         vcenter_host=vcenterHost,
+                                         vcenter_port=vcenterPort,
+                                         vcenter_version=vcenterVersion)
+            elif cloudProvider == 'qcloud':
+                cloudPrivateKey = request.POST['cloudPrivateKey']
+                cloudPublicKey = request.POST['cloudPublicKey']
+                account = VcenterAccount(account_name=accountName,
+                                         cloud_private_key=cloudPrivateKey,
+                                         cloud_public_key=cloudPublicKey,
+                                         cloud_provider=cloudProvider
+                                         )
+            elif cloudProvider == 'ucloud':
+                cloudPrivateKey = request.POST['cloudPrivateKey']
+                cloudPublicKey = request.POST['cloudPublicKey']
+                projectId = request.POST['projectId']
+                account = VcenterAccount(account_name=accountName,
+                                         cloud_private_key=cloudPrivateKey,
+                                         cloud_public_key=cloudPublicKey,
+                                         cloud_provider=cloudProvider,
+                                         project_id=projectId
+                                         )
+            else:
+                pass
+
             accountList =  VcenterAccount.objects.all()
             #判断是否有账号
             if len(accountList) == 0:
@@ -140,7 +163,7 @@ def createVCenterAccount(request):
             else:
                 accountExist = VcenterAccount.objects.filter(account_name=accountName)
 
-                if len(accountExist) >0:
+                if len(accountExist) > 0:
                     res = {
                         'result': True,
                         'message': "账号已经存在",
