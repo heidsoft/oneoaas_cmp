@@ -130,7 +130,9 @@ def createVCenterAccount(request):
                                          account_password=accountPassword,
                                          vcenter_host=vcenterHost,
                                          vcenter_port=vcenterPort,
-                                         vcenter_version=vcenterVersion)
+                                         vcenter_version=vcenterVersion,
+                                         cloud_provider=cloudProvider
+                                         )
             elif cloudProvider == 'qcloud':
                 cloudPrivateKey = request.POST['cloudPrivateKey']
                 cloudPublicKey = request.POST['cloudPublicKey']
@@ -176,9 +178,11 @@ def createVCenterAccount(request):
                     }
 
     except Exception as e:
+        print str(e)
+        traceback.print_exc()
         res = {
             'result': False,
-            'message': "账号保持错误",
+            'message': "账号保存错误",
         }
     return render_json(res)
 

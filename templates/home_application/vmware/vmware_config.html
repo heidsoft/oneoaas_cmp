@@ -8,33 +8,26 @@
     </div>
 </div>
 <div class="main-wrap" id="vcenter_config">
-    <form class="form-horizontal" action="" id="VMware_info" novalidate="true">
         <div class="panel panel-default">
             <div class="panel-heading">
                 VMware配置
                 <i class="fa fa-bars" style="float:right"></i>
             </div>
-            <div class='panel-body' id="account_info" style="display:block;">
+            <div class='panel-body' id="account_info">
                 <div class="col-sm-8">
-                    <div class="form-horizontal mt15" >
+                    <form class="form-horizontal mt15" action="" id="vmware_form" novalidate="true">
 
-                       <div class="form-group" hidden>
-                            <label class="col-sm-3 control-label" >云提供商类型:</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" value="VMware" id="vcenter_type" name="vcenter_type" disabled>
-                            </div>
-                        </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="account_name">帐号名称:</label>
+                            <label class="col-sm-3 control-label" for="vcenter_account_name">帐号名称:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入Vcenter用户名" id="account_name" name="account_name" AutoComplete>
+                                <input type="text" class="form-control" placeholder="请输入Vcenter用户名" id="vcenter_account_name" name="vcenter_account_name" AutoComplete>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="account_password">帐号密码:</label>
+                            <label class="col-sm-3 control-label" for="vcenter_account_password">帐号密码:</label>
                             <div class="col-sm-9">
-                                <input type="password" class="form-control" placeholder="请输入Vcenter密码" id="account_password" name="account_password">
+                                <input type="password" class="form-control" placeholder="请输入Vcenter密码" id="vcenter_account_password" name="vcenter_account_password">
                             </div>
                         </div>
 
@@ -72,20 +65,18 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>  
-    </form>
-    <form class="form-horizontal" action="" id="Tencent_info" novalidate="true">
         <div class="panel panel-default">
             <div class="panel-heading">
                 腾讯云配置
                 <i class="fa fa-bars" style="float:right"></i>
             </div>
-            <div class='panel-body' id="account_info" style="display:none;">
+            <div class='panel-body' id="account_info">
                 <div class="col-sm-8">
-                    <div class="form-horizontal mt15" >
+                    <form class="form-horizontal mt15" action="" id="qcloud_form" novalidate="true">
 
                        <div class="form-group" hidden>
                             <label class="col-sm-3 control-label" >云提供商类型:</label>
@@ -95,60 +86,51 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="account_name">帐号名称:</label>
+                            <label class="col-sm-3 control-label" for="qcloud_account_name">帐号名称:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入腾讯云用户名" id="account_name" name="account_name" AutoComplete>
+                                <input type="text" class="form-control" placeholder="请输入腾讯云用户名" id="qcloud_account_name" name="qcloud_account_name" AutoComplete>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="tencent_secretId">SecretId:</label>
+                            <label class="col-sm-3 control-label" for="tencent_secret_id">SecretId:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入SecretId" id="tencent_secretId" name="tencent_secretId" AutoComplete>
+                                <input type="text" class="form-control" placeholder="请输入SecretId" id="tencent_secret_id" name="tencent_secret_id" AutoComplete>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="tencent_secretKey">SecretKey:</label>
+                            <label class="col-sm-3 control-label" for="tencent_secret_key">SecretKey:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入SecretKey" id="tencent_secretKey" name="tencent_secretKey" AutoComplete>
+                                <input type="text" class="form-control" placeholder="请输入SecretKey" id="tencent_secret_key" name="tencent_secret_key" AutoComplete>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label col-sm-3" for="validation_select"></label>
                             <div class="col-sm-9">
-                                <button class="king-btn king-info mr10" title="保存" id="btn-validate" onclick="VCenterConfig.createTencentAccount();">
+                                <button class="king-btn king-info mr10" title="保存" id="btn-validate" onclick="VCenterConfig.createQcloudAccount();">
                                 <i class="fa fa-save btn-icon"></i>保存
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </form>
-    <form class="form-horizontal" action="" id="Ucloud_info" novalidate="true">
         <div class="panel panel-default">
             <div class="panel-heading">
                 UCLOUD配置
                 <i class="fa fa-bars" style="float:right"></i>
             </div>
-            <div class='panel-body' id="account_info" style="display:none;">
+            <div class='panel-body' id="account_info">
                 <div class="col-sm-8">
-                    <div class="form-horizontal mt15" >
-
-                       <div class="form-group" hidden>
-                            <label class="col-sm-3 control-label" >云提供商类型:</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" value="UCLOUD" id="vcenter_type" name="vcenter_type" disabled>
-                            </div>
-                        </div>
+                    <form class="form-horizontal mt15" action="" id="ucloud_form" novalidate="true">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="account_name">帐号名称:</label>
+                            <label class="col-sm-3 control-label" for="ucloud_account_name">帐号名称:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入Ucloud用户名" id="account_name" name="account_name" AutoComplete>
+                                <input type="text" class="form-control" placeholder="请输入Ucloud用户名" id="ucloud_account_name" name="ucloud_account_name" AutoComplete>
                             </div>
                         </div>
                         <div class="form-group">
@@ -178,34 +160,32 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </form>
-    <div class="panel panel-default">
-
-        <div class="panel-heading">
-            vcenter账号列表
-        </div>
-        <div class="panel-btns">
-            <a type="button" onclick="VCenterConfig.deleteAccount();"class="king-btn king-info pull-left mt15 ml15">
-                <i class="fa fa-user-plus mr5"></i>删除账号
-            </a>
-            <a type="button" data-type="success" onclick="VCenterConfig.desctroyAccount()"  class="king-btn king-info pull-left mt15 ml15">
-                <i class="fa fa-user-plus mr5"></i>清除账号与所属资源
-            </a>
-            <a type="button" onclick="VCenterConfig.setSyncPolicy();"  class="king-btn king-info pull-left mt15 ml15">
-                <i class="fa fa-user-plus mr5"></i>设置同步策略
-            </a>
-        </div>
-        <div class='panel-body panel-search-body'>
-            <div class="panel-content">
-                <table id="vcenter_config_record" class="table table-bordered table-hover table-striped">
-                </table>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                vcenter账号列表
+            </div>
+            <div class="panel-btns">
+                <a type="button" onclick="VCenterConfig.deleteAccount();"class="king-btn king-info pull-left mt15 ml15">
+                    <i class="fa fa-user-plus mr5"></i>删除账号
+                </a>
+                <a type="button" data-type="success" onclick="VCenterConfig.desctroyAccount()"  class="king-btn king-info pull-left mt15 ml15">
+                    <i class="fa fa-user-plus mr5"></i>清除账号与所属资源
+                </a>
+                <a type="button" onclick="VCenterConfig.setSyncPolicy();"  class="king-btn king-info pull-left mt15 ml15">
+                    <i class="fa fa-user-plus mr5"></i>设置同步策略
+                </a>
+            </div>
+            <div class='panel-body panel-search-body'>
+                <div class="panel-content">
+                    <table id="vcenter_config_record" class="table table-bordered table-hover table-striped">
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 </div>
 
 </%block>
@@ -213,6 +193,7 @@
 <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/validate-1.14.0/js/jquery.validate.js"></script>
 <script src="${STATIC_URL}js/vmware_config.js"></script>
 <script type="text/javascript">
+    /*
     $(document).ready(function() {
         $('#VMware_info').validate({
             errorElement: 'div',
@@ -272,7 +253,7 @@
                 account_name: {
                     required: true,
                     minlength: 2
-                }, 
+                },
                 ucloud_publicKey: {
                     required: true,
                     minlength: 2
@@ -301,5 +282,6 @@
             $(this).next().show();
         });
     });
+    */
 </script>
 </%block>

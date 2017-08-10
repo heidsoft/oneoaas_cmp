@@ -39,23 +39,25 @@ def overview(request):
         'vm':None,
         'storage':None
     }
-    vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
-    vms = vmManager.get_vms()
-    datacenters = vmManager.get_datacenters()
-    clusters = vmManager.get_resource_pools()
-    datastores = vmManager.get_datastores_info()
+    try:
+        vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
+        vms = vmManager.get_vms()
+        datacenters = vmManager.get_datacenters()
+        clusters = vmManager.get_resource_pools()
+        datastores = vmManager.get_datastores_info()
 
 
-    datastores_all_capacity = datastores['datastores_all_capacity']
-    if datastores_all_capacity is not None and datastores_all_capacity > 0:
-        data['storage'] = datastores_all_capacity/(1024*1024*1024*1024)
-    else:
-        data['storage'] = "Unkonw"
+        datastores_all_capacity = datastores['datastores_all_capacity']
+        if datastores_all_capacity is not None and datastores_all_capacity > 0:
+            data['storage'] = datastores_all_capacity/(1024*1024*1024*1024)
+        else:
+            data['storage'] = "Unkonw"
 
-    data['vm'] = len(vms)
-    data['cluster'] = len(clusters)
-    data['datacenter'] = len(datacenters)
-
+        data['vm'] = len(vms)
+        data['cluster'] = len(clusters)
+        data['datacenter'] = len(datacenters)
+    except Exception as e:
+        print str(e)
 
     return render_mako_context(
         request, '/home_application/overview/overview.html',data
