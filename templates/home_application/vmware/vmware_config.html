@@ -8,7 +8,7 @@
     </div>
 </div>
 <div class="main-wrap" id="vcenter_config">
-    <form class="form-horizontal" action="" id="VMware_info">
+    <form class="form-horizontal" action="" id="VMware_info" novalidate="true">
         <div class="panel panel-default">
             <div class="panel-heading">
                 VMware配置
@@ -24,9 +24,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="account_name"><span class="text-danger"> * </span>帐号名称:</label>
+                            <label class="col-sm-3 control-label" for="account_name">帐号名称:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入Vcenter用户" id="account_name" name="account_name">
+                                <input type="text" class="form-control" placeholder="请输入Vcenter用户名" id="account_name" name="account_name" AutoComplete>
                             </div>
                         </div>
 
@@ -41,14 +41,14 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="vcenter_host">主机地址:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入Vcenter主机IP" id="vcenter_host" name="vcenter_host">
+                                <input type="text" class="form-control" placeholder="请输入Vcenter主机IP" id="vcenter_host" name="vcenter_host" AutoComplete>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="vcenter_port">访问端口:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入Vcenter主机端口" id="vcenter_port" name="vcenter_port">
+                                <input type="text" class="form-control" placeholder="请输入Vcenter主机端口" id="vcenter_port" name="vcenter_port" AutoComplete>
                             </div>
                         </div>
 
@@ -66,7 +66,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-3"></label>
                             <div class="col-sm-9">
-                                <button class="king-btn king-info mr10" title="保存" type="submit" id="btn-validate" onclick="VCenterConfig.createVCenterAccount();">
+                                <button class="king-btn king-info mr10" title="保存" id="btn-validate" onclick="VCenterConfig.createVCenterAccount();">
                                 <i class="fa fa-save btn-icon"></i>保存
                                 </button>
                             </div>
@@ -76,7 +76,7 @@
             </div>
         </div>  
     </form>
-    <form class="form-horizontal" action="" id="Tencent_info">
+    <form class="form-horizontal" action="" id="Tencent_info" novalidate="true">
         <div class="panel panel-default">
             <div class="panel-heading">
                 腾讯云配置
@@ -93,23 +93,30 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="account_PublicKey">PublicKey:</label>
+                            <label class="col-sm-3 control-label" for="account_name">帐号名称:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入PublicKey" id="account_PublicKey" name="account_PublicKey">
+                                <input type="text" class="form-control" placeholder="请输入腾讯云用户名" id="account_name" name="account_name" AutoComplete>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="account_PrivateKey">PrivateKey:</label>
+                            <label class="col-sm-3 control-label" for="tencent_secretId">SecretId:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入PrivateKey" id="account_PrivateKey" name="account_PrivateKey">
+                                <input type="text" class="form-control" placeholder="请输入SecretId" id="tencent_secretId" name="tencent_secretId" AutoComplete>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="tencent_secretKey">SecretKey:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="请输入SecretKey" id="tencent_secretKey" name="tencent_secretKey" AutoComplete>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label col-sm-3" for="validation_select"></label>
                             <div class="col-sm-9">
-                                <button class="king-btn king-info mr10" title="保存" type="submit" id="btn-validate" onclick="VCenterConfig.createVCenterAccount();">
+                                <button class="king-btn king-info mr10" title="保存" id="btn-validate" onclick="VCenterConfig.createTencentAccount();">
                                 <i class="fa fa-save btn-icon"></i>保存
                                 </button>
                             </div>
@@ -120,7 +127,7 @@
         </div>
     </form>
 
-    <form class="form-horizontal" action="" id="Ucloud_info">
+    <form class="form-horizontal" action="" id="Ucloud_info" novalidate="true">
         <div class="panel panel-default">
             <div class="panel-heading">
                 UCLOUD配置
@@ -137,28 +144,34 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="account_PublicKey">PublicKey:</label>
+                            <label class="col-sm-3 control-label" for="account_name">帐号名称:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入PublicKey" id="account_PublicKey" name="account_PublicKey">
+                                <input type="text" class="form-control" placeholder="请输入Ucloud用户名" id="account_name" name="account_name" AutoComplete>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="account_name">PrivateKey:</label>
+                            <label class="col-sm-3 control-label" for="ucloud_publicKey">PublicKey:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入PrivateKey" id="account_PrivateKey" name="account_PrivateKey">
+                                <input type="text" class="form-control" placeholder="请输入PublicKey" id="ucloud_publicKey" name="ucloud_publicKey" AutoComplete>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="account_project_id">project_id :</label>
+                            <label class="col-sm-3 control-label" for="ucloud_privateKey">PrivateKey:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入project_id " id="account_project_id" name="account_project_id">
+                                <input type="text" class="form-control" placeholder="请输入PrivateKey" id="ucloud_privateKey" name="ucloud_privateKey" AutoComplete>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="ucloud_projectId">ProjectId:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" placeholder="请输入ProjectId " id="ucloud_projectId" name="ucloud_projectId" AutoComplete>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="control-label col-sm-3" for="validation_select"></label>
                             <div class="col-sm-9">
-                                <button class="king-btn king-info mr10" title="保存" type="submit" id="btn-validate" onclick="VCenterConfig.createVCenterAccount();">
+                                <button class="king-btn king-info mr10" title="保存" id="btn-validate" onclick="VCenterConfig.createUcloudAccount();">
                                 <i class="fa fa-save btn-icon"></i>保存
                                 </button>
                             </div>
@@ -231,41 +244,51 @@
             errorElement: 'div',
             errorClass: 'text-danger',
             rules: {
-                account_PublicKey: {
+                account_name: {
                     required: true,
                     minlength: 2
                 },
-                account_PrivateKey: {
+                tencent_secretId: {
+                    required: true,
+                    minlength: 2
+                },
+                tencent_secretKey: {
                     required: true,
                     minlength: 2,
                 }
             },
             messages: {
-                account_PublicKey: "请输入PublicKey",
-                account_PrivateKey: "请输入PrivateKey",
+                account_name: "请输入腾讯云账号名称(至少两位)",
+                tencent_secretId: "请输入SecretId",
+                tencent_secretKey: "请输入SecretKey",
             }
         });
         $('#Ucloud_info').validate({
             errorElement: 'div',
             errorClass: 'text-danger',
             rules: {
-                account_PublicKey: {
+                account_name: {
+                    required: true,
+                    minlength: 2
+                }, 
+                ucloud_publicKey: {
                     required: true,
                     minlength: 2
                 },
-                account_PrivateKey: {
+                ucloud_privateKey: {
                     required: true,
                     minlength: 2
                 },
-                account_project_id: {
+                ucloud_projectId: {
                     required: true,
                     minlength: 2
                 }
             },
             messages: {
-                account_PublicKey: "请输入PublicKey",
-                account_PrivateKey: "请输入PrivateKey",
-                account_project_id: "请输入项目ID",
+                account_name: "请输入Ucloud账号名称(至少两位)",
+                ucloud_publicKey: "请输入PublicKey",
+                ucloud_privateKey: "请输入PrivateKey",
+                ucloud_projectId: "请输入项目ID",
             }
         });
     });
