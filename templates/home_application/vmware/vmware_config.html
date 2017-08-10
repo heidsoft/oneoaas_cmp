@@ -12,8 +12,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 VMware配置
+                <i class="fa fa-bars" style="float:right"></i>
             </div>
-            <div class='panel-body' id="account_info">
+            <div class='panel-body' id="account_info" style="display:block;">
                 <div class="col-sm-8">
                     <div class="form-horizontal mt15" >
 
@@ -80,8 +81,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 腾讯云配置
+                <i class="fa fa-bars" style="float:right"></i>
             </div>
-            <div class='panel-body' id="account_info">
+            <div class='panel-body' id="account_info" style="display:none;">
                 <div class="col-sm-8">
                     <div class="form-horizontal mt15" >
 
@@ -126,13 +128,13 @@
             </div>
         </div>
     </form>
-
     <form class="form-horizontal" action="" id="Ucloud_info" novalidate="true">
         <div class="panel panel-default">
             <div class="panel-heading">
                 UCLOUD配置
+                <i class="fa fa-bars" style="float:right"></i>
             </div>
-            <div class='panel-body' id="account_info">
+            <div class='panel-body' id="account_info" style="display:none;">
                 <div class="col-sm-8">
                     <div class="form-horizontal mt15" >
 
@@ -290,6 +292,13 @@
                 ucloud_privateKey: "请输入PrivateKey",
                 ucloud_projectId: "请输入项目ID",
             }
+        });
+        $('form .panel-heading').on("click",function(e) {
+            var formDisplay = $('form #account_info');
+            formDisplay.each(function () {
+                formDisplay.css("display","none");
+            });
+            $(this).next().show();
         });
     });
 </script>
