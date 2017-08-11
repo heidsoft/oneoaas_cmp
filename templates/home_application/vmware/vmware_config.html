@@ -15,7 +15,7 @@
             </div>
             <div class='panel-body' id="account_info" v-show="vcenterIsShow">
                 <div class="col-sm-8">
-                    <form class="form-horizontal mt15" action="" id="vmware_form" novalidate="true">
+                    <form class="form-horizontal mt15" action="" id="vmware_form" @submit.prevent="onSubmit">
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="vcenter_account_name">帐号名称:</label>
@@ -30,7 +30,6 @@
                                 <input type="password" class="form-control" placeholder="请输入Vcenter密码" id="vcenter_account_password" name="vcenter_account_password">
                             </div>
                         </div>
-
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="vcenter_host">主机地址:</label>
@@ -76,7 +75,7 @@
             </div>
             <div class='panel-body' id="account_info" v-show="qcloudIsShow">
                 <div class="col-sm-8">
-                    <form class="form-horizontal mt15" action="" id="qcloud_form" novalidate="true">
+                    <form class="form-horizontal mt15" action="" id="qcloud_form" @submit.prevent="onSubmit">
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="qcloud_account_name">帐号名称:</label>
                             <div class="col-sm-9">
@@ -128,7 +127,7 @@
             </div>
             <div class='panel-body' id="account_info" v-show="ucloudIsShow">
                 <div class="col-sm-8">
-                    <form class="form-horizontal mt15" action="" id="ucloud_form" novalidate="true">
+                    <form class="form-horizontal mt15" action="" id="ucloud_form" @submit.prevent="onSubmit">
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="ucloud_account_name">帐号名称:</label>
@@ -169,18 +168,18 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                vcenter账号列表
+                云厂商账号列表
             </div>
             <div class="panel-btns">
                 <a type="button" onclick="VCenterConfig.deleteAccount();"class="king-btn king-info pull-left mt15 ml15">
-                    <i class="fa fa-user-plus mr5"></i>删除账号
+                    <i class="fa fa-trash-o mr5"></i>删除账号
                 </a>
-                <a type="button" data-type="success" onclick="VCenterConfig.desctroyAccount()"  class="king-btn king-info pull-left mt15 ml15">
-                    <i class="fa fa-user-plus mr5"></i>清除账号与所属资源
+<!--                <a type="button" data-type="success" onclick="VCenterConfig.desctroyAccount()"  class="king-btn king-info pull-left mt15 ml15" >
+                    <i class="fa fa-archive mr5"></i>清除账号与所属资源
                 </a>
-                <a type="button" onclick="VCenterConfig.setSyncPolicy();"  class="king-btn king-info pull-left mt15 ml15">
-                    <i class="fa fa-user-plus mr5"></i>设置同步策略
-                </a>
+                <a type="button" onclick="VCenterConfig.setSyncPolicy();"  class="king-btn king-info pull-left mt15 ml15" >
+                    <i class="fa fa-spinner mr5"></i>设置同步策略
+                </a>  -->
             </div>
             <div class='panel-body panel-search-body'>
                 <div class="panel-content">

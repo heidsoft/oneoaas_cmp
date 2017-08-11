@@ -58,16 +58,17 @@ var VCenterConfig = (function ($,toastr) {
                     {
                         title : '云厂商',
                         data: "cloud_provider",
-                    },
-                    {
+                    }
+                  /*  {
+                        title: '操作',
                         data: "id",
                         "render": function ( data, type, row ) {
                             var syncHtml = '<button class="btn btn-xs btn-info" ' ;
                             syncHtml+= ' onclick="VCenterConfig.syncVCenterAccount('+data+')" ';
-                            syncHtml+= ' >同步</button> ';
+                            syncHtml+= '>同步</button> ';
                             return syncHtml;
                         }
-                    }
+                    } */
                 ]
 
             });
@@ -78,7 +79,6 @@ var VCenterConfig = (function ($,toastr) {
 
         //创建vcenter账号
         createVCenterAccount: function () {
-
             var vcenterAccountName =  $("#vcenter_account_name").val();
             var vcenterAccountPassword = $("#vcenter_account_password").val();
             var vcenterHost = $("#vcenter_host").val();
@@ -86,48 +86,32 @@ var VCenterConfig = (function ($,toastr) {
             var vcenterPort = $("#vcenter_port").val();
             var vmwareForm = $('#vmware_form');
 
-            if(vcenterAccountName===""){
+            if(vcenterAccountName==="" || vcenterAccountPassword==="" || vcenterHost==="" || vcenterPort===""){
                 return
             }
-
-            if(vcenterAccountPassword===""){
-                return
-            }
-
-            if(vcenterHost===""){
-                return
-            }
-
-            if(vcenterPort===""){
-                return
-            }
-
             if(vcenterVersion===""){
-               alert(1);
-                return 
+               toastr.warning("版本不能为空"); // form 那儿不能出现提示信息，此处作补充
+               return
             }
 
-            vmwareForm.submit(function (e) {
-                e.preventDefault();
-                $.ajax({
-                    url: site_url+'vmware/api/createVCenterAccount',
-                    type: 'post',
-                    dataType: 'json',
-                    data: {
-                        "cloudProvider":"vmware",
-                        "accountName":vcenterAccountName,
-                        "accountPassword":vcenterAccountPassword,
-                        "vcenterHost":vcenterHost,
-                        "vcenterPort":vcenterPort,
-                        "vcenterVersion":vcenterVersion
-                    },
-                    success: function (data) {
-                        toastr.success(data.message);
-                        VCenterConfig.accountTable.ajax.reload( null, false );
-                        vmwareForm.trigger("reset");
-                        $("#vcenter_version .select2_box").select2("val","");
-                    }
-                });
+            $.ajax({
+              url: site_url+'vmware/api/createVCenterAccount',
+              type: 'post',
+              dataType: 'json',
+              data: {
+                  "cloudProvider":"vmware",
+                  "accountName":vcenterAccountName,
+                  "accountPassword":vcenterAccountPassword,
+                  "vcenterHost":vcenterHost,
+                  "vcenterPort":vcenterPort,
+                  "vcenterVersion":vcenterVersion
+               },
+              success: function (data) {
+                  toastr.success(data.message);
+                  VCenterConfig.accountTable.ajax.reload( null, false );
+                  vmwareForm.trigger("reset");
+                  $("#vcenter_version .select2_box").select2("val","");
+               }
             });
         },
 
@@ -139,39 +123,27 @@ var VCenterConfig = (function ($,toastr) {
             //var qcloudVersion = $("#qcloud_version .select2_box").select2("val"); // 腾讯版本号预留字段
             var qcloudForm = $('#qcloud_form');
 
-            if(qcloudAccountName===""){
+            if(qcloudAccountName==="" || qcloudSecretId==="" || qcloudSecretKey===""){
                 return
             }
-
-            if(qcloudSecretId===""){
-                return
-            }
-
-            if(qcloudSecretKey===""){
-                return
-            }
-
-            qcloudForm.submit(function (e) {
-                e.preventDefault();
-                $.ajax({
-                    url: site_url+'vmware/api/createVCenterAccount',
-                    type: 'post',
-                    dataType: 'json',
-                    data: {
-                        "cloudProvider":"qcloud",
-                        "accountName":qcloudAccountName,
-                        "cloudPublicKey":qcloudSecretId,
-                        "cloudPrivateKey":qcloudSecretKey,
-                        //"vcenterVersion":qcloudVersion
-                    },
-                    success: function (data) {
-                        toastr.success(data.message);
-                        VCenterConfig.accountTable.ajax.reload( null, false );
-                        qcloudForm.trigger("reset");
-                    }
-                });
+            $.ajax({
+              url: site_url+'vmware/api/createVCenterAccount',
+              type: 'post',
+              dataType: 'json',
+              data: {
+                  "cloudProvider":"qcloud",
+                  "accountName":qcloudAccountName,
+                  "cloudPublicKey":qcloudSecretId,
+                  "cloudPrivateKey":qcloudSecretKey,
+                  //"vcenterVersion":qcloudVersion
+               },
+              success: function (data) {
+                  toastr.success(data.message);
+                  VCenterConfig.accountTable.ajax.reload( null, false );
+                  qcloudForm.trigger("reset");
+                  // $("#qcloud_version .select2_box").select2("val","");
+               }
             });
-
         },
 
         //创建Ucloud账号
@@ -181,47 +153,32 @@ var VCenterConfig = (function ($,toastr) {
             var ucloudPrivateKey = $("#ucloud_private_key").val();
             var ucloudProjectId = $("#ucloud_project_id").val();
             var ucloudForm = $("#ucloud_form");
-            if(accountName===""){
+            if(accountName==="" || ucloudPublicKey==="" || ucloudPrivateKey==="" || ucloudProjectId===""){
                 return
             }
 
-            if(ucloudPublicKey===""){
-                return
-            }
-
-            if(ucloudPrivateKey===""){
-                return
-            }
-            if(ucloudProjectId===""){
-                return
-            }
-
-            ucloudForm.submit(function (e) {
-                e.preventDefault();
-                $.ajax({
-                    url: site_url+'vmware/api/createVCenterAccount',
-                    type: 'post',
-                    dataType: 'json',
-                    data: {
-                        "cloudProvider":"ucloud",
-                        "accountName":accountName,
-                        "cloudPublicKey":ucloudPublicKey,
-                        "cloudPrivateKey":ucloudPrivateKey,
-                        "projectId":ucloudProjectId
-                    },
-                    success: function (data) {
-                        toastr.success(data.message);
-                        VCenterConfig.accountTable.ajax.reload( null, false );
-                        ucloudForm.trigger("reset");
-                    },
-                    error:function (err1,err2,err3) {
-                        console.log(err1);
-                        console.log(err2);
-                        console.log(err3);
-                    }
-                });
+            $.ajax({
+               url: site_url+'vmware/api/createVCenterAccount',
+               type: 'post',
+               dataType: 'json',
+               data: {
+                  "cloudProvider":"ucloud",
+                  "accountName":accountName,
+                  "cloudPublicKey":ucloudPublicKey,
+                  "cloudPrivateKey":ucloudPrivateKey,
+                  "projectId":ucloudProjectId
+               },
+               success: function (data) {
+                  toastr.success(data.message);
+                  VCenterConfig.accountTable.ajax.reload( null, false );
+                  ucloudForm.trigger("reset");
+               },
+               error:function (err1,err2,err3) {
+                  console.log(err1);
+                  console.log(err2);
+                  console.log(err3);
+               }
             });
-            
         },
 
         //同步VCenter账号
@@ -301,15 +258,18 @@ var account_info_vue = new Vue({
         ] */
     },
     methods: {
-       vcenterHide:function(){
+       vcenterHide:function () {
           this.vcenterIsShow = !this.vcenterIsShow;
        },
-       qcloudHide:function(){
+       qcloudHide:function () {
           this.qcloudIsShow = !this.qcloudIsShow;
        },
-       ucloudHide:function(){
+       ucloudHide:function () {
           this.ucloudIsShow = !this.ucloudIsShow;
        },
+       onSubmit:function (e) {
+          e.preventDefault();
+       }
     },
     created: function () {
         var _self = this;
