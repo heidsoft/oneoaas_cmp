@@ -9,11 +9,11 @@
 </div>
 <div class="main-wrap" id="vcenter_config">
         <div class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading" @click="vcenterHide">
                 VMware配置
                 <i class="fa fa-bars" style="float:right"></i>
             </div>
-            <div class='panel-body' id="account_info">
+            <div class='panel-body' id="account_info" v-show="vcenterIsShow">
                 <div class="col-sm-8">
                     <form class="form-horizontal mt15" action="" id="vmware_form" novalidate="true">
 
@@ -70,21 +70,13 @@
             </div>
         </div>  
         <div class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading" @click="qcloudHide">
                 腾讯云配置
                 <i class="fa fa-bars" style="float:right"></i>
             </div>
-            <div class='panel-body' id="account_info">
+            <div class='panel-body' id="account_info" v-show="qcloudIsShow">
                 <div class="col-sm-8">
                     <form class="form-horizontal mt15" action="" id="qcloud_form" novalidate="true">
-
-                       <div class="form-group" hidden>
-                            <label class="col-sm-3 control-label" >云提供商类型:</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" value="腾讯云" id="vcenter_type" name="vcenter_type" disabled>
-                            </div>
-                        </div>
-
                         <div class="form-group">
                             <label class="col-sm-3 control-label" for="qcloud_account_name">帐号名称:</label>
                             <div class="col-sm-9">
@@ -93,16 +85,27 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="tencent_secret_id">SecretId:</label>
+                            <label class="col-sm-3 control-label" for="qcloud_secret_id">SecretId:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入SecretId" id="tencent_secret_id" name="tencent_secret_id" AutoComplete>
+                                <input type="text" class="form-control" placeholder="请输入SecretId" id="qcloud_secret_id" name="qcloud_secret_id" AutoComplete>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="tencent_secret_key">SecretKey:</label>
+                            <label class="col-sm-3 control-label" for="qcloud_secret_key">SecretKey:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入SecretKey" id="tencent_secret_key" name="tencent_secret_key" AutoComplete>
+                                <input type="text" class="form-control" placeholder="请输入SecretKey" id="qcloud_secret_key" name="qcloud_secret_key" AutoComplete>
+                            </div>
+                        </div>
+
+                        <div class="form-group" hidden>
+                            <label class="col-sm-3 control-label">版本:</label>
+                            <div class="col-sm-9">
+                                <div id="qcloud_version" style="display:inline-block;width:90%">
+                                    <!-- select2 通过javascript start -->
+                                    <input type="hidden" class="select2_box" style="width:100%;" >
+                                    <!-- select2 通过javascript end -->
+                                </div>
                             </div>
                         </div>
 
@@ -119,11 +122,11 @@
             </div>
         </div>
         <div class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading" @click="ucloudHide">
                 UCLOUD配置
                 <i class="fa fa-bars" style="float:right"></i>
             </div>
-            <div class='panel-body' id="account_info">
+            <div class='panel-body' id="account_info" v-show="ucloudIsShow">
                 <div class="col-sm-8">
                     <form class="form-horizontal mt15" action="" id="ucloud_form" novalidate="true">
 
@@ -134,21 +137,21 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="ucloud_publicKey">PublicKey:</label>
+                            <label class="col-sm-3 control-label" for="ucloud_public_key">PublicKey:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入PublicKey" id="ucloud_publicKey" name="ucloud_publicKey" AutoComplete>
+                                <input type="text" class="form-control" placeholder="请输入PublicKey" id="ucloud_public_key" name="ucloud_public_key" AutoComplete>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="ucloud_privateKey">PrivateKey:</label>
+                            <label class="col-sm-3 control-label" for="ucloud_private_key">PrivateKey:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入PrivateKey" id="ucloud_privateKey" name="ucloud_privateKey" AutoComplete>
+                                <input type="text" class="form-control" placeholder="请输入PrivateKey" id="ucloud_private_key" name="ucloud_private_key" AutoComplete>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="ucloud_projectId">ProjectId:</label>
+                            <label class="col-sm-3 control-label" for="ucloud_project_id">ProjectId:</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" placeholder="请输入ProjectId " id="ucloud_projectId" name="ucloud_projectId" AutoComplete>
+                                <input type="text" class="form-control" placeholder="请输入ProjectId " id="ucloud_project_id" name="ucloud_project_id" AutoComplete>
                             </div>
                         </div>
 
@@ -193,20 +196,19 @@
 <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/validate-1.14.0/js/jquery.validate.js"></script>
 <script src="${STATIC_URL}js/vmware_config.js"></script>
 <script type="text/javascript">
-    /*
     $(document).ready(function() {
-        $('#VMware_info').validate({
+        $('#vmware_form').validate({
             errorElement: 'div',
             errorClass: 'text-danger',
             rules: {
-                account_name: {
+                vcenter_account_name: {
                     required: true,
                     minlength: 2
                 },
-                account_password: {
+                vcenter_account_password: {
                     required: true,
                     minlength: 6,
-                    equalTo: '#account_password'
+                    equalTo: '#vcenter_account_password'
                 },
                 vcenter_host: {
                     required: true,
@@ -217,71 +219,64 @@
                 }
             },
             messages: {
-                account_name: "请输入Venter账号名称(至少两位)",
-                account_password: "请输入VCenter账号密码",
+                vcenter_account_name: "请输入Venter账号名称(至少两位)",
+                vcenter_account_password: "请输入VCenter账号密码",
                 vcenter_host: "请输入VCenter主机IP",
                 vcenter_port: "请输入VCenter主机Port",
             }
         });
-        $('#Tencent_info').validate({
+        $('#qcloud_form').validate({
             errorElement: 'div',
             errorClass: 'text-danger',
             rules: {
-                account_name: {
+                qcloud_account_name: {
                     required: true,
                     minlength: 2
                 },
-                tencent_secretId: {
+                qcloud_secret_id: {
                     required: true,
                     minlength: 2
                 },
-                tencent_secretKey: {
+                qcloud_secret_key: {
                     required: true,
                     minlength: 2,
                 }
             },
             messages: {
-                account_name: "请输入腾讯云账号名称(至少两位)",
-                tencent_secretId: "请输入SecretId",
-                tencent_secretKey: "请输入SecretKey",
+                qcloud_account_name: "请输入腾讯云账号名称(至少两位)",
+                qcloud_secret_id: "请输入SecretId",
+                qcloud_secret_key: "请输入SecretKey",
             }
         });
-        $('#Ucloud_info').validate({
+        $('#ucloud_form').validate({
             errorElement: 'div',
             errorClass: 'text-danger',
             rules: {
-                account_name: {
+                ucloud_account_name: {
                     required: true,
                     minlength: 2
                 },
-                ucloud_publicKey: {
+                ucloud_public_key: {
                     required: true,
                     minlength: 2
                 },
-                ucloud_privateKey: {
+                ucloud_private_key: {
                     required: true,
                     minlength: 2
                 },
-                ucloud_projectId: {
+                ucloud_project_id: {
                     required: true,
                     minlength: 2
                 }
             },
             messages: {
                 account_name: "请输入Ucloud账号名称(至少两位)",
-                ucloud_publicKey: "请输入PublicKey",
-                ucloud_privateKey: "请输入PrivateKey",
-                ucloud_projectId: "请输入项目ID",
+                ucloud_public_key: "请输入PublicKey",
+                ucloud_private_key: "请输入PrivateKey",
+                ucloud_project_id: "请输入项目ID",
             }
         });
-        $('form .panel-heading').on("click",function(e) {
-            var formDisplay = $('form #account_info');
-            formDisplay.each(function () {
-                formDisplay.css("display","none");
-            });
-            $(this).next().show();
-        });
     });
-    */
+    
 </script>
 </%block>

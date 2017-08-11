@@ -76,20 +76,6 @@ var VCenterConfig = (function ($,toastr) {
             return VCenterConfigRecord;
         },
 
-        beforeAction:function(){
-            var rows_selected = this.accountTable.column(0).checkboxes.selected();
-            if(typeof rows_selected === 'undefined' || rows_selected.length === 0){
-                toastr.warning("请选择账号资源");
-                return false
-            }
-            var rowIds = this.selectedRows =[];
-            $.each(rows_selected, function(index, rowId){
-                rowIds.push(rowId);
-            });
-            this.selectedRows = rowIds;
-            return true
-        },
-
         //创建vcenter账号
         createVCenterAccount: function () {
 
@@ -99,6 +85,27 @@ var VCenterConfig = (function ($,toastr) {
             var vcenterVersion = $("#vcenter_version .select2_box").select2("val");
             var vcenterPort = $("#vcenter_port").val();
             var vmwareForm = $('#vmware_form');
+
+            if(vcenterAccountName===""){
+                return
+            }
+
+            if(vcenterAccountPassword===""){
+                return
+            }
+
+            if(vcenterHost===""){
+                return
+            }
+
+            if(vcenterPort===""){
+                return
+            }
+
+            if(vcenterVersion===""){
+               alert(1);
+                return 
+            }
 
             vmwareForm.submit(function (e) {
                 e.preventDefault();
@@ -118,7 +125,7 @@ var VCenterConfig = (function ($,toastr) {
                         toastr.success(data.message);
                         VCenterConfig.accountTable.ajax.reload( null, false );
                         vmwareForm.trigger("reset");
-                        //$("#vcenter_version .select2_box").select2("val","");
+                        $("#vcenter_version .select2_box").select2("val","");
                     }
                 });
             });
@@ -127,9 +134,22 @@ var VCenterConfig = (function ($,toastr) {
         //创建Tencent账号
         createQcloudAccount: function () {
             var qcloudAccountName =  $("#qcloud_account_name").val();
-            var qcloudSecretId = $("#tencent_secret_id").val();
-            var qcloudSecretKey = $("#tencent_secret_key").val();
+            var qcloudSecretId = $("#qcloud_secret_id").val();
+            var qcloudSecretKey = $("#qcloud_secret_key").val();
+            //var qcloudVersion = $("#qcloud_version .select2_box").select2("val"); // 腾讯版本号预留字段
             var qcloudForm = $('#qcloud_form');
+
+            if(qcloudAccountName===""){
+                return
+            }
+
+            if(qcloudSecretId===""){
+                return
+            }
+
+            if(qcloudSecretKey===""){
+                return
+            }
 
             qcloudForm.submit(function (e) {
                 e.preventDefault();
@@ -138,10 +158,11 @@ var VCenterConfig = (function ($,toastr) {
                     type: 'post',
                     dataType: 'json',
                     data: {
-                        "accountName":qcloudAccountName,
                         "cloudProvider":"qcloud",
+                        "accountName":qcloudAccountName,
                         "cloudPublicKey":qcloudSecretId,
                         "cloudPrivateKey":qcloudSecretKey,
+                        //"vcenterVersion":qcloudVersion
                     },
                     success: function (data) {
                         toastr.success(data.message);
@@ -156,10 +177,24 @@ var VCenterConfig = (function ($,toastr) {
         //创建Ucloud账号
         createUcloudAccount: function () {
             var accountName =  $("#ucloud_account_name").val();
-            var ucloudPublicKey = $("#ucloud_publicKey").val();
-            var ucloudPrivateKey = $("#ucloud_privateKey").val();
-            var ucloudProjectId = $("#ucloud_projectId").val();
+            var ucloudPublicKey = $("#ucloud_public_key").val();
+            var ucloudPrivateKey = $("#ucloud_private_key").val();
+            var ucloudProjectId = $("#ucloud_project_id").val();
             var ucloudForm = $("#ucloud_form");
+            if(accountName===""){
+                return
+            }
+
+            if(ucloudPublicKey===""){
+                return
+            }
+
+            if(ucloudPrivateKey===""){
+                return
+            }
+            if(ucloudProjectId===""){
+                return
+            }
 
             ucloudForm.submit(function (e) {
                 e.preventDefault();
@@ -168,11 +203,11 @@ var VCenterConfig = (function ($,toastr) {
                     type: 'post',
                     dataType: 'json',
                     data: {
-                        "accountName":accountName,
                         "cloudProvider":"ucloud",
+                        "accountName":accountName,
                         "cloudPublicKey":ucloudPublicKey,
                         "cloudPrivateKey":ucloudPrivateKey,
-                        "projectId":ucloudProjectId,
+                        "projectId":ucloudProjectId
                     },
                     success: function (data) {
                         toastr.success(data.message);
@@ -204,6 +239,19 @@ var VCenterConfig = (function ($,toastr) {
             });
         },
 
+        beforeAction:function(){
+            var rows_selected = this.accountTable.column(0).checkboxes.selected();
+            if(typeof rows_selected === 'undefined' || rows_selected.length === 0){
+                toastr.warning("请选择账号资源");
+                return false
+            }
+            var rowIds = this.selectedRows =[];
+            $.each(rows_selected, function(index, rowId){
+                rowIds.push(rowId);
+            });
+            this.selectedRows = rowIds;
+            return true
+        },
         //删除账号
         deleteAccount: function () {
             if(!this.beforeAction()){
@@ -214,7 +262,7 @@ var VCenterConfig = (function ($,toastr) {
                 type: 'post',
                 dataType: 'json',
                 data: {
-                    "id":this.selectedRows[0],
+                    "id":this.selectedRows[0], //别人要删除多个怎么办？
                 },
                 success: function (data) {
                     toastr.success(data.message);
@@ -234,14 +282,34 @@ var VCenterConfig = (function ($,toastr) {
 })($,window.toastr);
 
 var account_info_vue = new Vue({
-    el: '#account_info',
+    el: '#vcenter_config',
     data: {
+        vcenterIsShow: true,
+        qcloudIsShow: false,
+        ucloudIsShow: false,
         vcenterVersionList: [
             {id:5.0,text:"5.0"},
             {id:5.1,text:"5.1"},
             {id:5.5,text:"5.5"},
             {id:6.0,text:"6.0"}
         ]
+        /* qcloudVersionList: [
+            {id:5.0,text:"5.0"},
+            {id:5.1,text:"5.1"},
+            {id:5.5,text:"5.5"},
+            {id:6.0,text:"6.0"}
+        ] */
+    },
+    methods: {
+       vcenterHide:function(){
+          this.vcenterIsShow = !this.vcenterIsShow;
+       },
+       qcloudHide:function(){
+          this.qcloudIsShow = !this.qcloudIsShow;
+       },
+       ucloudHide:function(){
+          this.ucloudIsShow = !this.ucloudIsShow;
+       },
     },
     created: function () {
         var _self = this;
@@ -250,15 +318,21 @@ var account_info_vue = new Vue({
             allowClear: true,
             data: this.vcenterVersionList
         });
-
+/*
+        $("#qcloud_version .select2_box").select2({
+            placeholder: "请选择腾讯版本",
+            allowClear: true,
+            data: this.qcloudVersionList
+        });
+*/
         VCenterConfig.init();
     },
     watch: {
         cloudProviderSelected: {
             handler(newValue, oldValue) {
-                console.log("aaaaaaaaaaaaa");
+                console.log("newVersion：");
                 console.log(newValue);
-                console.log("bbbbbbbbbbbbb");
+                console.log("oldVersion：");
                 console.log(oldValue);
             },
             deep: true
