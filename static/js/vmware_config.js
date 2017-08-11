@@ -184,7 +184,7 @@ var VCenterConfig = (function ($,toastr) {
         //同步VCenter账号
         syncVCenterAccount: function (data) {
             $.ajax({
-                url: site_url+'vmware/api/createVCenterAccount',
+                url: site_url+'vmware/api/syncVCenterAccount',
                 type: 'post',
                 dataType: 'json',
                 data: {
