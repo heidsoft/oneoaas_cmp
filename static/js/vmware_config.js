@@ -126,6 +126,10 @@ var VCenterConfig = (function ($,toastr) {
             if(qcloudAccountName==="" || qcloudSecretId==="" || qcloudSecretKey===""){
                 return
             }
+          /*  if(qcloudVersion===""){
+               toastr.warning("版本不能为空");
+               return
+            }*/
             $.ajax({
               url: site_url+'vmware/api/createVCenterAccount',
               type: 'post',
@@ -152,11 +156,15 @@ var VCenterConfig = (function ($,toastr) {
             var ucloudPublicKey = $("#ucloud_public_key").val();
             var ucloudPrivateKey = $("#ucloud_private_key").val();
             var ucloudProjectId = $("#ucloud_project_id").val();
+            var ucloudRegion = $("#cloud_region .select2_box").val().select2("val");
             var ucloudForm = $("#ucloud_form");
             if(accountName==="" || ucloudPublicKey==="" || ucloudPrivateKey==="" || ucloudProjectId===""){
                 return
             }
-
+            if(ucloudRegion===""){
+               toastr.warning("区域不能为空");
+               return
+            }
             $.ajax({
                url: site_url+'vmware/api/createVCenterAccount',
                type: 'post',
@@ -172,6 +180,7 @@ var VCenterConfig = (function ($,toastr) {
                   toastr.success(data.message);
                   VCenterConfig.accountTable.ajax.reload( null, false );
                   ucloudForm.trigger("reset");
+                  $("#cloud_region .select2_box").select2("val","");
                },
                error:function (err1,err2,err3) {
                   console.log(err1);
@@ -264,13 +273,29 @@ var account_info_vue = new Vue({
             {id:5.1,text:"5.1"},
             {id:5.5,text:"5.5"},
             {id:6.0,text:"6.0"}
-        ]
+        ],
         /* qcloudVersionList: [
             {id:5.0,text:"5.0"},
             {id:5.1,text:"5.1"},
             {id:5.5,text:"5.5"},
             {id:6.0,text:"6.0"}
         ] */
+        ucloudRegionList: [
+            {regionName:"北京一",regionAPI:"cn-bj1"},
+            {regionName:"北京二",regionAPI:"cn-bj2"},
+            {regionName:"浙江",regionAPI:"cn-zj"},
+            {regionName:"上海一",regionAPI:"cn-sh1"},
+            {regionName:"上海二",regionAPI:"cn-sh2"},
+            {regionName:"广州",regionAPI:"cn-gd"},
+            {regionName:"香港",regionAPI:"hk"},
+            {regionName:"洛杉矶",regionAPI:"us-ca"},
+            {regionName:"华盛顿",regionAPI:"us-ws"},
+            {regionName:"法兰克福",regionAPI:"ge-fra"},
+            {regionName:"曼谷",regionAPI:"th-bkk"},
+            {regionName:"首尔",regionAPI:"kr-seoul"},
+            {regionName:"新加坡",regionAPI:"sg"},
+            {regionName:"台湾",regionAPI:"tw-kh"}
+        ]
     },
     methods: {
        onSubmit:function (e) {
@@ -291,6 +316,11 @@ var account_info_vue = new Vue({
             data: this.qcloudVersionList
         });
 */
+        $("#ucloud_region .select2_box").select2({
+            placeholder: "请选择区域",
+            allowClear: true,
+            data: this.ucloudRegionList
+        });
         VCenterConfig.init();
     },
     watch: {
@@ -306,7 +336,19 @@ var account_info_vue = new Vue({
     }
 })
 
-// $(document).ready(function(){
-//     $("#cloud_provider .select2_box").on("change", function (e) { console.log("change"); });
-// })
-
+//详情展示,基于vue实例,使用单向数据绑定
+var vcenterView = new Vue({
+    el: '#vcenterDetails',
+    data: {
+        vcenterAccountList:{},
+    }
+});
+$('#vcenter_config_record').on( 'click', 'tr:gt(0)', function () {
+    // 获取数据
+    var currentVcenter = VCenterConfig.accountTable.row( this ).data();
+    vcenterView.vcenterAccountList=currentVcenter;
+    $("#vcenterDetails").removeClass('hidden');
+});
+$('#close').on('click', function(event){
+    $("#vcenterDetails").addClass('hidden');
+});

@@ -17,6 +17,30 @@
         font-weight: bold;
         text-shadow: 1px 1px 0 #fff;
     }
+    #vcenterDetails{
+        position: fixed;
+        right: 0;
+        top: 50px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.8);
+        width: 40%;
+        height: 100%;
+        z-index: 8;
+    }
+    #vcenterDetails .row{
+        height: 40px;
+        line-height: 40px;
+        margin-top:10px;
+    }
+    #close{
+        position: fixed;
+        top: 60px;
+        right: 40%;
+        width: 30px;
+        line-height: 30px;
+        text-align: center;
+        background: #f66;
+    }
 </style>
 </%block>
 
@@ -174,6 +198,16 @@
                                 <input type="text" class="form-control" placeholder="请输入ProjectId " id="ucloud_project_id" name="ucloud_project_id" AutoComplete>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">区域:</label>
+                            <div class="col-sm-9">
+                                <div id="ucloud_region" style="display:inline-block;width:90%">
+                                    <!-- select2 通过javascript start -->
+                                    <input type="hidden" class="select2_box" style="width:100%;" >
+                                    <!-- select2 通过javascript end -->
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="control-label col-sm-3" for="validation_select"></label>
@@ -209,8 +243,58 @@
                 </div>
             </div>
         </div>
+    </div>
 </div>
+<section class="hidden" id="vcenterDetails" data-type="close">
+    <div class="container">
+        <div class="row">
+            <span class="sub-title">账号名称：</span>
+            <span class="sub-content">{{vcenterAccountList?vcenterAccountList.account_name || "空":""}}</span>
+        </div>
+        <div class="row">
+            <span class="sub-title">云厂商名称：</span>
+            <span class="sub-content">{{vcenterAccountList?vcenterAccountList.cloud_provider || "空":""}}</span>
+        </div>
+        <div class="row">
+            <span class="sub-title">主机地址：</span>
+            <span class="sub-content">{{vcenterAccountList?vcenterAccountList.vcenter_host || "空":""}}</span>
+        </div>
+        <div class="row">
+            <span class="sub-title">端口号：</span>
+            <span class="sub-content">{{vcenterAccountList?vcenterAccountList.vcenter_port || "空":""}}</span>
+        </div>
 
+        <div class="row">
+            <span class="sub-title">SecretId：</span>
+            <span class="sub-content">{{vcenterAccountList?vcenterAccountList.cloud_public_key || "空":""}}</span>
+        </div>
+        <div class="row">
+            <span class="sub-title">SecretKey：</span>
+            <span class="sub-content">{{vcenterAccountList?vcenterAccountList.cloud_private_key || "空":""}}</span>
+        </div>
+        <div class="row">
+            <span class="sub-title">PublicKey：</span>
+            <span class="sub-content">{{vcenterAccountList?vcenterAccountList.cloud_public_key || "空":""}}</span>
+        </div>
+        <div class="row">
+            <span class="sub-title">PrivateKey：</span>
+            <span class="sub-content">{{vcenterAccountList?vcenterAccountList.cloud_private_key || "空":""}}</span>
+        </div>
+        <div class="row">
+            <span class="sub-title">ProjectId：</span>
+            <span class="sub-content">{{vcenterAccountList?vcenterAccountList.project_id || "空":""}}</span>
+        </div>
+        <div class="row">
+            <span class="sub-title">区域：</span>
+            <span class="sub-content">{{vcenterAccountList?vcenterAccountList.cloud_region || "空":""}}</span>
+        </div>
+        <div class="row">
+            <span class="sub-title">版本：</span>
+            <span class="sub-content">{{vcenterAccountList?vcenterAccountList.vcenter_version || "空":""}}</span>
+        </div>
+    </div>
+    <div class="close-btn open" id="close" data-type="close">X</div>
+</section>
 </%block>
 <%block name="script">
 <script type="text/javascript" src="${STATIC_URL}assets/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
