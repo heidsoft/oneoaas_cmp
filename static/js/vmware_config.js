@@ -62,7 +62,7 @@ var VCenterConfig = (function ($,toastr) {
                     {
                         title: '操作',
                         data: "id",
-                        "render": function ( data, type, row ) {
+                        "render": function (data, type, row) {
                             var syncHtml = '<button class="btn btn-xs btn-info" ' ;
                             syncHtml+= ' onclick="VCenterConfig.syncVCenterAccount('+data+')" ';
                             syncHtml+= '>同步</button> ';
