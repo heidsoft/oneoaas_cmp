@@ -461,7 +461,21 @@ class QcloudImageInfo (models.Model):
 腾讯云实例model管理
 """
 class QcloudInstanceInfo_Manager(models.Manager):
-    pass
+    def findAllInstanceIds(self):
+        queryStr = 'SELECT qii.instance_id FROM qcloud_instance_info qii '
+        print queryStr
+        cursor = connection.cursor()
+        cursor.execute(queryStr)
+        column_names = [d[0] for d in cursor.description]
+        return [Row(zip(column_names, row)) for row in cursor]
+
+    def findAllInstances(self):
+        queryStr = "SELECT id,instance_id AS instanceId,instance_name AS instanceName,instance_type AS instanceType,cpu,memory,`status`,zone,instance_charge_type AS instanceChargeType,private_ip_addresses AS privateIpAddresses,public_ip_addresses AS publicIpAddresses,image_id AS imageId,os_name AS osName,system_disk_type AS systemDiskType,system_disk_size AS systemDiskSize,renew_flag AS renewFlag,internet_max_bandwidth_out AS internetMaxBandwidthOut,instance_charge_type AS instanceChargeType,date_format(created_time, '%Y-%m-%d %H:%i:%s') AS createdTime,date_format(expired_time, '%Y-%m-%d %H:%i:%s') AS expiredTime FROM qcloud_instance_info"
+        print queryStr
+        cursor = connection.cursor()
+        cursor.execute(queryStr)
+        column_names = [d[0] for d in cursor.description]
+        return [Row(zip(column_names, row)) for row in cursor]
 
 """
 腾讯云  虚拟机实例
