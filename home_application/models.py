@@ -403,6 +403,9 @@ class UcloudInstance(models.Model):
     uHostType = models.CharField(default="",max_length=15,null=True)
     zone = models.CharField(default="",max_length=20,null=True)
 
+    class Meta:
+        db_table = 'ucloud_instance_info'
+
 
 '''
 腾讯云镜像model管理
