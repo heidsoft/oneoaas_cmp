@@ -30,7 +30,7 @@
 </div>
 <div class="main-wrap" id="vcenter_config">
         <div class="panel panel-default">
-            <div class="panel-heading" @click="vcenterHide">
+            <div class="panel-heading" @click="vcenterIsShow=!vcenterIsShow">
                 VMware配置
                 <i class="fa fa-bars" style="float:right"></i>
             </div>
@@ -90,7 +90,7 @@
             </div>
         </div>  
         <div class="panel panel-default">
-            <div class="panel-heading" @click="qcloudHide">
+            <div class="panel-heading" @click="qcloudIsShow=!qcloudIsShow">
                 腾讯云配置
                 <i class="fa fa-bars" style="float:right"></i>
             </div>
@@ -142,7 +142,7 @@
             </div>
         </div>
         <div class="panel panel-default">
-            <div class="panel-heading" @click="ucloudHide">
+            <div class="panel-heading" @click="ucloudIsShow=!ucloudIsShow">
                 UCLOUD配置
                 <i class="fa fa-bars" style="float:right"></i>
             </div>

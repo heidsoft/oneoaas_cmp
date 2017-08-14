@@ -76,7 +76,6 @@ var VCenterManage = (function ($,toastr) {
                     },
                     {
                         extend: 'pdfHtml5',
-                        bom: "utf-8",
                         text: '导出PDF'
                     },
                     {

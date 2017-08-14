@@ -38,12 +38,21 @@ elif relative_path.startswith(SITE_URL + "ucloud/"):
 %>
 
 <style type="text/css">
+    .logo{
+        width: 85px;
+        height: 48px;
+        display: inline-block;
+        background-image: url("${STATIC_URL}img/cmp-logo.png");
+        background-size: 170px 100px;
+        background-position: -85px -50px;
+        margin-top: -10px;
+    }
     .logo-lg{
         display: inline-block;
         font-weight: bold;
         text-shadow:5px 5px 15px #1296db;
         font-size: 2.8rem;
-
+        vertical-align: top;
     }
     .logo-img{
         margin-top: -14px;
@@ -61,21 +70,21 @@ elif relative_path.startswith(SITE_URL + "ucloud/"):
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="${SITE_URL}">
-                <img src="${STATIC_URL}img/cmp-logo.png" class="king-J-icon inline-block logo-img">
+                <span class="logo"></span>
                 <span class="logo-lg">CMP-V0.1.2</span>
             </a>
         </div>
         <!-- Top Menu Items -->
         <ul class="nav navbar-right top-nav">
             <li class="dropdown">
-                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> ${request.user.username} <b class="caret"></b></a>
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa mr5 fa-user"></i> ${request.user.username} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <!--li>
-                        <a href="javascript:;"><i class="fa fa-fw fa-user"></i>用户管理</a>
+                        <a href="javascript:;"><i class="fa mr5 fa-user"></i>用户管理</a>
                     </li-->
                     <li class="divider"></li>
                     <li>
-                        <a id="logout" href="${SITE_URL}account/logout/"><i class="fa fa-fw fa-power-off"></i> 退出</a>
+                        <a id="logout" href="${SITE_URL}account/logout/"><i class="fa mr5 fa-power-off"></i> 退出</a>
                     </li>
                 </ul>
             </li>
@@ -84,35 +93,35 @@ elif relative_path.startswith(SITE_URL + "ucloud/"):
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav">
                 <li class="${overView}">
-                    <a href="${SITE_URL}overview/"><i class="icon iconfont icon-tongjifenxi"></i>资源统计</a>
+                    <a href="${SITE_URL}overview/"><i class="icon mr5 iconfont icon-tongjifenxi"></i>资源统计</a>
                 </li>
 
                 <li class="${vmwareDatacenterManage}">
-                    <a href="${SITE_URL}vmware/datacenter/manage"><i class="icon iconfont icon-shujuzhongxin"></i>数据中心</a>
+                    <a href="${SITE_URL}vmware/datacenter/manage"><i class="icon mr5 iconfont icon-shujuzhongxin"></i>数据中心</a>
                 </li>
 
                 <li class="${vmwareClusterManage}">
-                    <a href="${SITE_URL}vmware/cluster/manage"><i class="icon iconfont icon-cluster"></i>集群</a>
+                    <a href="${SITE_URL}vmware/cluster/manage"><i class="icon mr5 iconfont icon-cluster"></i>集群</a>
                 </li>
 
                 <li class="${vmwareStorageManage}">
-                    <a href="${SITE_URL}vmware/storage/manage"><i class="icon iconfont icon-portal-icon-cunchu"></i>存储</a>
+                    <a href="${SITE_URL}vmware/storage/manage"><i class="icon mr5 iconfont icon-portal-icon-cunchu"></i>存储</a>
                 </li>
 
                 <li class="${vmwareStorageManage}">
-                    <a href="${SITE_URL}vmware/network/manage"><i class="icon iconfont icon-internet-other"></i>网络</a>
+                    <a href="${SITE_URL}vmware/network/manage"><i class="icon mr5 iconfont icon-internet-other"></i>网络</a>
                 </li>
 
                 <li class="${vmwareVmManage}">
-                    <a href="${SITE_URL}vmware/vm/manage"><i class="icon iconfont icon-xuniji"></i>虚拟机</a>
+                    <a href="${SITE_URL}vmware/vm/manage"><i class="icon mr5 iconfont icon-xuniji"></i>虚拟机</a>
                 </li>
 
                 <li>
-                    <a href="${SITE_URL}vmware/host/manage"><i class="fa fa-fw fa-pencil"></i>物理机</a>
+                    <a href="${SITE_URL}vmware/host/manage"><i class="fa mr5 fa-cubes"></i>物理机</a>
                 </li>
 
                 <li>
-                    <a href="javascript:;" data-toggle="collapse" data-target="#cloud_provider"><i class="fa fa-fw fa-arrows-v"></i>云资源<i class="fa fa-fw fa-caret-down"></i></a>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#cloud_provider"><i class="fa mr5 fa-jsfiddle"></i>云资源<i class="fa mr5 fa-caret-down pull-right"></i></a>
                     <ul id="cloud_provider" class="collapse">
                         <li class="${qcloudView}">
                             <a href="${SITE_URL}qcloud/">腾讯云</a>
@@ -130,7 +139,7 @@ elif relative_path.startswith(SITE_URL + "ucloud/"):
                 </li>
 
                 <!--li>
-                    <a href="javascript:;" data-toggle="collapse" data-target="#bill_report"><i class="fa fa-bank"></i>计费<i class="fa fa-fw fa-caret-down"></i></a>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#bill_report"><i class="fa mr5  fa-dollar"></i>计费<i class="fa mr5 fa-caret-down pull-right"></i></a>
                     <ul id="bill_report" class="collapse">
                         <li>
                             <a href="${SITE_URL}bill/day">每日消费消费</a>
@@ -146,30 +155,30 @@ elif relative_path.startswith(SITE_URL + "ucloud/"):
 
 
                 <!--li>
-                    <a href="http://cmdb.bking.com"><i class="fa fa-fw fa-pencil"></i>资产</a>
+                    <a href="http://cmdb.bking.com"><i class="fa mr5 fa-bank"></i>资产</a>
                 </li>
 
                 <li>
-                    <a href="http://paas.bking.com:80/o/bk_monitor/"><i class="fa fa-fw fa-pencil"></i>监控</a>
+                    <a href="http://paas.bking.com:80/o/bk_monitor/"><i class="fa mr5 fa-desktop"></i>监控</a>
                 </li>
 
                 <li>
-                    <a href="${SITE_URL}vmware/system/config"><i class="iconfont icon-xitongpeizhi"></i>事件</a>
+                    <a href="${SITE_URL}vmware/system/config"><i class="fa fa-tasks mr5"></i>事件</a>
                 </li-->
 
                 <li class="${vmwareSystemConfig}">
-                    <a href="${SITE_URL}vmware/system/config"><i class="iconfont icon-xitongpeizhi"></i>配置</a>
+                    <a href="${SITE_URL}vmware/system/config"><i class="iconfont mr5 icon-xitongpeizhi"></i>配置</a>
                 </li>
 
 
 
 
                 <!--li>
-                    <a href="${SITE_URL}vmware/user/manage/"><i class="fa fa-fw fa-book"></i>用户管理</a>
+                    <a href="${SITE_URL}vmware/user/manage/"><i class="fa mr5 fa-users"></i>用户管理</a>
                 </li>
 
                 <li>
-                    <a href="${SITE_URL}vmware/department/manage/"><i class="fa fa-fw fa-book"></i>组织管理</a>
+                    <a href="${SITE_URL}vmware/department/manage/"><i class="fa mr5 fa-book"></i>组织管理</a>
                 </li-->
 
 

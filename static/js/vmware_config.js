@@ -273,15 +273,6 @@ var account_info_vue = new Vue({
         ] */
     },
     methods: {
-       vcenterHide:function () {
-          this.vcenterIsShow = !this.vcenterIsShow;
-       },
-       qcloudHide:function () {
-          this.qcloudIsShow = !this.qcloudIsShow;
-       },
-       ucloudHide:function () {
-          this.ucloudIsShow = !this.ucloudIsShow;
-       },
        onSubmit:function (e) {
           e.preventDefault();
        }
