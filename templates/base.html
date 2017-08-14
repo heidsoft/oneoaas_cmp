@@ -17,7 +17,7 @@
 <%block name="menu">
 
 <%
-overView = vmwareDatacenterManage = vmwareClusterManage = vmwareStorageManage =vmwareVmManage = vmwareSystemConfig = ''
+overView = vmwareDatacenterManage = vmwareClusterManage = vmwareStorageManage =vmwareVmManage = vmwareSystemConfig = qcloudView = ucloudView = ''
 relative_path = APP_PATH
 if relative_path.startswith(SITE_URL + "overview/"):
     overView = 'active'
@@ -31,6 +31,10 @@ elif relative_path.startswith(SITE_URL + "vmware/vm/manage/"):
     vmwareVmManage = 'active'
 elif relative_path.startswith(SITE_URL + "vmware/system/config/"):
     vmwareSystemConfig = 'active'
+elif relative_path.startswith(SITE_URL + "qcloud/"):
+    qcloudView = 'active'
+elif relative_path.startswith(SITE_URL + "ucloud/"):
+    ucloudView = 'active'
 %>
 
 <style type="text/css">
@@ -58,7 +62,7 @@ elif relative_path.startswith(SITE_URL + "vmware/system/config/"):
             </button>
             <a class="navbar-brand" href="${SITE_URL}">
                 <img src="${STATIC_URL}img/cmp-logo.png" class="king-J-icon inline-block logo-img">
-                <span class="logo-lg">CMP-V0.1.1</span>
+                <span class="logo-lg">CMP-V0.1.2</span>
             </a>
         </div>
         <!-- Top Menu Items -->
@@ -110,7 +114,7 @@ elif relative_path.startswith(SITE_URL + "vmware/system/config/"):
                 <li>
                     <a href="javascript:;" data-toggle="collapse" data-target="#cloud_provider"><i class="fa fa-fw fa-arrows-v"></i>云资源<i class="fa fa-fw fa-caret-down"></i></a>
                     <ul id="cloud_provider" class="collapse">
-                        <li>
+                        <li class="${qcloudView}">
                             <a href="${SITE_URL}qcloud/">腾讯云</a>
                         </li>
                         <!--li>
@@ -119,13 +123,13 @@ elif relative_path.startswith(SITE_URL + "vmware/system/config/"):
                         <li>
                             <a href="${SITE_URL}aws/">亚马逊</a>
                         </li-->
-                        <li>
+                        <li class="${ucloudView}">
                             <a href="${SITE_URL}ucloud/">UCloud</a>
                         </li>
                     </ul>
                 </li>
 
-                <li>
+                <!--li>
                     <a href="javascript:;" data-toggle="collapse" data-target="#bill_report"><i class="fa fa-bank"></i>计费<i class="fa fa-fw fa-caret-down"></i></a>
                     <ul id="bill_report" class="collapse">
                         <li>
@@ -138,10 +142,10 @@ elif relative_path.startswith(SITE_URL + "vmware/system/config/"):
                             <a href="${SITE_URL}bill/year">每年消费消费</a>
                         </li>
                     </ul>
-                </li>
+                </li-->
 
 
-                <li>
+                <!--li>
                     <a href="http://cmdb.bking.com"><i class="fa fa-fw fa-pencil"></i>资产</a>
                 </li>
 
@@ -151,7 +155,7 @@ elif relative_path.startswith(SITE_URL + "vmware/system/config/"):
 
                 <li>
                     <a href="${SITE_URL}vmware/system/config"><i class="iconfont icon-xitongpeizhi"></i>事件</a>
-                </li>
+                </li-->
 
                 <li class="${vmwareSystemConfig}">
                     <a href="${SITE_URL}vmware/system/config"><i class="iconfont icon-xitongpeizhi"></i>配置</a>

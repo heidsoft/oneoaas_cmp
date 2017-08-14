@@ -291,6 +291,120 @@ class VcenterVirtualMachineSnapshot(models.Model):
     objects = VcenterVirtualMachineSnapshot_Manager()
 
 
+"""
+ucloud 虚拟机实例
+{
+    "Action": "DescribeUHostInstanceResponse",
+    "RetCode": 0,
+    "TotalCount": 1,
+    "UHostSet": [
+        {
+            "AutoRenew": "Yes",
+            "BasicImageId": "uimage-5sr2eq",
+            "BasicImageName": "CentOS 6.5 64\u4f4d",
+            "BootDiskState": "Normal",
+            "CPU": 1,
+            "ChargeType": "Dynamic",
+            "CreateTime": 1502442535,
+            "DiskSet": [
+                {
+                    "BackupType": "BASIC_SNAPSHOT",
+                    "DiskId": "bsi-moipen",
+                    "Drive": "/dev/vda",
+                    "Encrypted": "No",
+                    "Size": 20,
+                    "Type": "Boot"
+                }
+            ],
+            "ExpireTime": 1502446138,
+            "GPU": 0,
+            "HostType": "N1",
+            "HotplugFeature": false,
+            "IPSet": [
+                {
+                    "IP": "10.23.42.149",
+                    "SubnetId": "subnet-own13y",
+                    "Type": "Private",
+                    "VPCId": "uvnet-lb4hjg"
+                },
+                {
+                    "Bandwidth": 2,
+                    "IP": "120.132.23.55",
+                    "IPId": "eip-kzbrfa",
+                    "Type": "Bgp",
+                    "Weight": 50
+                }
+            ],
+            "ImageId": "bsi-moipen",
+            "IsExpire": "No",
+            "Memory": 2048,
+            "Name": "xiaoming",
+            "NetCapFeature": true,
+            "NetCapability": "Normal",
+            "NetworkState": "NotConnected",
+            "OsName": "CentOS 6.5 64\u4f4d",
+            "OsType": "Linux",
+            "Remark": "",
+            "State": "Initializing",
+            "StorageType": "UDisk",
+            "SubnetType": "Default",
+            "Tag": "Default",
+            "TimemachineFeature": "no",
+            "TotalDiskSpace": 0,
+            "UHostId": "uhost-wgasee",
+            "UHostType": "Normal",
+            "Zone": "cn-sh2-02"
+        }
+    ]
+}
+"""
+class UcloudInstance(models.Model):
+    autoRenew = models.CharField(default="",max_length=5,null=True)
+    basicImageId = models.CharField(default="",max_length=15,null=True)
+    basicImageName = models.CharField(default="",max_length=30,null=True)
+    bootDiskState = models.CharField(default="",max_length=10,null=True)
+    cpu= models.IntegerField(default=0,null=True)
+    chargeType = models.CharField(default="",max_length=15,null=True)
+    createTime = models.TimeField(null=True)
+    backupType = models.CharField(default="",max_length=15,null=True)
+    diskId = models.CharField(u'磁盘id',default="",max_length=15,null=True)
+    drive = models.CharField(u'磁盘驱动',default="",max_length=15,null=True)
+    encrypted = models.CharField(u'磁盘是否加密',default="No",max_length=5,null=True)
+    size = models.IntegerField(u'磁盘大小',default=0,null=True)
+    type = models.CharField(u'磁盘类型',default="Boot",max_length=10,null=True)
+    expireTime = models.TimeField(u'过期时间',null=True)
+    gpu = models.IntegerField(u'是否开启GPU',default=0,null=True)
+    hostType = models.CharField(u'主机类型',default="",max_length=10,null=True)
+    hotplugFeature = models.BooleanField(u'是否热插拔特性',default=False,max_length=10,null=True)
+    privateSubnetId = models.CharField(u'私有子网id',default="",max_length=20,null=True)
+    privateIP = models.CharField(u'',default="",max_length=20,null=True)
+    privateVPCId = models.CharField(u'子网VPCid',default="",max_length=20,null=True)
+    publicBandwidth = models.IntegerField(u'公共带宽',default=0,null=True)
+    publicIP = models.CharField(u'公共IP',default="",max_length=20,null=True)
+    publicIPId = models.CharField(u'公共IPid',default="",max_length=20,null=True)
+    publicType = models.CharField(u'公共IP类型',default="",max_length=20,null=True)
+    publicWeight = models.IntegerField(u'权重',default=0,null=True)
+    imageId = models.CharField(u'镜像ID',default="",max_length=20,null=True)
+    isExpire = models.CharField(u'是否过期',default="No",max_length=5,null=True)
+    memory = models.IntegerField(u'内存',default=0,null=True)
+    name = models.CharField(u'名称',default="",max_length=40,null=False)
+    netCapFeature = models.BooleanField(default=False,null=True)
+    netCapability = models.CharField(default="Normal",max_length=20,null=True)
+    networkState = models.CharField(default="NotConnected",max_length=20,null=True)
+    osName = models.CharField(default="",max_length=30,null=True)
+    osType = models.CharField(default="",max_length=10,null=True)
+    remark = models.CharField(default="",max_length=100,null=True)
+    state = models.CharField(default="",max_length=15,null=True)
+    storageType = models.CharField(default="",max_length=15,null=True)
+    subnetType = models.CharField(default="",max_length=15,null=True)
+    tag = models.CharField(default="",max_length=15,null=True)
+    timemachineFeature = models.CharField(default="",max_length=5,null=True)
+    totalDiskSpace = models.IntegerField(default=0,null=True)
+    uHostId = models.CharField(default="",max_length=15,null=True)
+    uHostType = models.CharField(default="",max_length=15,null=True)
+    zone = models.CharField(default="",max_length=20,null=True)
+
+
 '''
 腾讯云镜像model管理
 '''
@@ -341,17 +455,14 @@ class QcloudImageInfo (models.Model):
 
     objects = QcloudImageInfo_Manager()
 
-
-
-'''
+"""
 腾讯云实例model管理
-'''
+"""
 class QcloudInstanceInfo_Manager(models.Manager):
     pass
 
-
-
-'''
+"""
+腾讯云  虚拟机实例
 {
     "Placement": {
         "Zone": "ap-shanghai-1",
@@ -412,7 +523,7 @@ RenewFlag 	            String 	                否 	自动续费标识。取值�
 CreatedTime 	        Timestamp 	            否 	创建时间。按照ISO8601标准表示，并且使用UTC时间。格式为：YYYY-MM-DDThh:mm:ssZ。
 ExpiredTime 	        Timestamp 	            否 	到期时间。按照ISO8601标准表示，并且使用UTC时间。格式为：YYYY-MM-DDThh:mm:ssZ。
 }
-'''
+"""
 class QcloudInstanceInfo (models.Model):
     instance_id = models.CharField(u"实例id", max_length=50 ,unique= True)
     instance_name = models.CharField(u"实例名称", max_length=50)
@@ -438,8 +549,6 @@ class QcloudInstanceInfo (models.Model):
         db_table = 'qcloud_instance_info'
 
     objects = QcloudInstanceInfo_Manager()
-
-
 
 class Row(dict):
     """A dict that allows for object-like property access syntax."""
