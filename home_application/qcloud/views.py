@@ -390,7 +390,7 @@ def getQcloudVmList(request):
 腾讯云启动虚拟机实例
 '''
 def startQcloudVm(request):
-    vmIds = request.POST.getlist('id')
+    vmIds = request.POST.getlist('ids')
     vmInstanceIds = request.POST.getlist('instanceids')
     responseResult = {
         'result': True,
@@ -414,9 +414,9 @@ def startQcloudVm(request):
         return render_json(res)
     else:
         qcloudAccount = accountObjectList[0]
-        account_name = qcloudAccount.get('account_name')
-        account_password = qcloudAccount.get('account_password')
-        version = qcloudAccount.get('vcenter_version')
+        account_name = str(qcloudAccount.account_name)
+        account_password = str(qcloudAccount.account_password)
+        version = str(qcloudAccount.vcenter_version)
         module = 'cvm'
         action = 'StartInstances'
         '''
@@ -435,7 +435,9 @@ def startQcloudVm(request):
         result = utils.requestQcloud(module, action, account_name, account_password, params)
         if 'RequestId' in result:
             for i in range(len(vmInstanceIds)):
-                updateObject = QcloudInstanceInfo.objects.get(instance_id=updateinstance.instance_id)
+                instance = QcloudInstanceInfo.objects.get(instance_id=vmInstanceIds[i])
+                instance.status = 'RUNNING'
+                instance.save()
             return render_json(responseResult)
         else:
             res = {
@@ -453,7 +455,7 @@ def startQcloudVm(request):
 腾讯云停止虚拟机实例
 '''
 def stopQcloudVm(request):
-    vmIds = request.POST.getlist('vmIds')
+    vmIds = request.POST.getlist('ids')
     vmInstanceIds = request.POST.getlist('instanceids')
     responseResult = {
         'result': True,
@@ -477,20 +479,11 @@ def stopQcloudVm(request):
         return render_json(res)
     else:
         qcloudAccount = accountObjectList[0]
-        account_name = qcloudAccount.get('account_name')
-        account_password = qcloudAccount.get('account_password')
-        version = qcloudAccount.get('vcenter_version')
+        account_name = str(qcloudAccount.account_name)
+        account_password = str(qcloudAccount.account_password)
+        version = str(qcloudAccount.vcenter_version)
         module = 'cvm'
-        '''
-        action 对应接口的接口名，请参考产品文档上对应接口的接口名
-        '''
         action = 'StopInstances'
-        config = {
-            'Region': 'ap-shanghai',
-            'secretId': account_name,
-            'secretKey': account_password,
-            'method': 'get'
-        }
         '''
         params 请求参数，请参考产品文档上对应接口的说明
         '''
@@ -504,13 +497,12 @@ def stopQcloudVm(request):
             key = 'InstanceIds.' + str(i + 1)
             params[key] = vmInstanceIds[i]
     try:
-        service = QcloudApi(module, config)
-        # 生成请求的URL，不发起请求
-        service.generateUrl(action, params)
-        # 调用接口，发起请求
-        print params
-        result = service.call(action, params)
+        result = utils.requestQcloud(module, action, account_name, account_password, params)
         if 'RequestId' in result:
+            for i in range(len(vmInstanceIds)):
+                instance = QcloudInstanceInfo.objects.get(instance_id=vmInstanceIds[i])
+                instance.status = 'STOPPED'
+                instance.save()
             return render_json(responseResult)
         else:
             res = {
