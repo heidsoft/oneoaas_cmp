@@ -62,7 +62,7 @@ var VCenterConfig = (function ($,toastr) {
                     {
                         title: '操作',
                         data: "id",
-                        "render": function ( data, type, row ) {
+                        "render": function (data, type, row) {
                             var syncHtml = '<button class="btn btn-xs btn-info" ' ;
                             syncHtml+= ' onclick="VCenterConfig.syncVCenterAccount('+data+')" ';
                             syncHtml+= '>同步</button> ';
@@ -191,7 +191,7 @@ var VCenterConfig = (function ($,toastr) {
         },
 
         //同步VCenter账号
-        syncVCenterAccount: function (data) {
+        syncVCenterAccount: function (data,cloudProvider) {
             var d = dialog({
                 cancel: false,
                 padding: 0,
@@ -203,7 +203,7 @@ var VCenterConfig = (function ($,toastr) {
             });
             d.showModal();
             $.ajax({
-                url: site_url+'vmware/api/syncVCenterAccount',
+                url: site_url+'vmware/api/syncCloudAccount',
                 type: 'post',
                 dataType: 'json',
                 data: {

@@ -14,10 +14,11 @@ class VcenterAccount(models.Model):
     vcenter_host = models.CharField(max_length=30,null=True,default="")
     vcenter_port = models.IntegerField(default=443,null=True)
     vcenter_version = models.CharField(max_length=10,null=True,default="")
-    cloud_provider = models.CharField(max_length=20,null=True,default="")
-    cloud_private_key = models.CharField(max_length=60,null=True,default="")
-    cloud_public_key = models.CharField(max_length=60,null=True,default="")
-    project_id = models.CharField(max_length=20,null=True,default="")
+    cloud_provider = models.CharField(u'云提供商',max_length=20,null=True,default="")
+    cloud_private_key = models.CharField(u'云私钥匙',max_length=60,null=True,default="")
+    cloud_public_key = models.CharField(u'云公钥匙',max_length=60,null=True,default="")
+    cloud_region = models.CharField(u'云区域',max_length=20,null=True,default="")
+    project_id = models.CharField(u'云项目',max_length=20,null=True,default="")
 
     #自定义表名称
     class Meta:

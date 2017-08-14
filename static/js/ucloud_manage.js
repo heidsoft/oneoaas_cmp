@@ -38,40 +38,40 @@ var UcloudManage = (function ($,toastr) {
                 lengthChange: false, //不允许用户改变表格每页显示的记录数
                 language: language, //汉化
                 ajax: {
-                    url: site_url+'vmware/api/getVcenterHostList',
+                    url: site_url+'ucloud/api/getUcloudInstanceList',
                 },
                 columns: [
                     {
                         data: "name",
-                        title:"主机名称"
+                        title:"实例名称"
                     },
                     {
-                        data: "api_version",
-                        title:"API版本"
+                        data: "osType",
+                        title:"操作系统类型"
                     },
                     {
-                        data: "build",
-                        title:"构建时间"
+                        data: "memory",
+                        title:"内存"
                     },
                     {
-                        data: "full_name",
-                        title:"全称"
+                        data: "cpu",
+                        title:"CPU"
                     },
                     {
-                        data: "instance_uuid",
-                        title:"uuid"
+                        data: "publicIP",
+                        title:"公网IP"
                     },
                     {
-                        data: "locale_version",
-                        title:"本地版本"
+                        data: "privateIP",
+                        title:"私有IP"
                     },
                     {
-                        data: "vendor",
-                        title:"厂商"
+                        data: "chargeType",
+                        title:"计费类型"
                     },
                     {
-                        data: "version",
-                        title:"版本"
+                        data: "expireTime",
+                        title:"过期时间"
                     },
                 ],
             });

@@ -38,40 +38,40 @@ var QcloudManage = (function ($,toastr) {
                 lengthChange: false, //不允许用户改变表格每页显示的记录数
                 language: language, //汉化
                 ajax: {
-                    url: site_url+'vmware/api/getVcenterHostList',
+                    url: site_url+'qcloud/api/getQcloudVmList',
                 },
                 columns: [
                     {
-                        data: "name",
-                        title:"主机名称"
+                        data: "instanceName",
+                        title:"实例名称"
                     },
                     {
-                        data: "api_version",
-                        title:"API版本"
+                        data: "instanceType",
+                        title:"实例类型"
                     },
                     {
-                        data: "build",
-                        title:"构建时间"
+                        data: "cpu",
+                        title:"CPU"
                     },
                     {
-                        data: "full_name",
-                        title:"全称"
+                        data: "memory",
+                        title:"内存"
                     },
                     {
-                        data: "instance_uuid",
-                        title:"uuid"
+                        data: "status",
+                        title:"状态"
                     },
                     {
-                        data: "locale_version",
-                        title:"本地版本"
+                        data: "zone",
+                        title:"区域"
                     },
                     {
-                        data: "vendor",
-                        title:"厂商"
+                        data: "instanceChargeType",
+                        title:"实例计费类型"
                     },
                     {
-                        data: "version",
-                        title:"版本"
+                        data: "privateIpAddresses",
+                        title:"内网IP"
                     },
                 ],
             });

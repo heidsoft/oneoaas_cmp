@@ -34,6 +34,7 @@ urlpatterns = patterns(
     url(r'api/deleteAccount', 'deleteAccount'),
     url(r'api/desctroyAccount', 'desctroyAccount'),
     url(r'api/createVCenterAccount$', 'createVCenterAccount'),
+    url(r'api/syncCloudAccount', 'syncCloudAccount'),
     url(r'api/syncVCenterAccount', 'syncVCenterAccount'),
     url(r'api/getVcenterVirtualMachineList', 'getVcenterVirtualMachineList'),
     url(r'api/create$', 'createVmRequest'),
