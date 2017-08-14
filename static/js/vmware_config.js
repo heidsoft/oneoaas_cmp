@@ -58,8 +58,8 @@ var VCenterConfig = (function ($,toastr) {
                     {
                         title : '云厂商',
                         data: "cloud_provider",
-                    }
-                  /*  {
+                    },
+                    {
                         title: '操作',
                         data: "id",
                         "render": function ( data, type, row ) {
@@ -68,7 +68,7 @@ var VCenterConfig = (function ($,toastr) {
                             syncHtml+= '>同步</button> ';
                             return syncHtml;
                         }
-                    } */
+                    }
                 ]
 
             });
@@ -183,6 +183,16 @@ var VCenterConfig = (function ($,toastr) {
 
         //同步VCenter账号
         syncVCenterAccount: function (data) {
+            var d = dialog({
+                cancel: false,
+                padding: 0,
+                width:500,
+                content:'<div id="progressbar"></div>'
+            });
+            $( "#progressbar" ).progressbar({
+                value: false
+            });
+            d.showModal();
             $.ajax({
                 url: site_url+'vmware/api/syncVCenterAccount',
                 type: 'post',
@@ -191,7 +201,12 @@ var VCenterConfig = (function ($,toastr) {
                     "id":data,
                 },
                 success: function (data) {
-                    toastr.success(data.message);
+                    d.remove();
+                    if(data.result){
+                        toastr.success(data.message);
+                    }else{
+                        toastr.error(data.message);
+                    }
                 }
             });
         },
