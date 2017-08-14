@@ -38,6 +38,33 @@ def syncUcloudAccount(request):
         response = ApiClient.get("/", Parameters)
         print response
 
+"""
+根据账号来同步
+"""
+def syncUcloud(accountModel):
+    if accountModel is None:
+        res = {
+            'result': False,
+            'message': "同步失败",
+        }
+        return render_json(res)
+
+    public_key = accountModel.cloud_public_key
+    private_key = accountModel.cloud_private_key
+    ApiClient = UcloudApiClient(base_url, public_key, private_key)
+    Parameters={
+        "Action":"DescribeUHostInstance",
+        "Region":"cn-sh2",
+    }
+    response = ApiClient.get("/", Parameters)
+
+    print response
+    res = {
+        'result': True,
+        'message': "同步成功",
+    }
+    return render_json(res)
+
 #获取ucloud虚拟机列表
 def getUcloudInstanceList(request):
     logger.info("查询配置vcenter 虚拟机")

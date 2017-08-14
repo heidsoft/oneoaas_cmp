@@ -9,6 +9,8 @@ from blueking.component.base import logger
 from common.mymako import render_mako_context, render_json
 from home_application.celery_tasks import execute_task
 from home_application.models import *
+from home_application.qcloud.views import syncQcloud
+from home_application.ucloud.views import syncUcloud
 from home_application.vmware.object_convert import convertVmEntityToVcenterVirtualMachine
 from hybirdsdk.virtualMachine import VmManage
 from pyVmomi import vim
@@ -213,8 +215,8 @@ def deleteAccount(request):
 def desctroyAccount(request):
     pass
 
-#同步账号
-def syncVCenterAccount(request):
+
+def syncCloudAccount(request):
     accountId = None
     if request.method == 'POST':
         accountId = request.POST['id']
@@ -228,6 +230,37 @@ def syncVCenterAccount(request):
 
     try:
         accountModel = VcenterAccount.objects.get(id=accountId)
+        if accountModel.cloud_provider =='vmware':
+            syncVCenter(accountModel)
+        elif accountModel.cloud_provider =='qcloud':
+            syncQcloud(accountModel)
+        elif accountModel.cloud_provider =='ucloud':
+            syncUcloud(accountModel)
+
+        res = {
+            'result': True,
+            'message': "同步成功",
+        }
+        return render_json(res)
+
+    except Exception as e:
+        logger.exception(str(e))
+        res = {
+            'result': False,
+            'message': "同步失败",
+        }
+        return render_json(res)
+
+#同步账号
+def syncVCenter(accountModel):
+    if accountModel is None:
+        res = {
+            'result': False,
+            'message': "同步失败",
+        }
+        return render_json(res)
+
+    try:
         vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
         rootFolder = vmManager.content.rootFolder
 
