@@ -10,7 +10,7 @@ vcenter账号信息对象
 """
 class VcenterAccount(models.Model):
     account_name = models.CharField(max_length=60)
-    account_password = models.CharField(max_length=20,null=True,default="")
+    account_password = models.CharField(max_length=60,null=True,default="")
     vcenter_host = models.CharField(max_length=30,null=True,default="")
     vcenter_port = models.IntegerField(default=443,null=True)
     vcenter_version = models.CharField(max_length=10,null=True,default="")
@@ -289,6 +289,156 @@ class VcenterVirtualMachineSnapshot(models.Model):
         db_table = 'vcenter_virtualmachine_snapshot'
 
     objects = VcenterVirtualMachineSnapshot_Manager()
+
+
+'''
+腾讯云镜像model管理
+'''
+class QcloudImageInfo_Manager(models.Manager):
+    pass
+
+
+'''
+腾讯云镜像相关信息
+"ImageId": "img-50mr2ow7",
+"OsName": "CentOS 6.2 64位",
+"ImageSize": 50,
+"ImageType": "PUBLIC_IMAGE",
+"CreatedTime": null,
+"ImageState": "NORMAL",
+"ImageSource": "OFFICIAL",
+"ImageName": "CentOS 6.2 64位",
+"ImageDescription": "CentOS 6.2 64位",
+"ImageCreator": null,
+"OperationMask": 7
+名称 	            类型 	是否必选 	描述
+ImageId 	        String 	    否 	    镜像ID
+OsName 	            String 	    否 	    操作系统名称
+ImageSize 	        String 	    否 	    操作系统容量（GiB）
+ImageType 	        Integer 	否 	    镜像类型
+CreatedTime 	    String 	    否 	    创建时间
+ImageState 	        String 	    否 	    镜像状态
+ImageName 	        String 	    否 	    镜像名称
+ImageDescription 	String 	    否 	    镜像详细描述
+ImageSource 	    String 	    否 	    镜像来源。
+ImageCreator 	    String 	    否 	    镜像创建者
+'''
+class QcloudImageInfo (models.Model):
+    image_id = models.CharField(u"镜像id", max_length=50)
+    osname = models.CharField(u"操作系统名称", max_length=50)
+    image_size = models.CharField(u"操作系统容量（GiB）", max_length=50)
+    image_type = models.IntegerField(u"镜像类型")
+    created_time = models.CharField(u"镜像创建时间", max_length=50)
+    image_state = models.CharField(u"镜像状态", max_length=50)
+    image_source = models.CharField(u"镜像来源", max_length=50)
+    image_name = models.CharField(u"镜像名称", max_length=50)
+    image_description = models.CharField(u"镜像详细描述", max_length=50)
+    image_creator = models.CharField(u"镜像创建者", max_length=50)
+    operation_mask = models.CharField(u"", max_length=50)
+    # 自定义表名称
+    class Meta:
+        db_table = 'qcloud_image_info'
+
+    objects = QcloudImageInfo_Manager()
+
+
+
+'''
+腾讯云实例model管理
+'''
+class QcloudInstanceInfo_Manager(models.Manager):
+    pass
+
+
+
+'''
+{
+    "Placement": {
+        "Zone": "ap-shanghai-1",
+        "HostId": null,
+        "ProjectId": 0
+    },
+    "InstanceId": "ins-42jzxh5x",
+    "InstanceType": "S1.SMALL1",
+    "CPU": 1,
+    "Memory": 1,
+    "InstanceName": "qcloud_test",
+    "InstanceChargeType": "PREPAID",
+    "SystemDisk": {
+        "DiskType": "CLOUD_BASIC",
+        "DiskId": "disk-g6l12c05",
+        "DiskSize": 50
+    },
+    "DataDisks": null,
+    "PrivateIpAddresses": [
+        "172.17.16.17"
+    ],
+    "PublicIpAddresses": [
+        "182.254.155.148"
+    ],
+    "InternetAccessible": {
+        "InternetMaxBandwidthOut": 1,
+        "InternetChargeType": "BANDWIDTH_PREPAID"
+    },
+    "VirtualPrivateCloud": {
+        "VpcId": "vpc-06b67wju",
+        "SubnetId": "subnet-68qy40hn",
+        "AsVpcGateway": false
+    },
+    "ImageId": "img-31tjrtph",
+    "OsName": "CentOS 7.2 64位",
+    "RenewFlag": "NOTIFY_AND_MANUAL_RENEW",
+    "CreatedTime": "2017-08-08T02:13:18Z",
+    "ExpiredTime": "2017-09-08T02:13:22Z"
+Placement 	            Placement 	            否 	实例所在的位置。
+InstanceId 	            String 	                否 	实例ID。
+InstanceType 	        String 	                否 	实例机型。
+CPU 	                Integer 	            否 	实例的CPU核数，单位：核。
+Memory 	                Integer 	            否 	实例内存容量，单位：GB。
+InstanceName 	        String 	                否 	实例名称。
+InstanceChargeType 	    String 	                否 	实例计费模式。取值范围：PREPAID：表示预付费，即包年包月
+                                                                           POSTPAID_BY_HOUR：表示后付费，即按量计费
+                                                                           CDHPAID：CDH付费，即只对CDH计费，不对CDH上的实例计费。
+SystemDisk 	            SystemDisk 	            否 	实例系统盘信息。
+DataDisks 	            array of DataDisk objects 	否 	实例数据盘信息。只包含随实例购买的数据盘。
+PrivateIpAddresses 	    array of Strings 	    否 	实例主网卡的内网IP列表。
+PublicIpAddresses 	    array of Strings 	    否 	实例主网卡的公网IP列表。
+InternetAccessible 	    InternetAccessible 	    否 	实例带宽信息。
+VirtualPrivateCloud 	VirtualPrivateCloud 	否 	实例所属虚拟私有网络信息。
+ImageId 	            String 	                否 	生产实例所使用的镜像ID。
+RenewFlag 	            String 	                否 	自动续费标识。取值范围：NOTIFY_AND_MANUAL_RENEW：表示通知即将过期，但不自动续费
+                                                                          NOTIFY_AND_AUTO_RENEW：表示通知即将过期，而且自动续费
+                                                                          DISABLE_NOTIFY_AND_MANUAL_RENEW：表示不通知即将过期，也不自动续费。
+CreatedTime 	        Timestamp 	            否 	创建时间。按照ISO8601标准表示，并且使用UTC时间。格式为：YYYY-MM-DDThh:mm:ssZ。
+ExpiredTime 	        Timestamp 	            否 	到期时间。按照ISO8601标准表示，并且使用UTC时间。格式为：YYYY-MM-DDThh:mm:ssZ。
+}
+'''
+class QcloudInstanceInfo (models.Model):
+    instance_id = models.CharField(u"实例id", max_length=50 ,unique= True)
+    instance_name = models.CharField(u"实例名称", max_length=50)
+    instance_type = models.CharField(u"实例类型", max_length=50)
+    cpu = models.IntegerField(u"cpu")
+    memory = models.IntegerField(u"内存")
+    status = models.CharField(u"实例状态(PENDING准备中,RUNNING运行中,STOPPED已停止,REBOOTING重启中,STARTING启动中,STOPPING停止中,EXPIRED已过期,TERMINATING退还中,TERMINATED已退还)", max_length=50 ,default='RUNNING')
+    zone = models.CharField(u"实例所属地域", max_length=50)
+    instance_charge_type = models.CharField(u"实例计费模式", max_length=50)
+    private_ip_addresses = models.CharField(u"内网ip", max_length=50)
+    public_ip_addresses = models.CharField(u"外网ip", max_length=50)
+    image_id = models.CharField(u"镜像id", max_length=50)
+    os_name = models.CharField(u"操作系统名称", max_length=50)
+    system_disk_type = models.CharField(u"系统盘类型", max_length=50)
+    system_disk_size = models.CharField(u"系统盘尺寸", max_length=50)
+    renew_flag = models.CharField(u"自动续费标识", max_length=50)
+    internet_max_bandwidth_out = models.CharField(u"实例网络带宽上限", max_length=50)
+    internet_charge_type = models.CharField(u"实例网络计费类型", max_length=50)
+    created_time = models.DateTimeField(u"实例创建时间", default=timezone.now)
+    expired_time = models.DateTimeField(u"实例到期时间", default=timezone.now)
+    # 自定义表名称
+    class Meta:
+        db_table = 'qcloud_instance_info'
+
+    objects = QcloudInstanceInfo_Manager()
+
 
 
 class Row(dict):
