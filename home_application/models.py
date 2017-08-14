@@ -290,9 +290,8 @@ class VcenterVirtualMachineSnapshot(models.Model):
 
     objects = VcenterVirtualMachineSnapshot_Manager()
 
-
 """
-ucloud 虚拟机实例
+ucloud  虚拟机实例
 {
     "Action": "DescribeUHostInstanceResponse",
     "RetCode": 0,
@@ -409,7 +408,18 @@ class UcloudInstance(models.Model):
 腾讯云镜像model管理
 '''
 class QcloudImageInfo_Manager(models.Manager):
-    pass
+    statusTime = models.TimeField(null=True)
+    deadlineTime = models.TimeField(null=True)
+    autoRenew = models.IntegerField(default=0,null=True)
+    projectId = models.IntegerField(default=0,null=True)
+    os = models.CharField(default="",max_length=20,null=True)
+    cvmPayMode = models.IntegerField(default=0,null=True)
+    networkPayMode = models.IntegerField(default=0,null=True)
+    zoneId = models.CharField(default="",max_length=15,null=True)
+    vpcId = models.CharField(default="",max_length=15,null=True)
+    subnetId = models.CharField(default="",max_length=30,null=True)
+    isVpcGateway = models.IntegerField(default=0,null=True)
+    unInstanceId = models.CharField()
 
 
 '''
