@@ -28,6 +28,14 @@
 4.由于当前还处理迭代开发中，系统可能存在bug，同是功能没有太多健壮性和容错考虑，还请谅解
 
 
+5.前端重构
+
+``
+npm install --global gulp
+
+npm install gulp-minify-css gulp-concat gulp-uglify gulp-imagemin gulp-clean gulp-rename gulp-htmlmin --save-dev
+``
+
 如有疑问可联系：bin.liu@oneoaas.com,谢谢关注
 
   
