@@ -34,7 +34,7 @@ cp -rf ${APP_PUBLIC_DIR} ${RELEASE_ROOT}/src
 
 cp -rf ${APP_PUBLIC_FILE} ${RELEASE_ROOT}/src
 
-cp -rf app.yml ${RELEASE_ROOT}/src
+cp -rf app.yml ${RELEASE_ROOT}
 
 cp -rf pkgs ${RELEASE_ROOT}
 
