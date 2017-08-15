@@ -40,6 +40,7 @@ cp -rf pkgs ${RELEASE_ROOT}
 
 cd release
 
+echo "package name is ${APP_PKG} "
 tar zcf ${APP_PKG}  ${APP_NAME}
 
 cp -rf ${APP_PKG} /opt/release/${APP_NAME}
