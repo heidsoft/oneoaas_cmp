@@ -43,7 +43,7 @@ cd release
 echo "package name is ${APP_PKG} "
 tar zcf ${APP_PKG}  ${APP_NAME}
 
-cp -rf ${APP_PKG} /opt/release/${APP_NAME}
+cp -rf ${APP_PKG} /opt/release/oneoaas-cmp
 
 echo "release finish ..."
 
