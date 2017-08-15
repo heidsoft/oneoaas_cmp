@@ -40,6 +40,8 @@ cp -rf pkgs ${RELEASE_ROOT}
 
 tar zcf ${APP_PKG}  ${RELEASE_ROOT}
 
+mv ${APP_PKG} /opt/release/${APP_NAME}
+
 echo "release finish ..."
 
 
