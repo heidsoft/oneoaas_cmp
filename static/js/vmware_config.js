@@ -65,7 +65,7 @@ var VCenterConfig = (function ($,toastr) {
                         "render": function (data, type, row) {
                             var syncHtml = '<button class="btn btn-xs btn-info" ' ;
                             syncHtml+= ' onclick="VCenterConfig.syncVCenterAccount('+data+')" ';
-                            syncHtml+= '>同步</button> ';
+                            syncHtml+= '>同步</button> <button class="btn btn-xs btn-info" id="mybutton">详情</button>';
                             return syncHtml;
                         }
                     }
@@ -156,7 +156,7 @@ var VCenterConfig = (function ($,toastr) {
             var ucloudPublicKey = $("#ucloud_public_key").val();
             var ucloudPrivateKey = $("#ucloud_private_key").val();
             var ucloudProjectId = $("#ucloud_project_id").val();
-            var ucloudRegion = $("#cloud_region .select2_box").val().select2("val");
+            var ucloudRegion = $("#ucloud_region .select2_box").select2("val");
             var ucloudForm = $("#ucloud_form");
             if(accountName==="" || ucloudPublicKey==="" || ucloudPrivateKey==="" || ucloudProjectId===""){
                 return
@@ -174,13 +174,14 @@ var VCenterConfig = (function ($,toastr) {
                   "accountName":accountName,
                   "cloudPublicKey":ucloudPublicKey,
                   "cloudPrivateKey":ucloudPrivateKey,
-                  "projectId":ucloudProjectId
+                  "projectId":ucloudProjectId,
+                  "cloudRegion":ucloudRegion,
                },
                success: function (data) {
                   toastr.success(data.message);
                   VCenterConfig.accountTable.ajax.reload( null, false );
                   ucloudForm.trigger("reset");
-                  $("#cloud_region .select2_box").select2("val","");
+                  $("#ucloud_region .select2_box").select2("val","");
                },
                error:function (err1,err2,err3) {
                   console.log(err1);
@@ -281,21 +282,23 @@ var account_info_vue = new Vue({
             {id:6.0,text:"6.0"}
         ] */
         ucloudRegionList: [
-            {regionName:"北京一",regionAPI:"cn-bj1"},
-            {regionName:"北京二",regionAPI:"cn-bj2"},
-            {regionName:"浙江",regionAPI:"cn-zj"},
-            {regionName:"上海一",regionAPI:"cn-sh1"},
-            {regionName:"上海二",regionAPI:"cn-sh2"},
-            {regionName:"广州",regionAPI:"cn-gd"},
-            {regionName:"香港",regionAPI:"hk"},
-            {regionName:"洛杉矶",regionAPI:"us-ca"},
-            {regionName:"华盛顿",regionAPI:"us-ws"},
-            {regionName:"法兰克福",regionAPI:"ge-fra"},
-            {regionName:"曼谷",regionAPI:"th-bkk"},
-            {regionName:"首尔",regionAPI:"kr-seoul"},
-            {regionName:"新加坡",regionAPI:"sg"},
-            {regionName:"台湾",regionAPI:"tw-kh"}
-        ]
+            {id:"cn-bj1",text:"北京一"},
+            {id:"cn-bj2",text:"北京二"},
+            {id:"cn-zj",text:"浙江"},
+            {id:"cn-sh1",text:"上海一"},
+            {id:"cn-sh2",text:"上海二"},
+            {id:"cn-gd",text:"广州"},
+            {id:"hk",text:"香港"},
+            {id:"us-ca",text:"洛杉矶"},
+            {id:"us-ws",text:"华盛顿"},
+            {id:"ge-fra",text:"法兰克福"},
+            {id:"th-bkk",text:"曼谷"},
+            {id:"kr-seoul",text:"首尔"},
+            {id:"sg",text:"新加坡"},
+            {id:"tw-kh",text:"台湾"}
+        ],
+        vcenterAccountList:{},
+        password:false,
     },
     methods: {
        onSubmit:function (e) {
@@ -341,9 +344,11 @@ var vcenterView = new Vue({
     el: '#vcenterDetails',
     data: {
         vcenterAccountList:{},
+        password:false,
     }
 });
-$('#vcenter_config_record').on( 'click', 'tr:gt(0)', function () {
+
+$("#vcenter_config_record").on('click','tr:gt(0)',function() {
     // 获取数据
     var currentVcenter = VCenterConfig.accountTable.row( this ).data();
     vcenterView.vcenterAccountList=currentVcenter;
