@@ -3,7 +3,7 @@
 echo "release start ..."
 
 #定义应用根目录
-APP_NAME="oneoaas-cmp-v3"
+APP_NAME="oneoaas-cmp-v4"
 APP_PKG=${APP_NAME}.tar.gz
 APP_ROOT=$(dirname "${BASH_SOURCE}")/..
 RELEASE_ROOT=release/${APP_NAME}
