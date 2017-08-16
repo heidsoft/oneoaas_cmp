@@ -415,22 +415,34 @@ var VCenterManage = (function ($,toastr) {
                 progressbarShow.remove();
                 return
             }
-            $.ajax({
-                url: site_url+'vmware/api/destroy',
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    "vmId":this.selectedRows[0],
+            var vmwareDestroy = dialog({
+                width: 260,
+                title: '提示',
+                content: '确认销毁？',
+                okValue: '确定',
+                ok: function() {
+                    $.ajax({
+                        url: site_url+'vmware/api/destroy',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            "vmId":VCenterManage.selectedRows[0],
+                        },
+                        success: function (data) {
+                            progressbarShow.remove();
+                            toastr.success(data.message);
+                            VCenterManage.vmTable.ajax.reload( null, false );
+                        },
+                        error:function () {
+                            progressbarShow.remove();
+                       }
+                    });
                 },
-                success: function (data) {
-                    progressbarShow.remove();
-                    toastr.success(data.message);
-                    VCenterManage.vmTable.ajax.reload( null, false );
-                },
-                error:function () {
-                    progressbarShow.remove();
-               }
+                cancelValue: '取消',
+                cancel: function() {},
+                onshow: function() {},
             });
+            vmwareDestroy.show();
         },
         snapshot:function () {
 

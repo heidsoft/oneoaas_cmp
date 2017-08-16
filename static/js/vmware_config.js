@@ -65,9 +65,8 @@ var VCenterConfig = (function ($,toastr) {
                         title: '操作',
                         data: "id",
                         "render": function (data, type, row,meta) {
-                            var syncHtml = '<button class="btn btn-xs btn-info" ' ;
-                            syncHtml+= ' onclick="VCenterConfig.syncVCenterAccount('+data+')" ';
-                            syncHtml+= '>同步</button> <button class="btn btn-xs btn-info" onclick="VCenterConfig.showAccountDetail('+ meta.row+')">详情</button>';
+                            var syncHtml = '<button class="btn btn-xs btn-info ml10" onclick="VCenterConfig.syncVCenterAccount('+data+')"><i class="fa fa-history mr5"></i>同步</button>';
+                            syncHtml+='<button class="btn btn-xs btn-info ml10" onclick="VCenterConfig.showAccountDetail('+ meta.row+')"><i class="mr5">…</i>详情</button>';
                             return syncHtml;
                         }
                     }
@@ -195,7 +194,7 @@ var VCenterConfig = (function ($,toastr) {
 
         //同步VCenter账号
         syncVCenterAccount: function (data,cloudProvider) {
-            var d = dialog({
+            var progressbarShow = dialog({
                 cancel: false,
                 padding: 0,
                 width:500,
@@ -204,7 +203,7 @@ var VCenterConfig = (function ($,toastr) {
             $( "#progressbar" ).progressbar({
                 value: false
             });
-            d.showModal();
+            progressbarShow.showModal();
             $.ajax({
                 url: site_url+'vmware/api/syncCloudAccount',
                 type: 'post',
@@ -213,7 +212,7 @@ var VCenterConfig = (function ($,toastr) {
                     "id":data,
                 },
                 success: function (data) {
-                    d.remove();
+                    progressbarShow.remove();
                     if(data.result){
                         toastr.success(data.message);
                     }else{
@@ -241,18 +240,30 @@ var VCenterConfig = (function ($,toastr) {
             if(!this.beforeAction()){
                 return;
             }
-            $.ajax({
-                url: site_url+'vmware/api/deleteAccount',
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    "id":this.selectedRows[0], //别人要删除多个怎么办？
+            var delAccount = dialog({
+                width: 260,
+                title: '提示',
+                content: '确认删除？',
+                okValue: '确定',
+                ok: function() {
+                    $.ajax({
+                        url: site_url+'vmware/api/deleteAccount',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            "id":VCenterConfig.selectedRows[0], //别人要删除多个怎么办？
+                        },
+                        success: function (data) {
+                            toastr.success(data.message);
+                            VCenterConfig.accountTable.ajax.reload( null, false );
+                        }
+                    });
                 },
-                success: function (data) {
-                    toastr.success(data.message);
-                    VCenterConfig.accountTable.ajax.reload( null, false );
-                }
+                cancelValue: '取消',
+                cancel: function() {},
+                onshow: function() {},
             });
+            delAccount.show();
         },
         //清除账号下所有资源
         desctroyAccount: function () {
@@ -265,7 +276,7 @@ var VCenterConfig = (function ($,toastr) {
         // 侧边栏详情
         showAccountDetail: function(rowIndex){
             var tableData = VCenterConfig.accountTable.rows().data();
-            account_detail_vue.vcenterAccountList=tableData[rowIndex];
+            account_detail_vue.vcenterAccountData=tableData[rowIndex];
             account_detail_vue.showDetailSide();
         }
     }
@@ -274,8 +285,8 @@ var VCenterConfig = (function ($,toastr) {
 var account_detail_vue = new Vue({
     el: '#vcenterDetails',
     data: {
-        vcenterAccountList:{},
-        password:false,
+        vcenterAccountData:{},
+        passwordShow:false,
     },
     methods:{
         showDetailSide:function () {
@@ -301,12 +312,14 @@ var account_info_vue = new Vue({
             {id:5.5,text:"5.5"},
             {id:6.0,text:"6.0"}
         ],
-        /* qcloudVersionList: [
+/* 
+        qcloudVersionList: [
             {id:5.0,text:"5.0"},
             {id:5.1,text:"5.1"},
             {id:5.5,text:"5.5"},
             {id:6.0,text:"6.0"}
-        ] */
+        ] 
+*/        
         ucloudRegionList: [
             {id:"cn-bj1",text:"北京一"},
             {id:"cn-bj2",text:"北京二"},
@@ -322,9 +335,7 @@ var account_info_vue = new Vue({
             {id:"kr-seoul",text:"首尔"},
             {id:"sg",text:"新加坡"},
             {id:"tw-kh",text:"台湾"}
-        ],
-        vcenterAccountList:{},
-        password:false,
+        ]
     },
     methods: {
        onSubmit:function (e) {
@@ -364,4 +375,84 @@ var account_info_vue = new Vue({
         }
     }
 })
-
+$(document).ready(function() {
+    $('#vmware_form').validate({
+        errorElement: 'div',
+        errorClass: 'text-danger',
+        rules: {
+            vcenter_account_name: {
+                required: true,
+                minlength: 2
+            },
+            vcenter_account_password: {
+                required: true,
+                minlength: 6,
+                equalTo: '#vcenter_account_password'
+            },
+            vcenter_host: {
+                required: true,
+            },
+            vcenter_port: {
+                required: true,
+                minlength: 2
+            }
+        },
+        messages: {
+            vcenter_account_name: "请输入Venter账号名称(至少两位)",
+            vcenter_account_password: "请输入VCenter账号密码",
+            vcenter_host: "请输入VCenter主机IP",
+            vcenter_port: "请输入VCenter主机Port",
+        }
+    });
+    $('#qcloud_form').validate({
+        errorElement: 'div',
+        errorClass: 'text-danger',
+        rules: {
+            qcloud_account_name: {
+                required: true,
+                minlength: 2
+            },
+            qcloud_secret_id: {
+                required: true,
+                minlength: 2
+            },
+            qcloud_secret_key: {
+                required: true,
+                minlength: 2,
+            }
+        },
+        messages: {
+            qcloud_account_name: "请输入腾讯云账号名称(至少两位)",
+            qcloud_secret_id: "请输入SecretId",
+            qcloud_secret_key: "请输入SecretKey",
+        }
+    });
+    $('#ucloud_form').validate({
+        errorElement: 'div',
+        errorClass: 'text-danger',
+        rules: {
+            ucloud_account_name: {
+                required: true,
+                minlength: 2
+            },
+            ucloud_public_key: {
+                required: true,
+                minlength: 2
+            },
+            ucloud_private_key: {
+                required: true,
+                minlength: 2
+            },
+            ucloud_project_id: {
+                required: true,
+                minlength: 2
+            }
+        },
+        messages: {
+            ucloud_account_name: "请输入Ucloud账号名称(至少两位)",
+            ucloud_public_key: "请输入PublicKey",
+            ucloud_private_key: "请输入PrivateKey",
+            ucloud_project_id: "请输入项目ID",
+        }
+    });
+});
