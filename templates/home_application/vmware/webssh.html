@@ -26,7 +26,9 @@
     </div>
     <div class="col-lg-2">
         <h1 class="page-header">
-            <a class="king-btn king-info" title="返回" onclick="history.go(-1)" id="back_btn_id">返回</a>
+            <a class="king-btn king-info" title="返回" onclick="history.go(-1)" id="back_btn_id">
+                <i class="fa fa-reply mr5"></i> 返回
+            </a>
         </h1>
     </div>
 </div>
@@ -54,11 +56,11 @@
                             认证类型
                         </label>
                         <div class="col-sm-10 col-xs-8">
-                            <label class="radio ml20 mr20">
+                            <label class="radio ml20 mr30" style="display:inline-block">
                                 <input type="radio" name="authentication_method" value="password" checked />密码
                             </label>
 
-                            <label class="radio">
+                            <label class="radio" style="display:inline-block">
                                 <input type="radio" name="authentication_method" value="private_key" />密钥
                             </label>
                         </div>
