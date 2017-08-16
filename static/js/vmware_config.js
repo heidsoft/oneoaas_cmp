@@ -65,7 +65,7 @@ var VCenterConfig = (function ($,toastr) {
                         "render": function (data, type, row) {
                             var syncHtml = '<button class="btn btn-xs btn-info" ' ;
                             syncHtml+= ' onclick="VCenterConfig.syncVCenterAccount('+data+')" ';
-                            syncHtml+= '>同步</button> <button class="btn btn-xs btn-info" id="mybutton">详情</button>';
+                            syncHtml+= '>同步</button> <button class="btn btn-xs btn-info" onclick="VCenterConfig.cloudParticulars()">详情</button>';
                             return syncHtml;
                         }
                     }
@@ -259,6 +259,26 @@ var VCenterConfig = (function ($,toastr) {
         //设置同步策略
         setSyncPolicy: function (data) {
             toastr.warning("蓝鲸社区版暂不支持该功能,如果需要请联系OneOaaS");
+        },
+        // 侧边栏详情
+        cloudParticulars: function(){
+            var vcenterView = new Vue({
+                el: '#vcenterDetails',
+                data: {
+                    vcenterAccountList:{},
+                    password:false,
+                }
+            });
+
+            $("#vcenter_config_record").on('click','tr:gt(0)',function() {
+                // 获取数据
+                var currentVcenter = VCenterConfig.accountTable.row( this ).data();
+                vcenterView.vcenterAccountList=currentVcenter;
+                $("#vcenterDetails").removeClass('hidden');
+            });
+            $('#close').on('click', function(event){
+                $("#vcenterDetails").addClass('hidden');
+            });
         }
     }
 })($,window.toastr);
@@ -339,21 +359,3 @@ var account_info_vue = new Vue({
     }
 })
 
-//详情展示,基于vue实例,使用单向数据绑定
-var vcenterView = new Vue({
-    el: '#vcenterDetails',
-    data: {
-        vcenterAccountList:{},
-        password:false,
-    }
-});
-
-$("#vcenter_config_record").on('click','tr:gt(0)',function() {
-    // 获取数据
-    var currentVcenter = VCenterConfig.accountTable.row( this ).data();
-    vcenterView.vcenterAccountList=currentVcenter;
-    $("#vcenterDetails").removeClass('hidden');
-});
-$('#close').on('click', function(event){
-    $("#vcenterDetails").addClass('hidden');
-});

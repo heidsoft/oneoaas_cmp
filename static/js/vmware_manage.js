@@ -7,6 +7,8 @@
 
 //vcenter 管理插件
 var VCenterManage = (function ($,toastr) {
+    // progressbar
+    var progressbarShow;
     return {
         //初始化虚拟机表格对象
         vmTable:null,
@@ -177,6 +179,9 @@ var VCenterManage = (function ($,toastr) {
             var rows_selected = this.vmTable.column(0).checkboxes.selected();
             if(typeof rows_selected === 'undefined' || rows_selected.length === 0){
                 toastr.warning("请选择虚拟机资源");
+                setTimeout(function(){
+                    progressbarShow.remove();
+                },300);
                 return false
             }
             var rowIds = this.selectedRows =[];
@@ -186,6 +191,7 @@ var VCenterManage = (function ($,toastr) {
             this.selectedRows = rowIds;
             return true
         },
+
         //创建虚拟机
         create:function () {
             toastr.warning("这是高级功能，蓝鲸社区版暂不支持该功能,如果需要请联系OneOaaS");
@@ -207,15 +213,17 @@ var VCenterManage = (function ($,toastr) {
         },
         //克隆虚拟机
         clone:function () {
+            VCenterManage.progressbarModal();
             if(!this.beforeAction()){
                 return
             }
             if(this.selectedRows.length>1){
                 toastr.warning("蓝鲸版克隆操作只支持选择一台虚拟机");
+                progressbarShow.remove();
                 return
             }
-
             $('#cloneVmWizard').modal('show');
+            progressbarShow.remove();
 
         },
         //执行克隆
@@ -245,12 +253,14 @@ var VCenterManage = (function ($,toastr) {
         },
         //关闭虚拟机
         poweroff: function (data) {
+            VCenterManage.progressbarModal();
             if(!this.beforeAction()){
                 return
             }
 
             if(this.selectedRows.length>1){
                 toastr.warning("蓝鲸版关机操作只支持一台虚拟机");
+                progressbarShow.remove();
                 return
             }
 
@@ -331,6 +341,7 @@ var VCenterManage = (function ($,toastr) {
                     "vmId":this.selectedRows[0],
                 },
                 success: function (data) {
+                    progressbarShow.remove();
                     toastr.success(data.message);
                     //重新刷新表格数据
                     VCenterManage.vmTable.ajax.reload( null, false );
@@ -339,11 +350,13 @@ var VCenterManage = (function ($,toastr) {
         },
         //开启虚拟机
         start: function (data) {
+            VCenterManage.progressbarModal();
             if(!this.beforeAction()){
                 return
             }
             if(this.selectedRows.length>1){
                 toastr.warning("蓝鲸版开机操作只支持一台虚拟机");
+                progressbarShow.remove();
                 return
             }
             $.ajax({
@@ -354,18 +367,24 @@ var VCenterManage = (function ($,toastr) {
                     "vmId":this.selectedRows[0],
                 },
                 success: function (data) {
+                    progressbarShow.remove();
                     toastr.success(data.message);
                     VCenterManage.vmTable.ajax.reload( null, false );
-                }
+                },
+                error:function () {
+                    progressbarShow.remove();
+               }
             });
         },
         //重启虚拟机
         reboot: function (data) {
+            VCenterManage.progressbarModal();
             if(!this.beforeAction()){
                 return
             }
             if(this.selectedRows.length>1){
                 toastr.warning("蓝鲸版重启操作只支持一台虚拟机");
+                progressbarShow.remove();
                 return
             }
             $.ajax({
@@ -376,18 +395,24 @@ var VCenterManage = (function ($,toastr) {
                     "vmId":this.selectedRows[0],
                 },
                 success: function (data) {
+                    progressbarShow.remove();
                     toastr.success(data.message);
                     VCenterManage.vmTable.ajax.reload( null, false );
-                }
+                },
+                error:function () {
+                    progressbarShow.remove();
+               }
             });
         },
         //销毁虚拟机
         destroy: function (data) {
+            VCenterManage.progressbarModal();
             if(!this.beforeAction()){
                 return
             }
             if(this.selectedRows.length>1){
                 toastr.warning("蓝鲸版销毁操作只支持一台虚拟机");
+                progressbarShow.remove();
                 return
             }
             $.ajax({
@@ -398,9 +423,13 @@ var VCenterManage = (function ($,toastr) {
                     "vmId":this.selectedRows[0],
                 },
                 success: function (data) {
+                    progressbarShow.remove();
                     toastr.success(data.message);
                     VCenterManage.vmTable.ajax.reload( null, false );
-                }
+                },
+                error:function () {
+                    progressbarShow.remove();
+               }
             });
         },
         snapshot:function () {
@@ -464,6 +493,7 @@ var VCenterManage = (function ($,toastr) {
         },
         //webssh控制台
         webssh:function () {
+            VCenterManage.progressbarModal();
             window.location.href = site_url + "vmware/webssh/manage";
             //toastr.warning("这是高级功能，蓝鲸社区版暂不支持该功能,如果需要请联系OneOaaS");
             return
@@ -471,6 +501,19 @@ var VCenterManage = (function ($,toastr) {
         RDP:function () {
             toastr.warning("这是高级功能，蓝鲸社区版暂不支持该功能,如果需要请联系OneOaaS");
             return
+        },
+        // progressbarModal
+        progressbarModal:function(){
+            progressbarShow=dialog({
+                cancel: false,
+                padding: 0,
+                width:500,
+                content:'<div id="progressbar"></div>'
+            });
+            $( "#progressbar" ).progressbar({
+                value: false
+            });
+            progressbarShow.showModal();
         }
     }
 })($,window.toastr);
