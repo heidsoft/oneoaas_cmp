@@ -3,6 +3,8 @@
  * @description vcenter配置操作模块
  */
 
+
+
 var VCenterConfig = (function ($,toastr) {
     return {
         accountTable:null,
@@ -62,10 +64,10 @@ var VCenterConfig = (function ($,toastr) {
                     {
                         title: '操作',
                         data: "id",
-                        "render": function (data, type, row) {
+                        "render": function (data, type, row,meta) {
                             var syncHtml = '<button class="btn btn-xs btn-info" ' ;
                             syncHtml+= ' onclick="VCenterConfig.syncVCenterAccount('+data+')" ';
-                            syncHtml+= '>同步</button> <button class="btn btn-xs btn-info" onclick="VCenterConfig.cloudParticulars()">详情</button>';
+                            syncHtml+= '>同步</button> <button class="btn btn-xs btn-info" onclick="VCenterConfig.showAccountDetail('+ meta.row+')">详情</button>';
                             return syncHtml;
                         }
                     }
@@ -261,27 +263,31 @@ var VCenterConfig = (function ($,toastr) {
             toastr.warning("蓝鲸社区版暂不支持该功能,如果需要请联系OneOaaS");
         },
         // 侧边栏详情
-        cloudParticulars: function(){
-            var vcenterView = new Vue({
-                el: '#vcenterDetails',
-                data: {
-                    vcenterAccountList:{},
-                    password:false,
-                }
-            });
-
-            $("#vcenter_config_record").on('click','tr:gt(0)',function() {
-                // 获取数据
-                var currentVcenter = VCenterConfig.accountTable.row( this ).data();
-                vcenterView.vcenterAccountList=currentVcenter;
-                $("#vcenterDetails").removeClass('hidden');
-            });
-            $('#close').on('click', function(event){
-                $("#vcenterDetails").addClass('hidden');
-            });
+        showAccountDetail: function(rowIndex){
+            var tableData = VCenterConfig.accountTable.rows().data();
+            account_detail_vue.vcenterAccountList=tableData[rowIndex];
+            account_detail_vue.showDetailSide();
         }
     }
 })($,window.toastr);
+
+var account_detail_vue = new Vue({
+    el: '#vcenterDetails',
+    data: {
+        vcenterAccountList:{},
+        password:false,
+    },
+    methods:{
+        showDetailSide:function () {
+            $("#vcenterDetails").removeClass('hidden');
+        }
+    },
+    created:function () {
+        $('#close').on('click', function(event){
+            $("#vcenterDetails").addClass('hidden');
+        });
+    }
+});
 
 var account_info_vue = new Vue({
     el: '#vcenter_config',
