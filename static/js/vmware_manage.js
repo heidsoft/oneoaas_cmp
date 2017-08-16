@@ -435,11 +435,13 @@ var VCenterManage = (function ($,toastr) {
                         },
                         error:function () {
                             progressbarShow.remove();
-                       }
+                        }
                     });
                 },
                 cancelValue: '取消',
-                cancel: function() {},
+                cancel: function() {
+                    progressbarShow.remove();
+                },
                 onshow: function() {},
             });
             vmwareDestroy.show();
