@@ -35,7 +35,7 @@ gulp.task('uglify',function () {
     .pipe(jshint.reporter('default'))*/
     // .pipe(concat('main.js'))
     // .pipe(gulp.dest(jsDst))
-        .pipe(rename({ suffix: '.min' }))
+        //.pipe(rename({ suffix: '.min' }))
         .pipe(uglify())
         .pipe(gulp.dest(jsDst));
 });
