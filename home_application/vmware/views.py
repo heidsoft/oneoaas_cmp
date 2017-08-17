@@ -147,11 +147,13 @@ def createVCenterAccount(request):
                 cloudPrivateKey = request.POST['cloudPrivateKey']
                 cloudPublicKey = request.POST['cloudPublicKey']
                 projectId = request.POST['projectId']
+                cloudRegion = request.POST['cloudRegion']
                 account = VcenterAccount(account_name=accountName,
                                          cloud_private_key=cloudPrivateKey,
                                          cloud_public_key=cloudPublicKey,
                                          cloud_provider=cloudProvider,
-                                         project_id=projectId
+                                         project_id=projectId,
+                                         cloud_region=cloudRegion
                                          )
             else:
                 pass

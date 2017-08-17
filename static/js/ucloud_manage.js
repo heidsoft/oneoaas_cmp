@@ -41,10 +41,10 @@ var UcloudManage = (function ($,toastr) {
                     url: site_url+'ucloud/api/getUcloudInstanceList',
                 },
                 columns: [
-                    {
-                        data: "name",
-                        title:"实例名称"
-                    },
+                    // {
+                    //     data: "name",
+                    //     title:"实例名称"
+                    // },
                     {
                         data: "osType",
                         title:"操作系统类型"
@@ -58,12 +58,12 @@ var UcloudManage = (function ($,toastr) {
                         title:"CPU"
                     },
                     {
-                        data: "publicIP",
-                        title:"公网IP"
+                        data: "state",
+                        title:"状态"
                     },
                     {
-                        data: "privateIP",
-                        title:"私有IP"
+                        data: "isExpire",
+                        title:"是否过期"
                     },
                     {
                         data: "chargeType",
