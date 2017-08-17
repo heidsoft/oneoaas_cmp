@@ -6,7 +6,7 @@ import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 
 from common.log import logger
-from common.mymako import render_mako_context, render_json
+from common.mymako import render_mako_context, render_json, render_json_custom
 from home_application.models import VcenterAccount, UcloudInstance
 from hybirdsdk.ucloud.sdk import UcloudApiClient
 from hybirdsdk.ucloud.config import base_url
@@ -205,44 +205,20 @@ def syncUcloud(accountModel):
 
 
 
-class JSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, datetime):
-            return obj.strftime('%Y-%m-%d %H:%M:%S')
-        elif isinstance(obj, datetime.date):
-            return obj.strftime('%Y-%m-%d')
-        elif isinstance(obj, datetime.time):
-            return obj.strftime('%H:%M:%S')
-        return json.JSONEncoder.default(self, obj)
-
-class JSONDecoder(json.JSONDecoder):
-    def decode(self, json_string):
-        json_data = json.loads(json_string)
-        for key in json_data.keys():
-            try:
-                json_data[key] = datetime.fromtimestamp(
-                    datetime.time.mktime(datetime.time.strptime(json_data[key], "%Y-%m-%d %H:%M:%S")))
-            except TypeError:
-                # It's not a datetime/time object
-                pass
-        return json_data
-
 
 #获取ucloud虚拟机列表
 def getUcloudInstanceList(request):
-    logger.info("查询配置vcenter 虚拟机")
+    logger.info("查询ucloud虚拟机列表")
     instanceList = UcloudInstance.objects.all()
     vmJsonList = []
+
     from django.forms.models import model_to_dict
     for vm in instanceList:
         tempvm = model_to_dict(vm)
         vmJsonList.append(tempvm)
 
-    data = json.dumps(vmJsonList, cls=DjangoJSONEncoder)
-    print len(instanceList)
-    print len(data)
     res = {
         "recordsTotal": len(instanceList),
-        'data': data
+        'data': vmJsonList
     }
-    return render_json(res)
+    return render_json_custom(res)

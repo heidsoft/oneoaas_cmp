@@ -5,7 +5,10 @@ mako模板的render方法等
 """
 
 import json
+
+import datetime
 from django.conf import settings
+from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 from django.template.context import Context
 from mako.lookup import TemplateLookup
@@ -115,6 +118,46 @@ def render_json(dictionary={}):
             'message': dictionary,
         }
     return HttpResponse(json.dumps(dictionary), content_type='application/json')
+
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+        elif isinstance(obj, datetime.date):
+            return obj.strftime('%Y-%m-%d')
+        elif isinstance(obj, datetime.time):
+            return obj.strftime('%H:%M:%S')
+        return json.JSONEncoder.default(self, obj)
+
+class JSONDecoder(json.JSONDecoder):
+    def decode(self, json_string):
+        json_data = json.loads(json_string)
+        for key in json_data.keys():
+            try:
+                json_data[key] = datetime.fromtimestamp(
+                    datetime.time.mktime(datetime.time.strptime(json_data[key], "%Y-%m-%d %H:%M:%S")))
+            except TypeError:
+                # It's not a datetime/time object
+                pass
+        return json_data
+
+def render_json_custom(dictionary={}):
+    """
+    return the json string for response
+    @summary: dictionary也可以是string, list数据
+    @note:  返回结果是个dict, 请注意默认数据格式:
+                                    {'result': '',
+                                     'message':''
+                                    }
+    """
+    if type(dictionary) is not dict:
+        # 如果参数不是dict,则组合成dict
+        dictionary = {
+            'result': True,
+            'message': dictionary,
+        }
+    return HttpResponse(json.dumps(dictionary,cls=JSONEncoder), content_type='application/json')
 
 
 def get_context_processors_content(request):
