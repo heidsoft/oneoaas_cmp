@@ -20,8 +20,9 @@
             <div class="king-widget-content p20 bg-info">
                 <div class="king-counter king-counter-lg">
                     <div class="king-counter-label text-uppercase f16">
-                        <i class="icon mr5 iconfont icon-shujuzhongxin"></i>
-                        <a href="${SITE_URL}vmware/datacenter/manage/">数据中心</a>
+                        <a href="${SITE_URL}vmware/datacenter/manage">
+                            <i class="icon mr5 iconfont icon-shujuzhongxin"></i>数据中心
+                        </a>
                     </div>
                     <div class="king-counter-number-group">
                         <span class="king-counter-number white">${datacenter}个</span>
@@ -35,8 +36,9 @@
             <div class="king-widget-content p20 bg-info">
                 <div class="king-counter king-counter-lg">
                     <div class="king-counter-label text-uppercase f16">
-                        <i class="icon mr5 iconfont icon-cluster"></i>
-                        <a href="${SITE_URL}vmware/cluster/manage/">集群</a>
+                        <a href="${SITE_URL}vmware/cluster/manage">
+                            <i class="icon mr5 iconfont icon-cluster"></i>集群
+                        </a>
                     </div>
                     <div class="king-counter-number-group">
                         <span class="king-counter-number white">${cluster}个</span>
@@ -50,8 +52,9 @@
             <div class="king-widget-content p20 bg-info">
                 <div class="king-counter king-counter-lg">
                     <div class="king-counter-label text-uppercase f16">
-                        <i class="icon mr5 iconfont icon-xuniji"></i>
-                        <a href="${SITE_URL}vmware/vm/manage/">虚拟机</a>
+                        <a href="${SITE_URL}vmware/vm/manage">
+                            <i class="icon mr5 iconfont icon-xuniji"></i>虚拟机
+                        </a>
                     </div>
                     <div class="king-counter-number-group">
                         <span class="king-counter-number white">${vm}个</span>
@@ -65,8 +68,9 @@
             <div class="king-widget-content p20 bg-info">
                 <div class="king-counter king-counter-lg">
                     <div class="king-counter-label text-uppercase f16">
-                        <i class="icon mr5 iconfont icon-portal-icon-cunchu"></i>
-                        <a href="${SITE_URL}vmware/storage/manage/"> 存储</a>
+                        <a href="${SITE_URL}vmware/storage/manage">
+                            <i class="icon mr5 iconfont icon-portal-icon-cunchu"></i>存储
+                        </a>
                     </div>
                     <div class="king-counter-number-group">
                         <span class="king-counter-number white">${storage}T</span>
@@ -126,194 +130,7 @@
 
 <%block name="script">
 <!-- 包括所有kendoui的js插件或者可以根据需要使用的js插件调用　-->
-<script src="https://magicbox.bkclouds.cc/static_api/v3/assets/kendoui-2015.2.624/js/kendo.all.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-
-        var promise = $.ajax({
-            url: site_url+'overview/getAnalysisDataRequest',
-            type: 'post',
-            dataType:'json',
-            data: {
-
-            },
-        });
-
-        promise
-            .then(handleData,handleError);
-
-        function handleData(data) {
-            $('#memory_analysis').kendoChart({
-                legend:{
-                    position : "bottom"
-                },
-                theme : 'bootstrap',
-                seriesDefaults: {
-                    labels: {
-                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
-                        position: "outsideEnd",
-                        visible: true,
-                        background: "transparent"
-                    }
-                },
-                series: [{
-                    name: '内存分布',
-                    type: 'pie',
-                    data: data.memroy
-                }]
-            });
-
-
-            $('#cpu_analysis').kendoChart({
-                legend:{
-                    position : "bottom"
-                },
-                theme : 'bootstrap',
-                seriesDefaults: {
-                    labels: {
-                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
-                        position: "outsideEnd",
-                        visible: true,
-                        background: "transparent"
-                    }
-                },
-                series: [{
-                    name: 'CPU分布',
-                    type: 'pie',
-                    data: data.cpu
-                }]
-            });
-
-            $('#storage_analysis').kendoChart({
-                legend:{
-                    position : "bottom"
-                },
-                theme : 'bootstrap',
-                seriesDefaults: {
-                    labels: {
-                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
-                        position: "outsideEnd",
-                        visible: true,
-                        background: "transparent"
-                    }
-                },
-                series:[{
-                    name: '存储分布',
-                    type: 'pie',
-                    data: data.storage
-                }]
-
-            });
-
-            $('#flow_analysis').kendoChart({
-                legend:{
-                    position : "bottom"
-                },
-                theme : 'bootstrap',
-                seriesDefaults: {
-                    labels: {
-                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
-                        position: "outsideEnd",
-                        visible: true,
-                        background: "transparent"
-                    }
-                },
-                series:[{
-                    name: 'CPU-Core分布',
-                    type: 'pie',
-                    data: data.cpuCores
-                }]
-            });
-        }
-        function handleError(error) {
-            //处理错误
-            console.log(error);
-            $('#memory_analysis').kendoChart({
-                legend:{
-                    position : "bottom"
-                },
-                theme : 'bootstrap',
-                seriesDefaults: {
-                    labels: {
-                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
-                        position: "outsideEnd",
-                        visible: true,
-                        background: "transparent"
-                    }
-                },
-                series: [{
-                    name: '内存分布',
-                    type: 'pie',
-                    data: []
-                }]
-            });
-
-
-            $('#cpu_analysis').kendoChart({
-                legend:{
-                    position : "bottom"
-                },
-                theme : 'bootstrap',
-                seriesDefaults: {
-                    labels: {
-                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
-                        position: "outsideEnd",
-                        visible: true,
-                        background: "transparent"
-                    }
-                },
-                series: [{
-                    name: 'CPU分布',
-                    type: 'pie',
-                    data: []
-                }]
-            });
-
-            $('#storage_analysis').kendoChart({
-                legend:{
-                    position : "bottom"
-                },
-                theme : 'bootstrap',
-                seriesDefaults: {
-                    labels: {
-                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
-                        position: "outsideEnd",
-                        visible: true,
-                        background: "transparent"
-                    }
-                },
-                series:[{
-                    name: '存储分布',
-                    type: 'pie',
-                    data: []
-                }]
-
-            });
-
-            $('#flow_analysis').kendoChart({
-                legend:{
-                    position : "bottom"
-                },
-                theme : 'bootstrap',
-                seriesDefaults: {
-                    labels: {
-                        template: "#= category # - #= kendo.format('{0:P}', percentage)#",
-                        position: "outsideEnd",
-                        visible: true,
-                        background: "transparent"
-                    }
-                },
-                series:[{
-                    name: '虚拟机分布',
-                    type: 'pie',
-                    data: []
-                }]
-            });
-        }
-
-
-
-    });
-
-</script>
+<!--<script src="https://magicbox.bkclouds.cc/static_api/v3/assets/kendoui-2015.2.624/js/kendo.all.min.js"></script>-->
+<script src="${STATIC_URL}js/magicbox.kendo.all.min.js"></script>
+<script src="${STATIC_URL}js/overview_manage.js"></script>
 </%block>

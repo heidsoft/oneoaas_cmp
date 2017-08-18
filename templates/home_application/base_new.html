@@ -13,6 +13,9 @@
 <!--前端开发者提供的样式 -->
 <!--<link href="${STATIC_URL}css/alert.css" rel="stylesheet">-->
 
+<!--animate样式 -->
+<link href="${STATIC_URL}css/animate.css" rel="stylesheet" >
+
 <link href="${STATIC_URL}assets/select2-3.5.2/select2.css" rel="stylesheet">
 <link href="${STATIC_URL}assets/jquery.sumoselect-2.0.0/sumoselect.css" rel="stylesheet">
 <link href="${STATIC_URL}assets/mCustomScrollbar-3.0.9/jquery.mCustomScrollbar.css" rel="stylesheet">
@@ -34,9 +37,11 @@
 
 
 <!-- 以下两个插件用于在IE8以及以下版本浏览器支持HTML5元素和媒体查询，如果不需要用可以移除 -->
+<!-- <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/html5shiv.min.js"></script>
+     <script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/respond.min.js"></script> -->
 <!--[if lt IE 9]>
-<script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/html5shiv.min.js"></script>
-<script src="https://magicbox.bkclouds.cc/static_api/v3/assets/js/respond.min.js"></script>
+<script src="${STATIC_URL}js/magicbox.html5shiv.min.js"></script>
+<script src="${STATIC_URL}js/magicbox.respond.min.js"></script>
 <![endif]-->
 <script type="text/javascript">
     var app_id = "${APP_ID}";

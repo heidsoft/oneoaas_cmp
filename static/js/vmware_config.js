@@ -290,12 +290,16 @@ var account_detail_vue = new Vue({
     },
     methods:{
         showDetailSide:function () {
-            $("#vcenterDetails").removeClass('hidden');
+            $("#vcenterDetailsShade").removeClass('hidden');
+            $("#vcenterDetails").removeClass('animated fadeOutRight');
         }
     },
     created:function () {
         $('#close').on('click', function(event){
-            $("#vcenterDetails").addClass('hidden');
+            $("#vcenterDetails").addClass('animated fadeOutRight');
+            setTimeout(function(){
+                $("#vcenterDetailsShade").addClass('hidden');
+        },500)
         });
     }
 });
@@ -306,6 +310,7 @@ var account_info_vue = new Vue({
         vcenterIsShow: true,
         qcloudIsShow: false,
         ucloudIsShow: false,
+        cloudProviderSelected: '',
         vcenterVersionList: [
             {id:5.0,text:"5.0"},
             {id:5.1,text:"5.1"},
@@ -340,7 +345,13 @@ var account_info_vue = new Vue({
     methods: {
        onSubmit:function (e) {
           e.preventDefault();
-       }
+       },
+       watchProviderSelected:function(newValue, oldValue) {
+            console.log("newVersion：");
+            console.log(newValue);
+            console.log("oldVersion：");
+            console.log(oldValue);
+        }
     },
     created: function () {
         var _self = this;
@@ -365,16 +376,12 @@ var account_info_vue = new Vue({
     },
     watch: {
         cloudProviderSelected: {
-            handler(newValue, oldValue) {
-                console.log("newVersion：");
-                console.log(newValue);
-                console.log("oldVersion：");
-                console.log(oldValue);
-            },
+            handler:'watchProviderSelected',
             deep: true
         }
     }
 })
+// form 输入拦截
 $(document).ready(function() {
     $('#vmware_form').validate({
         errorElement: 'div',

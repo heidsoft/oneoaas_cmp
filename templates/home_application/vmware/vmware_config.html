@@ -212,77 +212,79 @@
     </div>
 </div>
 
-<section class="hidden" id="vcenterDetails" data-type="close">
-    <div class="container">
-        <div class="row">
-            <span class="sub-title">云厂商名称：</span>
-            <span class="sub-content">{{vcenterAccountData.cloud_provider}}</span>
-        </div>
-        <div class="row">
-            <span class="sub-title">账号名称：</span>
-            <span class="sub-content">{{vcenterAccountData.account_name}}</span>
-        </div>
-        <div v-show="vcenterAccountData.cloud_provider=='vmware'?true:false">
+<div class="hidden" id="vcenterDetailsShade" >
+    <section data-type="close" id="vcenterDetails">
+        <div class="container">
             <div class="row">
-                <span class="sub-title">账号密码：</span>
-                <span v-show="!passwordShow"> ****** </span>
-                <span class="sub-content" v-show="passwordShow">{{vcenterAccountData.account_password}}</span>
-                <i class="fa fa-eye ml10" @click="passwordShow=!passwordShow"></i>
+                <span class="sub-title">云厂商名称：</span>
+                <span class="sub-content">{{vcenterAccountData.cloud_provider}}</span>
             </div>
             <div class="row">
-                <span class="sub-title">主机地址：</span>
-                <span class="sub-content">{{vcenterAccountData.vcenter_host}}</span>
+                <span class="sub-title">账号名称：</span>
+                <span class="sub-content">{{vcenterAccountData.account_name}}</span>
             </div>
-            <div class="row">
-                <span class="sub-title">端口号：</span>
-                <span class="sub-content">{{vcenterAccountData.vcenter_port}}</span>
+            <div v-show="vcenterAccountData.cloud_provider=='vmware'?true:false">
+                <div class="row">
+                    <span class="sub-title">账号密码：</span>
+                    <span v-show="!passwordShow"> ****** </span>
+                    <span class="sub-content" v-show="passwordShow">{{vcenterAccountData.account_password}}</span>
+                    <i class="fa fa-eye ml10" @click="passwordShow=!passwordShow"></i>
+                </div>
+                <div class="row">
+                    <span class="sub-title">主机地址：</span>
+                    <span class="sub-content">{{vcenterAccountData.vcenter_host}}</span>
+                </div>
+                <div class="row">
+                    <span class="sub-title">端口号：</span>
+                    <span class="sub-content">{{vcenterAccountData.vcenter_port}}</span>
+                </div>
             </div>
-        </div>
-        
-        <div v-show="vcenterAccountData.cloud_provider=='qcloud'?true:false">
-            <div class="row">
-                <span class="sub-title">SecretId：</span>
-                <span class="sub-content">{{vcenterAccountData.cloud_public_key}}</span>
+            
+            <div v-show="vcenterAccountData.cloud_provider=='qcloud'?true:false">
+                <div class="row">
+                    <span class="sub-title">SecretId：</span>
+                    <span class="sub-content">{{vcenterAccountData.cloud_public_key}}</span>
+                </div>
+                <div class="row">
+                    <span class="sub-title">SecretKey：</span>
+                    <span v-show="!passwordShow"> ****** </span>
+                    <span class="sub-content" v-show="passwordShow">{{vcenterAccountData.cloud_private_key}}</span>
+                    <i class="fa fa-eye ml10" @click="passwordShow=!passwordShow"></i>
+                </div>
             </div>
-            <div class="row">
-                <span class="sub-title">SecretKey：</span>
-                <span v-show="!passwordShow"> ****** </span>
-                <span class="sub-content" v-show="passwordShow">{{vcenterAccountData.cloud_private_key}}</span>
-                <i class="fa fa-eye ml10" @click="passwordShow=!passwordShow"></i>
+            <div v-show="vcenterAccountData.cloud_provider=='ucloud'?true:false">
+                <div class="row">
+                    <span class="sub-title">PublicKey：</span>
+                    <span class="sub-content">{{vcenterAccountData.cloud_public_key}}</span>
+                </div>
+                <div class="row">
+                    <span class="sub-title">PrivateKey：</span>
+                    <span v-show="!passwordShow"> ****** </span>
+                    <span class="sub-content" v-show="passwordShow">{{vcenterAccountData.cloud_private_key}}</span>
+                    <i class="fa fa-eye ml10" @click="passwordShow=!passwordShow"></i>
+                </div>
+                <div class="row">
+                    <span class="sub-title">ProjectId：</span>
+                    <span class="sub-content">{{vcenterAccountData.project_id}}</span>
+                </div>
+                <div class="row">
+                    <span class="sub-title">区域：</span>
+                    <span class="sub-content">{{vcenterAccountData.cloud_region}}</span>
+                </div>
             </div>
-        </div>
-        <div v-show="vcenterAccountData.cloud_provider=='ucloud'?true:false">
-            <div class="row">
-                <span class="sub-title">PublicKey：</span>
-                <span class="sub-content">{{vcenterAccountData.cloud_public_key}}</span>
-            </div>
-            <div class="row">
-                <span class="sub-title">PrivateKey：</span>
-                <span v-show="!passwordShow"> ****** </span>
-                <span class="sub-content" v-show="passwordShow">{{vcenterAccountData.cloud_private_key}}</span>
-                <i class="fa fa-eye ml10" @click="passwordShow=!passwordShow"></i>
-            </div>
-            <div class="row">
-                <span class="sub-title">ProjectId：</span>
-                <span class="sub-content">{{vcenterAccountData.project_id}}</span>
-            </div>
-            <div class="row">
-                <span class="sub-title">区域：</span>
-                <span class="sub-content">{{vcenterAccountData.cloud_region}}</span>
-            </div>
-        </div>
 
-        <div class="row" v-show="vcenterAccountData.cloud_provider=='vmware'?true:false">
-            <span class="sub-title">版本：</span>
-            <span class="sub-content">{{vcenterAccountData.vcenter_version}}</span>
+            <div class="row" v-show="vcenterAccountData.cloud_provider=='vmware'?true:false">
+                <span class="sub-title">版本：</span>
+                <span class="sub-content">{{vcenterAccountData.vcenter_version}}</span>
+            </div>
         </div>
-    </div>
-    <div class="close-btn open" id="close" data-type="close">关闭</div>
-</section>
+        <div class="close-btn open" id="close" data-type="close">关闭</div>
+    </section>
+</div>
 </%block>
 <%block name="script">
 <script type="text/javascript" src="${STATIC_URL}assets/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 <script type="text/javascript" src="${STATIC_URL}assets/art-dialog/dist/dialog.js"></script>
-<script src="https://magicbox.bkclouds.cc/static_api/v3/assets/validate-1.14.0/js/jquery.validate.js"></script>
+<script src="${STATIC_URL}js/magicbox.jquery.validate.js"></script>
 <script src="${STATIC_URL}js/vmware_config.js"></script>
 </%block>

@@ -7,20 +7,22 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),          //js压缩
     rename = require('gulp-rename'),           //重命名
     concat = require('gulp-concat'),          //合并文件
-    clean = require('gulp-clean');            //清空文件夹
-htmlmin = require('gulp-htmlmin');        //html 处理
+    clean = require('gulp-clean'),            //清空文件夹
+    htmlmin = require('gulp-htmlmin'),        //html 处理
+    coffee = require('gulp-coffee'),
+    sourcemaps = require('gulp-sourcemaps');
 //css 压缩
 gulp.task('minifycss',function() {
-    var cssSrc = './src/css/*.css',
+    var cssSrc = './css/*.css',
         cssDst = './dist/css';
     return gulp.src(cssSrc)                  //被压缩的文件
-        .pipe(rename({ suffix: '.min' }))
+        // .pipe(rename({ suffix: '.min' }))
         .pipe(minifycss())                       //执行压缩
         .pipe(gulp.dest(cssDst));        //输出文件夹
 });
 // 图片处理
 gulp.task('imagemin',function(){
-    var imgSrc = './src/images/*',
+    var imgSrc = './img/*',
         imgDst = './dist/images';
     return gulp.src(imgSrc)
         .pipe(imagemin())
@@ -31,11 +33,11 @@ gulp.task('uglify',function () {
     var jsSrc = './js/*.js',
         jsDst ='./dist';
     return gulp.src(jsSrc)
-    /*.pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('default'))*/
+    // .pipe(jshint('.jshintrc'))
+    // .pipe(jshint.reporter('default'))
     // .pipe(concat('main.js'))
     // .pipe(gulp.dest(jsDst))
-        .pipe(rename({ suffix: '.min' }))
+        // .pipe(rename({ suffix: '.min' }))
         .pipe(uglify())
         .pipe(gulp.dest(jsDst));
 });
