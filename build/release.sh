@@ -34,6 +34,10 @@ cp -rf ${APP_PUBLIC_DIR} ${RELEASE_ROOT}/src
 
 cp -rf ${APP_PUBLIC_FILE} ${RELEASE_ROOT}/src
 
+rm -rf ${RELEASE_ROOT}/src/static/js
+
+mv -rf ${RELEASE_ROOT}/src/static/dist ${RELEASE_ROOT}/src/static/js
+
 cp -rf app.yml ${RELEASE_ROOT}
 
 cp -rf pkgs ${RELEASE_ROOT}
