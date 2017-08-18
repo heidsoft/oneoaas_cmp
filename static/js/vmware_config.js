@@ -42,7 +42,7 @@ var VCenterConfig = (function ($,toastr) {
                         'targets': 0,
                         'className': 'dt-head-center dt-body-center',
                         'checkboxes': {
-                            'selectRow': false
+                            'selectRow': true
                         }
                     }
                 ],
