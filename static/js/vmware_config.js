@@ -281,7 +281,7 @@ var VCenterConfig = (function ($,toastr) {
         }
     }
 })($,window.toastr);
-
+// 云厂商账号列表详情
 var account_detail_vue = new Vue({
     el: '#vcenterDetails',
     data: {
@@ -303,7 +303,7 @@ var account_detail_vue = new Vue({
         });
     }
 });
-
+// 云配置 下拉列表
 var account_info_vue = new Vue({
     el: '#vcenter_config',
     data: {
@@ -381,7 +381,7 @@ var account_info_vue = new Vue({
         }
     }
 })
-// form 输入拦截
+// 云配置 form 输入拦截
 $(document).ready(function() {
     $('#vmware_form').validate({
         errorElement: 'div',

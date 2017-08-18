@@ -90,7 +90,7 @@ var VCenterManage = (function ($,toastr) {
                     {
                         extend: 'csvHtml5',
                         bom: "utf-8",
-                        text: '导出CVS'
+                        text: '导出CSV'
                     },
                 ],
             } );

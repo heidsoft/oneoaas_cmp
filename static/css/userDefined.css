@@ -13,7 +13,7 @@
     position: fixed;
     right: 0;
     top: 50px;
-    padding: 20px;
+    padding-top: 20px;
     background: #fff;
     width: 550px;
     height: 100%;
@@ -23,6 +23,7 @@
     height: 40px;
     line-height: 40px;
     margin-top:10px;
+    padding-left: 40px;
 }
 #close{
     position: absolute;
