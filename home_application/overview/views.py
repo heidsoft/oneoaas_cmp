@@ -34,10 +34,10 @@ def overview(request):
        )
 
     data={
-        'datacenter':None,
-        'cluster':None,
-        'vm':None,
-        'storage':None
+        'datacenter':0,
+        'cluster':0,
+        'vm':0,
+        'storage':0
     }
     try:
         vmManager = VmManage(host=accountModel.vcenter_host,user=accountModel.account_name,password=accountModel.account_password,port=accountModel.vcenter_port,ssl=None)
