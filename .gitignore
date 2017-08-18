@@ -2,6 +2,7 @@
 /out/
 *.iml
 *.log
+*.pyc
 local_settings.py
 target/
 .venv
