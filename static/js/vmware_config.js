@@ -42,7 +42,7 @@ var VCenterConfig = (function ($,toastr) {
                         'targets': 0,
                         'className': 'dt-head-center dt-body-center',
                         'checkboxes': {
-                            'selectRow': true
+                            'selectRow': false
                         }
                     }
                 ],
@@ -228,9 +228,9 @@ var VCenterConfig = (function ($,toastr) {
                 toastr.warning("请选择账号资源");
                 return false
             }
-            var rowIds = this.selectedRows =[];
+            var rowIds = this.selectedRows ="";
             $.each(rows_selected, function(index, rowId){
-                rowIds.push(rowId);
+                rowIds+=rowId+",";
             });
             this.selectedRows = rowIds;
             return true
@@ -251,7 +251,7 @@ var VCenterConfig = (function ($,toastr) {
                         type: 'post',
                         dataType: 'json',
                         data: {
-                            "id":VCenterConfig.selectedRows[0], //别人要删除多个怎么办？
+                            "id":VCenterConfig.selectedRows, //别人要删除多个怎么办？
                         },
                         success: function (data) {
                             toastr.success(data.message);

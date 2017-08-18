@@ -194,17 +194,28 @@ def deleteAccount(request):
     accountId = None
     if request.method == 'POST':
         accountId = request.POST['id']
-        if accountId is None or accountId <0:
-            res = {
-                'result': True,
-                'message': "该账号不存在",
-            }
-            return render_json(res)
+        accountIds = accountId.split(',')
+        accountIds = [i for i in accountIds if i != ''] # 去空
+        # if accountId is None or accountId <0:
+        #     res = {
+        #         'result': True,
+        #         'message': "该账号不存在",
+        #     }
+        #     return render_json(res)
 
+    # try:
+    #     accountModel = VcenterAccount.objects.get(id=accountId)
+    #     print accountModel
+    #     accountModel.delete()
+    #     res = {
+    #         'result': True,
+    #         'message': "删除账号成功",
+    #     }
     try:
-        accountModel = VcenterAccount.objects.get(id=accountId)
-        print accountModel
-        accountModel.delete()
+        for account in accountIds:
+            accountModel = VcenterAccount.objects.get(id=account)
+            # print accountModel
+            accountModel.delete()
         res = {
             'result': True,
             'message': "删除账号成功",
