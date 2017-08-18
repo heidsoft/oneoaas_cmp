@@ -164,7 +164,7 @@ function make_single_graphs(){
     make_contain_graph($("#disk_usage_maximum"),'disk.usage.maximum','磁盘最大利用率');
     make_contain_graph($("#disk_usage_minimum"),'disk.usage.minimum','磁盘最小利用率');
 
-    make_contain_graph($("#net_usage_maximum"),'net.usage.minimum','网络流量最小利用率');
+    make_contain_graph($("#net_usage_minimum"),'net.usage.minimum','网络流量最小利用率');
     make_contain_graph($("#net_usage_maximum"),'net.usage.maximum','网络流量最大利用率');
     // $(".single-contain").each(function(){
     //
