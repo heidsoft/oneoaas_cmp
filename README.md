@@ -30,6 +30,8 @@
 
 5.前端重构
 
+6. find . -name "*.pyc" -exec git rm -f "{}" \;
+
 ``
 npm install --global gulp
 
