@@ -1,5 +1,6 @@
 .idea
 *.pyc
+home_application/**/*.pyc
 /out/
 *.iml
 *.log

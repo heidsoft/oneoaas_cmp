@@ -10,9 +10,9 @@ class Migration(migrations.Migration):
         ('home_application', '0012_auto_20170730_1839'),
     ]
 
-    operations = [
-        migrations.AlterModelTable(
-            name='vcentervirtualmachinesnapshot',
-            table='vcenter_virtualmachine_snapshot',
-        ),
-    ]
+    # operations = [
+    #     migrations.AlterModelTable(
+    #         name='vcentervirtualmachinesnapshot',
+    #         table='vcenter_virtualmachine_snapshot',
+    #     ),
+    # ]

@@ -14,8 +14,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'oneoaas_cmp',                        # 数据库名 (默认与APP_ID相同)
         'USER': 'root',                         # 你的数据库user
-        'PASSWORD': 'oneoaas@2A',                  # 你的数据库password
-        'HOST': '10.0.2.47',                    # 数据库HOST
+        'PASSWORD': '1qaz@WSX',                  # 你的数据库password
+        'HOST': '127.0.0.1',                    # 数据库HOST
         'PORT': '3306',
     },
 }
